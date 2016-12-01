@@ -4,7 +4,7 @@ require_once("../inc/init.php");
 if(!isInRequest("subject","category"))
     showHelpError("Invalid inputs");
 else
-    showHelp($_REQUEST["subject"],$_REQUEST["category"]);
+    showHelp(requestVal("subject"),requestVal("category"));
 
 
 function showHelp($subject,$category)

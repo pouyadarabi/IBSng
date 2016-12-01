@@ -12,7 +12,7 @@ else
 function intShowCategories()
 {
     $smarty=new IBSSmarty();
-    $smarty->assign("admin_username",$_REQUEST["admin_username"]);
+    $smarty->assign("admin_username",requestVal("admin_username"));
     $smarty->display("admin/admins/perm_category_select.tpl");
 }
 

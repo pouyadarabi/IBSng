@@ -58,6 +58,3 @@ function intSetErrors(&$smarty,$err_keys)
                                     ),$err_keys);
 
 }
-
-
-?>

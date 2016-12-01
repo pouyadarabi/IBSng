@@ -7,7 +7,7 @@ needAuthType(NORMAL_USER_AUTH_TYPE,VOIP_USER_AUTH_TYPE);
 $smarty=new IBSSmarty();
 
 if (isInRequest("message"))
-    postMessageToAdmin($smarty, $_REQUEST["message"]);
+    postMessageToAdmin($smarty, requestVal("message"));
 else
     postInterface($smarty);
 

@@ -33,9 +33,9 @@ function intShowPerms($add_success=FALSE,$err=null)
 
 function intAssignValues(&$smarty,$add_success,$err)
 {
-    $smarty->assign("category",$_REQUEST["category"]);
-    $smarty->assign("category_name","{#".$_REQUEST["category"]."#}");
-    $smarty->assign("admin_username",$_REQUEST["admin_username"]);
+    $smarty->assign("category",requestVal("category"));
+    $smarty->assign("category_name","{#".requestVal("category")."#}");
+    $smarty->assign("admin_username",requestVal("admin_username"));
     $smarty->assign("add_success",$add_success);
     $smarty->assign("can_change",canDo("CHANGE ADMIN PERMISSIONS"));
     
@@ -72,8 +72,8 @@ function intAssignSelectedPermVals(&$smarty)
 {
     if(isInRequest("selected"))
     {
-        $has_perm=hasPerm($_REQUEST["selected"],$_REQUEST["admin_username"]);   
-        $smarty->assign("selected",$_REQUEST["selected"]);
+        $has_perm=hasPerm($_REQUEST["selected"],requestVal("admin_username"));
+        $smarty->assign("selected",requestVal("selected"));
         $smarty->assign("has_selected_perm",$has_perm);
         $smarty->assign("selected_value",requestVal("value"));
 
@@ -93,6 +93,3 @@ function intAssignSelectedPermVals(&$smarty)
     else
         $smarty->assign("selected","");
 }
-
-
-?>

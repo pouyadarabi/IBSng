@@ -8,7 +8,7 @@ require_once("bw_graph_img_funcs.php");
 needAuthType(ADMIN_AUTH_TYPE);
 
 if(isInRequest("user_id", "username"))
-    intBWGraph($_REQUEST["username"]);
+    intBWGraph(requestVal("username"));
 else
 {
     toLog("bw_graph_img : Invalid Request");

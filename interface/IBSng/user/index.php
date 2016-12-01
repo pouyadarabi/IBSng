@@ -37,7 +37,7 @@ function goUserIndex()
 
 function setPreferredLang()
 {
-    if(isInRequest("lang"))
+    if(isInRequest("lang") && isValidLang($_REQUEST["lang"]))
         setSessionLang($_REQUEST["lang"]);
 }
 
@@ -49,6 +49,3 @@ function face($err=NULL)
         $smarty->set_page_error($err->getErrorMsgs());
     $smarty->display("user/".getLang()."/index.tpl");    
 }
-
-
-?>

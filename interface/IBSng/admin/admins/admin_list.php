@@ -25,9 +25,7 @@ function face($admin_infos,$errs=null)
 function intSetErrors(&$smarty,$errs)
 {
     if(isInRequest("msg"))
-        $smarty->set_page_error(array($_REQUEST["msg"]));
+        $smarty->set_page_error(array(requestVal("msg")));
     if($errs!=null)    
         $smarty->set_page_error($errs->getErrorMsgs());
 }
-
-?>

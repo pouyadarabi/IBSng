@@ -69,7 +69,7 @@
 		{elseif $perm.value_type eq "MULTIVALUE"}
 			<table border=1 style="border-collapse:collapse" bordercolor="#c0c0c0">
 			{foreach from=$perm.value item=val}
-			    <tr class="{cycle values="list_Row_LightColor,list_Row_DarkColor"}">
+			    <tr class="{cycle values='list_Row_LightColor,list_Row_DarkColor'}">
 				<td>
 				    {$val} 
 				<td>
@@ -81,7 +81,7 @@
 				    {/if}
 			{/foreach}
 			{if $can_change eq TRUE}
-			    <tr class="{cycle values="list_Row_LightColor,list_Row_DarkColor"}">
+			    <tr class="{cycle values='list_Row_LightColor,list_Row_DarkColor'}">
 				<td colspan=2>
 				    <a class="link_in_body" href="{eval var=#show_perms_link#}">
 					    <b><nobr>Add Another Value</b>

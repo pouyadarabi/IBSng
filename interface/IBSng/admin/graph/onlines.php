@@ -23,5 +23,3 @@ function face(&$smarty)
 {
     $smarty->display("admin/graph/onlines.tpl");
 }
-    
-?>

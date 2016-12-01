@@ -198,4 +198,3 @@ function permValueRestricted($perm_name,$admin_name)
     else
         return True;
 }
-?>

@@ -18,9 +18,9 @@ function intSetVars(&$smarty)
 {
     if(isInRequest("user_id","username"))
     {
-        $smarty->assign("user_id",$_REQUEST["user_id"]);
-        $smarty->assign("username",$_REQUEST["username"]);
-        $smarty->assign("default_query","user_ids={$_REQUEST["user_id"]}");
+        $smarty->assign("user_id",requestVal("user_id"));
+        $smarty->assign("username",requestVal("username"));
+        $smarty->assign("default_query",'user_ids={'.requestVal("user_id").'}');
     }
     else
     {

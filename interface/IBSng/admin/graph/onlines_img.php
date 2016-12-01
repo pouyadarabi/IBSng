@@ -57,7 +57,7 @@ function getData($conds,$type)
 
 function getUserType()
 {
-    return $_REQUEST["type"];
+    return requestVal("type");
 }
 
 function collectConds()

@@ -11,7 +11,7 @@ function redirectToUserInfo($user_id)
         $url_params[]="tab1_selected={$_REQUEST["tab1_selected"]}";
     $url_params[]=largeUrlSave("user_id_multi",$user_id);
         
-    $redirect_str="/IBSng/admin/user/user_info.php?".join("&",$url_params);
+    $redirect_str="/IBSng/admin/user/user_info.php?".urlencode(join("&",$url_params));
     redirect($redirect_str);
 }
 

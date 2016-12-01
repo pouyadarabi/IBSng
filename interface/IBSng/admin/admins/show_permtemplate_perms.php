@@ -5,7 +5,7 @@ require_once(IBSINC."admin_face.php");
 
 needAuthType(ADMIN_AUTH_TYPE);
 if (isInRequest("template_name"))
-    intShowTemplatePerms($_REQUEST["template_name"]);
+    intShowTemplatePerms(requestVal("template_name"));
 
 
 function intShowTemplatePerms($template_name)
@@ -51,5 +51,3 @@ function getPermsOfTemplateByCategory($template_name)
     $categorized_perms=getPermsByCategory($perms);
     return array(TRUE,$categorized_perms);
 }
-
-?>

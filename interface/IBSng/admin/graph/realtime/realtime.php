@@ -11,11 +11,13 @@ else
 
 function face($url)
 {
-    $smarty=new IBSSmarty();
+    $smarty = new IBSSmarty();
 
     $smarty->assign("refresh_times",array(5,10,15,20,30,60));
-    $smarty->assign("refresh_default",requestVal("refresh",15));
-
-    $smarty->assign("url",$url);
+    if(isset($_REQUEST['refresh']) && is_numeric($_REQUEST['refresh']))
+       $smarty->assign("refresh_default",requestVal("refresh",15));
+    else
+        $smarty->assign("refresh_default",15);
+    $smarty->assign("url",urlencode($url));
     $smarty->display("admin/graph/realtime.tpl");
 }

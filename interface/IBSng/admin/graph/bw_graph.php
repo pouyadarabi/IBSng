@@ -22,5 +22,3 @@ function face(&$smarty)
 {
     $smarty->display("admin/graph/bw_graph.tpl");
 }
-    
-?>

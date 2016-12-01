@@ -22,7 +22,7 @@ function face(&$smarty)
 function intSetErrors(&$smarty)
 {
     if(isInRequest("msg"))
-        $smarty->set_page_error(array($_REQUEST["msg"]));
+        $smarty->set_page_error(array(requestVal("msg")));
 }
 
 function intSetChargeInfos(&$smarty)
@@ -47,5 +47,3 @@ function intSetChargeInfos(&$smarty)
     }
     $smarty->assign("charge_infos",$charge_infos);
 }
-
-?>

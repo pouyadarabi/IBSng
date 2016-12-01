@@ -25,7 +25,7 @@ function intAssignVars(&$smarty)
                                       "admin_id"=>"Admin ID"));
     $smarty->assign("order_by_default",requestVal("order_by","date"));
     if(isInRequest("msg"))
-        $smarty->set_page_error($_REQUEST["msg"]);
+        $smarty->set_page_error(requestVal("msg"));
 }
 
 function intSetReport(&$smarty)

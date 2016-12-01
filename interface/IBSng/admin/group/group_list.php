@@ -22,7 +22,7 @@ function face(&$smarty)
 function intSetErrorMsg(&$smarty)
 {
     if(isInRequest("msg"))
-        $smarty->set_page_error(array($_REQUEST["msg"]));
+        $smarty->set_page_error(array(requestVal("msg")));
 }
 
 function intSetGroupInfos(&$smarty)

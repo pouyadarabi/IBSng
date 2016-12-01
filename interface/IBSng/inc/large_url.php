@@ -38,6 +38,3 @@ function saveInSession($request_key,$value)
     $_SESSION["{$request_key}__values"][$id]=$value;
     return $id;
 }
-
-
-?>

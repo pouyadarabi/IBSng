@@ -64,7 +64,7 @@ function face(&$smarty,$active_ras_infos,$inactive_ras_infos)
 function intSetErrors(&$smarty)
 {
     if(isInRequest("msg"))
-        $smarty->set_page_error(array($_REQUEST["msg"]));
+        $smarty->set_page_error(array(requestVal("msg")));
 }
 
 ?>

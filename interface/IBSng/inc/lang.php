@@ -33,6 +33,3 @@ function getLang()
     else
         return DEFAULT_LANGUAGE;
 }
-
-
-?>

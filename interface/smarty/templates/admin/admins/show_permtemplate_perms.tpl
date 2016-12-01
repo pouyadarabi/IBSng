@@ -33,7 +33,7 @@
 		    {elseif $cat_perms[index].value_type eq "MULTIVALUE"}
 			<table border=1 style="border-collapse:collapse" bordercolor="#c0c0c0" width="100%">
 			{foreach from=$cat_perms[index].value item=val}
-			    <tr class="{cycle values="list_Row_LightColor,list_Row_DarkColor"}">
+			    <tr class="{cycle values='list_Row_LightColor,list_Row_DarkColor'}">
 				<td>
 				    {$val} 
 			{/foreach}

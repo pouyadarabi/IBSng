@@ -31,8 +31,8 @@ function isInRequest()
 function requestVal($key,$default="")
 {/* return value of $key in request, if it's not available in request return $default 
  */
-    if (isInRequest($key))
-        return $_REQUEST[$key];
+    if (isInRequest($key) && gettype($default) === gettype($_REQUEST[$key]))
+        return htmlspecialchars($_REQUEST[$key]);
     else
         return $default;
 
@@ -44,7 +44,7 @@ function requestValWithDefaultArr($key,$default_arr,$default="")
     if it has key $key, if not, return $default
 */
     if (isInRequest($key))
-        return $_REQUEST[$key];
+        return htmlspecialchars($_REQUEST[$key]);
     else if (isset($default_arr[$key]))
         return $default_arr[$key];
     else

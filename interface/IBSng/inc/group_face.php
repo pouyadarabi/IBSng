@@ -17,7 +17,7 @@ function redirectToGroupInfo($group_name,$extra_param="")
     if($extra_param!="")
         $url_params[]=$extra_param;
     
-    $redirect_str="/IBSng/admin/group/group_info.php?".join("&",$url_params);
+    $redirect_str="/IBSng/admin/group/group_info.php?".urlencode(join("&",$url_params));
     redirect($redirect_str);
 }
 

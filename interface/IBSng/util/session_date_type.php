@@ -6,6 +6,3 @@ if(isInRequest("date_type") and in_array($_REQUEST["date_type"],array("gregorian
     setSessionDateType($_REQUEST["date_type"]);
 
 print ucwords(getDateType());
-
-
-?>

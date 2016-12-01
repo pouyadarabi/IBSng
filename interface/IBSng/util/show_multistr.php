@@ -4,7 +4,7 @@ require_once(IBSINC."util.php");
 
 
 if(isInRequest("str"))
-    showMultiStr($_REQUEST["str"]);
+    showMultiStr(requestVal("str"));
 else
 {
     print "Invalid inputs";
@@ -46,5 +46,3 @@ function intSetAllStrs(&$smarty,$raw_str,$left_pad)
         $smarty->assign("all_strs",array());    
     }
 }
-
-?>

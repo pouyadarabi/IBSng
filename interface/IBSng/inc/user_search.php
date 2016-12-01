@@ -36,5 +36,3 @@ function redirectToUserSearchInc($conds)
 
     intDoSearch();
 }
-
-?>
