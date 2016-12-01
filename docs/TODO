@@ -1,0 +1,43 @@
+login users on startup
+    *Cisco VPDN
+    *Mikrotik
+
+*fix gnugk/cisco/tenor ras to use calc_remaining_time in voip authorization(fixed, to be checked)
+*fast dial in user area pages
+
+keep user in user pool after logout if possible
+    *not possible because of some changes has been done in user_obj that isn't reflected
+     in loaded_user
+
+     *Change Plugin API
+     
+asterisk agi configuration file
+banned caller ids
+
+move some actions method to related user plugins
+
+voip carrier selection
+voip carrier reports
+state charge rules
+prepaid vouchers
+
+admin deposit change report
+
+don't allow user to send message in short periods(eg. 1 message per minute)
+
+some icons need state
+
+snapshot normalization in core
+
+voip tariff prefix finding optimization
+
+Delete After Expire
+
+add netmask to ip pools
+normal user/voip user/caller id to user_id mapping in memory
+
+cisco pre auth
+user sets
+system audit log
+flat daily/monthly rate charge
+isp management and graphs

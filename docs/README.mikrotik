@@ -1,0 +1,18 @@
+1. SSH Configuration
+    set ssh username and password in ras attributes and mikrotik
+    
+    /password
+    
+    IBSng should be enable to ssh mikrotik to force disconnect users
+    
+2. Radius Configuration
+
+    /radius add address=192.168.1.10 secret=test accounting-port=1813 authentication-port=1812 timeout=1000 service=ppp
+    
+3. PPPoE or PPTP
+
+    /ppp aaa set use-radius=yes interim-update=60 accounting=yes
+
+4. HotSpot
+    
+    ip hotspot profile set hsprof2  use-radius=yes radius-accounting=yes radius-interim-update=60 nas-port-type=wireless-802.11

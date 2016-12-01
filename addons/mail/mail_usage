@@ -1,0 +1,4 @@
+#!/bin/sh
+# $1 is username of user
+
+du -hbs /home/mailmaster/$1 | cut -f 1

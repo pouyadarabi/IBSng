@@ -1,0 +1,44 @@
+# This is the default configuration file for squid analyzer daemon.
+
+########################## IBSng server specifications #######
+# IBSng server ip and port
+IBSNG_SERVER_IP=127.0.0.1
+IBSNG_SERVER_PORT=1235
+
+# authentication parameter
+WEB_ANALYZER_PASS=web_analyzer_password
+
+########################## Log files ########
+# where is the squid log file
+SQUID_LOG_PATH=/var/log/squid/access.log
+
+# where to log my functionality
+EVENT_LOG_PATH=/var/log/IBSng/squid_analyzer.log
+
+
+######################### Internal functionality settings #######
+# sych your time with IBSng time (Note: Must be trusted for ssh)
+SYNCH_TIME=0
+
+# how much lines i've to read from squid log in each period
+LINES_PER_READ=1000
+
+# would i've to send only new log lines
+IGNORE_OLD=1
+
+# how much lines i've to buffer from squid log file
+MAX_CACHE_FILL=4000
+
+# how much ready to send data i've to buffer, before dropping on failure
+# it is the size of send queue.
+FEEDER_MAX_QUEUE=10
+
+# what is the time period for try_to_send
+# this specifies the interval time to send data to IBSng in seconds
+FEED_DELAY=20
+
+# may i show you my internals and how much (0,1,2)
+# 0: do not log (just logs major events)
+# 1: log functionality and operations
+# 2: show any valuable info and event
+DEBUG=1

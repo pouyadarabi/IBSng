@@ -1,0 +1,17 @@
+#!/usr/bin/python -O
+"""
+
+    should print "port username in_bytes out_bytes"
+"""
+import os
+
+fd=os.popen("echo 'show detail' | /usr/local/sbin/ctlportslave | grep '^S[0-9]\|IOT:'","r")
+lines=fd.readlines()
+fd.close()
+for i in range(len(lines)/2):
+    lines[i*2]=lines[i*2].strip()
+    line1=lines[i*2].split()
+    lines[i*2+1]=lines[i*2+1].strip()
+    line2=lines[i*2+1].split()
+    if len(line1)==5 and line1[4]=="ESTABLISHED" and line1[1]!="AutoPPP":
+	print "%s %s %s %s"%(line1[0][1:], line1[1], line2[2], line2[1])

@@ -1,0 +1,6 @@
+#!/bin/bash
+#Needs Portslave
+#
+#WARNING: don't work for ports more than 99!!!
+#$1 ras_ip $2 port
+echo reset S$2 | /usr/local/sbin/ctlportslave

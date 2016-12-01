@@ -1,0 +1,12 @@
+#!/bin/bash
+#	PPPD apply bandwidth limit script
+
+#	Warning: Script should not wait or hang. It should run jobs in background if there are possibility of 
+#	hang or waits (eg. ssh ing to other host, while other host is down)
+#
+#	Arguments:
+#	$1 ras_ip	
+#	$2 port number
+#	$3 rate kbytes/sec
+
+/sbin/tc qdisc add dev ppp$2 root tbf rate "$3"kbps limit 20000 burst 1540

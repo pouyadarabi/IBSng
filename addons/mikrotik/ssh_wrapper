@@ -1,0 +1,62 @@
+#!/usr/bin/python
+import signal
+import sys
+import os
+import traceback
+
+"""
+    argv[1]: ip address of mikrotik
+    argv[2]: username
+    argv[3]: password
+    argv[4]: command to run
+
+    execute command and echo result it stdout
+    errors will be written in stderr
+    
+"""
+
+
+sys.path.append("/usr/local/IBSng/addons/pexpect")
+import pexpect
+
+TIMEOUT=10
+
+def main():
+    doSSH(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], TIMEOUT)
+
+def doSSH(host, username, password, command, timeout):
+
+    child = pexpect.spawn("/usr/bin/ssh",["%s@%s"%(username,host),command],timeout)
+    output = ""
+
+    try:
+        _index = child.expect(["[pP]assword:","\(yes/no\)\?"])
+	if _index == 1:
+	    child.write("yes\r\n")
+	    child.expect("[pP]assword:")
+
+	child.write("%s\r\n"%password)
+    except (pexpect.EOF,pexpect.TIMEOUT):
+	sys.stderr.write(getExceptionText())
+
+    while True:
+        try:
+	    output += child.read_nonblocking(1024*1024, timeout)
+	except pexpect.EOF:
+	    success = True
+	    break
+	except pexpect.TIMEOUT:
+	    success = False
+	    sys.stderr.write(getExceptionText())
+	    break
+		
+    sys.stdout.write(output)
+	
+def getExceptionText():
+    """
+	create and return text of last exception
+    """
+    (_type,value,tback)=sys.exc_info()
+    return "".join(traceback.format_exception(_type, value, tback))
+
+main()

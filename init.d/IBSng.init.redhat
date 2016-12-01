@@ -1,0 +1,96 @@
+#!/bin/sh
+# Startup script for IBS
+#
+# chkconfig: 2345 95 05
+# description: Run/Shutdown Isp Billing System V. 2
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+python="/usr/bin/python"
+python_args="-OO -W ignore:::"
+prog="ibs.py"
+ibs_root="/usr/local/IBSng"
+init_plan=0
+init_bw=0
+
+
+#Uncomment this if you encounter dead-locks in threading code
+#export LD_ASSUME_KERNEL=2.4.1 #prevent python deadlocks
+
+startibs() {
+    echo -n $"Starting IBSng Core: " 
+    /sbin/modprobe sch_tbf >/dev/null 2>&1
+    /sbin/modprobe sch_htb >/dev/null 2>&1
+    ulimit -n 2000
+
+    if [ $init_plan = 1 ]; then
+	`$ibs_root/addons/plan/init`
+    fi
+
+    if [ $init_bw = 1 ]; then
+	`$ibs_root/addons/bw_manager/init`
+    fi
+    
+    daemon $python $python_args $ibs_root/$prog
+    echo
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    
+    if [ -f /var/run/IBSng.pid ]; then
+	pid=`cat /var/run/IBSng.pid`
+	/bin/kill $pid > /dev/null 2>&1
+	RETVAL=$?
+	c=0
+	while [ \( "`ps hc $pid`" != "" \) -a \( $c -lt 30 \) ]; do
+	    sleep 1
+	    echo -n "."
+	    c=$((c+1))
+	done
+        /bin/kill -9 `cat /var/run/IBSng.pid` > /dev/null 2>&1
+	rm -f /var/run/IBSng.pid >/dev/null 2>&1
+    else
+	RETVAL=255
+    fi
+    
+    if [ $RETVAL = 0 ]; then
+	success
+    else
+	failure
+    fi
+    echo 
+    return $RETVAL
+}
+
+case "$1" in
+	start)
+	    startibs
+	    ;;
+	
+	stop)
+	    stop
+	    ;;
+	
+	status)
+	    status $prog
+	    ;;
+	restart)
+	    stop
+	    sleep 1
+	    startibs
+	    ;;
+	
+	startibs)
+	    startibs
+	    ;;
+
+	*)
+	    echo $"Usage: $0 {start|stop|restart|status}"
+	    exit 1
+
+esac
+
+exit 0

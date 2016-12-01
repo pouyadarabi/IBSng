@@ -1,0 +1,71 @@
+IBSng Quick Installation Guide
+
+This has been checked on Fedora Core 3 , Debian Sarge Stable.
+Please send your corrections to farshad@parspooyesh.com. 
+
+
+1. Downloading
+    Latest version can be downloaded from http://ibs.sourceforge.net/
+
+2. Extracting
+    Extract the bz2 tarbal in /usr/local/. A sample Command can be
+
+    $tar -xvjf IBSng-(VERSION NAME).tar.bz2 -C /usr/local
+
+3. Change pg_hba.conf
+    You should allow IBSng to connect postgresql database. It's done by changing pg_hba.conf
+    normally located in /var/lib/pgsql/data/pg_hba.conf or /etc/postgrespg_hba.conf .
+    
+    For example, if database and ibs are on same box and you want to allow everyone on localhost to
+    connect to IBSng database without password, put this line on *TOP* of pg_hba.conf.
+    
+    local  IBSng   ibs            trust
+    
+    You must restart postgresql service after changing pg_hba.conf.(ex. service postgresql restart)
+    
+    NOTE: if /var/lib/pgsql ( /var/lib/postgres on Debian ) directory is empty, 
+	  try starting postgresql service, and it will initialize database.
+
+4. Creating Postgresql Database/User
+    IBSng, database name is IBSng and default user is ibs.
+    
+    Try these commands if you don't plan to do an special install.
+
+    $su - postgres
+    $createdb IBSng
+    $createuser ibs
+    $createlang plpgsql IBSng
+
+5. Run setup.py script
+    run setup Script :
+    $./usr/local/IBSng/scripts/setup.py
+
+    These are options you should choose if you want an typical install.
+
+    1 Install
+    2 Test DB Connection and Continue
+    2 Compile Configuration and Continue
+    1 Import Tables and Continue
+    Enter System password
+    1 Copy ibs.conf to '/etc/httpd/conf.d'
+    2 Chown apache directories to 'apache'
+    5 Continue
+    1 Copy logrotate Conf to /etc/logrotate.d
+    3 Continue
+    1 Copy Redhat init file to /etc/init.d
+    2 Set IBSng to start on reboot
+    b Back to main menu
+    x Exit
+    
+    None of above stages should report ERROR on log history.
+    
+6. Reload apache
+    service httpd reload
+    
+7. Run IBSng
+    either by "service IBSng start" or "/usr/local/IBSng/ibs.py"
+
+8. 
+    Now fire up a browser and go for http://ibs_server_ip/IBSng/admin
+    Default Admin UserName Is system .
+

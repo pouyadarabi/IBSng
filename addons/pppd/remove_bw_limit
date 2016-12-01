@@ -1,0 +1,11 @@
+#!/bin/bash
+#	PPPD remove bandwidth limit script
+
+#	Warning: Script should not wait or hang. It should run jobs in background if there are possibility of 
+#	hang or waits (eg. ssh ing to other host, while other host is down)
+#
+#	Arguments:
+#	$1 ras_ip	
+#	$2 port number
+
+/sbin/tc qdisc del dev ppp$2 root tbf

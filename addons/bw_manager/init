@@ -1,0 +1,27 @@
+#!/bin/bash
+
+iptables -t mangle -nL IBSng_PREROUTING >/dev/null 2>&1
+
+if [ $? = 0 ] ; then
+    iptables -t mangle -F IBSng_PREROUTING
+    iptables -t mangle -D PREROUTING -j IBSng_PREROUTING
+    iptables -t mangle -X IBSng_PREROUTING
+fi
+
+iptables -t mangle -nL IBSng_POSTROUTING >/dev/null 2>&1
+
+if [ $? = 0 ] ; then
+    iptables -t mangle -F IBSng_POSTROUTING
+    iptables -t mangle -D POSTROUTING -j IBSng_POSTROUTING
+    iptables -t mangle -X IBSng_POSTROUTING
+fi
+
+
+iptables -t mangle -N IBSng_PREROUTING
+iptables -t mangle -A PREROUTING -j IBSng_PREROUTING
+
+iptables -t mangle -N IBSng_POSTROUTING
+iptables -t mangle -A POSTROUTING -j IBSng_POSTROUTING
+
+#/usr/local/IBSng/addons/bw_manager/recreate_tree
+#ssh -o connecttimeout=5 ibs_server /usr/local/IBSng/addons/bw_manager/recreate_tree

@@ -1,0 +1,580 @@
+2006-jul-12:
+	*Fixed bug in group information page and admin permissions(#240)
+
+2006-jun-14:
+	*Fixed bug in online flag and duplication login detection
+
+2006-may-15:
+	*Search User and User Area Connection Log Interface Enhancements (#71, #137)
+	*A1.24 Enterprise Release(971)
+
+2006-may-09:
+	*Connection Usage Report For Getting total of in/outs, credit and time for each user(#173)
+
+2006-may-07:
+	*Implemented Fast Dial By Using Fast Dial Prefix in Advanced Configuration(#175)
+
+2006-may-06:
+	*Implemented Thread Wrapper Checker to check and log long queued threads(#40)
+
+2006-may-04:
+	*Implemented Script Launcher to be able to force timeout while running external scripts(#148)
+
+2006-may-03:
+	*Make Radius Clean Time Configurable with default value of 20 seconds(#177)
+
+2006-apr-26:
+	*Added Logging of response radius packet
+
+2006-apr-24:
+	*Upgraded from Smarty 2.6.2 to Smarty 2.6.13 that solves issues on new php5(Version that shipped with fedora 5) (#135)
+	*Do Nothing on detecting stale DB connections. Just write an error log (#153)
+	*Implemented Authorize H323-ID Keeping method to overcome problem of not-started-voip-leg users in Cisco Ras
+
+2006-apr-14:
+	*Digest Authentication Support in Radius Server Based on draft-sterman-aaa-sip-00(#117)
+	*Ser Ras Support(#117)
+
+2006-mar-30:
+	*Allow arbitary float precision for credit in cisco voip ras(#48)
+
+2006-mar-14:
+	*Implemented Active Admins List(#24)
+	*Advanced Configuration and Ras Attributes Interface Enhancements(#14)
+	*Idle Timeout Plugin(#32)
+	*Redirect Invalid referrers to login page(#62)
+	
+
+2006-feb-28:
+	*Connection Log Interface Enhancements(#7)
+	*Preserve Radius Secret on error (#45)
+
+2006-feb-27:
+	*Added mikrotik_snmp_enable Attribute in Mikrotik ras(#67)
+	*Added Save Bw Usage Enabled in User Search(#65)
+
+2006-feb-26:
+	*Change unit of rates in active leaves to bit/s(#27)
+	*Enabled sending of connect_info in cisco and cisco_vpdn ras(#57)
+	*Enabled capturing of Acct-Terminate-Cause in connection log(#55)
+	*Support for Acct-*-Gigawords in BSAE and Mikrotik Ras(#52)
+
+2006-feb-21:
+        *Fixed bug in telephony stop handling of a call, while the voip stop for that call has not been arrived.
+	 Tenor Ras should detect this and end the voip leg after a small delay.
+
+2006-feb-19:
+	*ChilliSpot Ras Support(#5)
+	*Filter non alpha-numeric characters in caller id(#35)
+	*Filter Bad usernames in log console that caused the xml rpc errors in log console(#33)
+
+2006-feb-11:
+	*Added an index to boost web analyzer search and delete operations(#9)
+
+2006-jan-15:
+	*Fixed bug in updating admin permissions that resulted in curropted permission list
+	*Fixed bug in deleting VoIP Tariff
+	*Optimized user delete speed by changing the primary key of internet_bw_snapshots table
+
+2006-jan-12:
+	*A1.22 Enterprise release(704)
+
+2006-jan-11:
+	*Added Ras Description "an unique Text Representation of each ras", and use it instead of ras ip
+	 for reports
+	*Portmaster 2e ras
+
+2006-jan-8:
+	*Added Play/Pause button to all refresh headers
+	*Implemented Online Users Filters. Interface support is only
+	 available in advanced mode. Current filter options are
+	 Ras and Username Prefix
+	 
+
+2006-jan-6:
+	*Many Interface Enhancements
+	*Added link to mised "VoIP Tarrif Delete" in VoIP Tariff Info page
+	*Added link in groups, charges and bw leaves to show users that use these attributes
+	*Added link in bw leaves to show charges that those leaves used in
+
+2006-jan-4:
+	*Fixed bug with VoIP Charge and check user event on 23:59:59(rare happening)
+	*Fixed error logs caused by a voip user with traffic periodic accounting
+	*Datang BSAE Ras
+
+2006-jan-2:
+	*Fixed Periodic Accounting NextEvent Calculation bug. This causes recalcEvent
+	 to run less often and improves performance
+	*Moved snapshot configuration options to advanced configuration section
+	*Optimized Snapshots to consume less cpu and memory(300% less cpu usage, 30% less memory usage)
+	*Optimized Sort functions (2x boost)
+	*Added total in/out option in connection log
+	*Changed redhat init.d script to run ibs with python -OO option to turn on optimizations
+	*Make daily and monthly graphs more attractive by showing more data in graph
+	*Multi lingual users area(currently english and farsi languages are supported)
+	*A1.21 Enterprise release(693)
+	    
+
+2005-dec-26:
+	*Fixed bug in add new users that do not add users again if refresh button is pressed
+	 while editing attributes
+	*Killed Checker to look for --killed but not logged out users-- and re-kill them again
+	*Ability to automatically login users which are online on ras, but don't exist in IBSng
+	  Online users. Currently works on cisco_vpdn and pppd rases.
+
+2005-dec-19:
+	*Top Visited URLs report
+	*A1.20 Enterprise release(650)
+
+2005-dec-18:
+	*Asterisk AGI Maximum Password Length Option
+	*Added Mikrotik ssh_wrapper_interactive to support force disconnect on 2.8 series
+	*Implemented Log Console to montitor and log login/logout events
+	*Check Duplicate Onlines before user login. This fixes many complains
+	 about "Concurrent Logins" and PPPd ras
+	*Added Connection Log Details Conditions to Connection Log Report
+	*Connection Log Report template cleanups
+
+2005-dec-8:
+	*Statistics subsystem and interface
+	*Mikrotik in/out rate calculation based on update accounting packets
+	*Reorganized plan scripts to be able to support IBSng_INPUT chain easily
+
+2005-dec-7:
+	*Implemented Radius Request List to handle duplicate radius requests
+	*Statistics subsystem
+	*Total Control Ras for E1
+	*Added Support for US Robotic VSA Attributes
+
+2005-dec-3:
+	*Added NoUsername search for Internet and VoIP
+	*Save BW Usage User Plugin
+	*Save BW Snapshot in database
+
+2005-nov-24:
+	*Fixed a potential bug in VoIPCharge calcInstanceUsageFromStart and interval interaction
+	 23:59:59 time belongs to no interval
+
+2005-nov-20:
+	*MikroTik Ras for PPPoE,PPTP,HotSpot
+	*SNMP Walk now starts with GETNEXTREQUEST instead of GETREQUEST on first
+	 request and changing to GETNEXTREQUEST
+	*RSH Client improvements
+	
+2005-nov-16:
+	*Email Address User Plugin
+	*Implemented handling of email addresses with multiple domains
+
+2005-nov-15:
+	*Fixed web analyzer interface bugs
+	*Fixed web analyzer log rotate
+
+2005-nov-14:
+	*Fix squid analyzer exiting bug on invalid http status codes
+
+2005-nov-10:
+	*Web Analyzer API and interface. This adds new functionality to see users web history
+	*Squid Log Analyzer compatible with Web Analyzer API
+	*Critical Asterisk AGI fixes. This fixes bug that user remains online
+	 after line is phiscally disconnected
+	*A1.19 Enterprise Release(556)
+
+2005-nov-8:
+	*Fixed IPPool bug that deleted ip's are still used
+	*Fixed lowload events didn't run regularly
+	*Fixed LogRotate script
+	*Added ippool ordering in ras. IPpools are now ordered as they are added
+
+2005-nov-2:
+	*Cast connection_log_id and credit_log_id to bigint so postgresql will use indexes in queries
+
+2005-oct-30:
+	*MVTS Ras in prepaid mode
+	*try_single_session_h323 ras message attribute
+
+2005-oct-29:
+	*Fixed in/out byte sorting bug in online users
+	*Fixed Interrupted System call issue with radius server
+
+2005-oct-26:
+	*Added first login to search user order bys
+
+2005-oct-25:
+	*Fixed sorting bug in advanced online users
+	*VoIP Preferred Language User Plugin and interface
+	*A1.18 Enterprise release(517)
+
+2005-oct-24:
+	*Allow keep ordering of users while loading them. 
+	 This fixes bug with killing multiple users
+	*Fast Dial plugin interface	 
+
+2005-oct-22:
+	*Asterisk Disconnect Call support
+	*Added Minimum Chargable Duration to voip tariff
+	*Asterisk agi fixes
+
+2005-oct-19:
+	*Optimize User Search And Connection Log Database Queries
+	*Log duration of database queries in ibs_query.log
+
+2005-oct-17:
+	*Fixed Active leaves rate and in/out bytes representation as byte
+	*Changed VoIP Tarrif page to show prefixes by starting letter.
+	 This is much faster and easier to handle.
+	*Separated graph in menu
+	*Added Caller ID in advanced online users attributes
+	*Added option to run profiler
+	*Added trusted clients definition for core
+	*VoIP Fast Dial User Plugin
+	*Fixed bug with nearest_exp_date plugin and abs_exp_date in group
+	*PrePaid Asterisk Support and IBSng specific AGI
+
+2005-sep-25:
+	*Convert all user info attributes to cdata when passing to dialer. This prevents <br> in comment to break XML
+	*Mail system is now create mailbox directory when attribute is assigned to user
+	*Fixed bug in getNextJalaliMonth method
+	
+2005-sep-19:
+	*Added mail system installation document
+	*Relative Expiration Date and First Login Search
+
+2005-sep-15:
+	*A1.17 enterprise release(432)
+
+2005-sep-13:
+	*Added index to boost speed of search on absolute expiration date
+	*Added session date type selection for admins
+
+2005-sep-11:
+	*Simplify user area pages
+	*Added new date type relative. It shows date relative from
+	 current time ex. 2 Days ago@2:00
+
+	*Fixed persistent lan reload bug, because of diffrent ip/netmask formats
+	*Added Approximate Duration in users area
+	*Calendar Icon is now always enabled, and clicking on it
+	 will set date type drop down to jalali or gregorian based on
+	 current system date type.
+	*Implemented a new layer in advanced online users to show bw graph
+
+2005-sep-6:
+	*A1.16 enterprise release(408)
+
+2005-sep-5:
+	*Fixed bug of reloading ras that caused radius key not
+	 updated in running radius server
+	*GnuGK RadAliasAuth Support
+
+2005-sep-3:
+	*Fixed persistent lan in/out didn't update correctly
+	*Connection Log Analysis Graphs
+
+2005-aug-30:
+	*Implemented admin lock and unlock
+	*A1.15 enterprise release
+
+2005-aug-29:
+	*Implemented calculate approximate duration for internet charge
+
+2005-aug-28:
+	*Implemented mail quota plugin
+	*Integrated mail system
+	*Changed Persistent lan unique id to (client_mac,client_ip) instead of mac
+	 This solves using multiple accounts for multiple bridged users
+
+2005-aug-25:
+	*Implemeted Phone and Name user plugins
+	*Tabify group information page
+	*Fixed total duration format in users connection log
+	*IAS API and handler
+	*Changed user information tab color to orange
+
+2005-aug-21:
+	*Implemented Delete for "Add User Saves"
+
+2005-aug-20:
+	*JavaScript Online users with xmlhttp
+	*Fixed dialer connectionlog duration format
+	*Allow kill/clear of multiple users
+	*Added cancel button to attribute edit page	
+	*Fixed bug in deleting admin messages
+	*A1.14 enterprise release
+
+2005-aug-17:
+	*Optimized user event handling by checking if event is created yet while trying to delete
+	*Changed daily periodic accounting next reset calculation to reset on start(00:00:00) of specified day
+	*Fixed connection logout time conditions were ignored
+	*Keep page number when deleting messages
+
+2005-aug-15:
+	*Fixed bug that _checkResetTimer wasn't called on first instance login
+	*Implemented first login reset plugin
+	*Implemented Cisco VPDN Ras
+	*Move user kill to onlines, and hold online lock while killing a user
+	*Convert active leaves in/out byte to float, so large values won't boil xml-rpc
+
+2005-aug-11:
+	*Fix periodic accounting daily next reset calculations
+	*Preserve tab selection of user search and user information pages
+
+2005-aug-10:
+	*Fixed ippool reload bug
+	*A1.13 Enterprise and Free release
+
+2005-aug-8:
+	*Clean-up portslave ras codes
+	*Added ends with in string operators
+
+2005-aug-7:
+	*Fixed bug in user pool "bulk user load" locking
+	*Fixed bug in periodic accounting commit session usage only
+	*Added Users area message icon image	
+	*Change format of ibs_server.log to contain method and username of caller
+
+2005-aug-6:
+	*Fixed bug in ippool and ip container interaction
+	*Fixed bug in loading_users lock	
+
+2005-aug-5:
+	*Admin Delete
+
+2005-aug-2:
+	*Assign IP plugin to easily assign an ip address to a user
+	*Seperate IPContainer From IPPool so it can be used in Assign IP Plugin
+	*Optimize Add User Save Report, by not passing all usernames to interface when searching
+	 Also show count of each Add User Save
+	*Fixed bug in bulk load of voip caller id attributes
+	*Allow searching on user ids using "less/greater than" operators
+	*Improve IBSngDialer and Message system Interface and fix some bugs with unicode inputs
+	*Fixed bug in tenor ras when pre-authentication packet didn't have caller id attribute
+	*Make Framed-IP-Address attribute optional in cisco ras accounting stop of an internet connection
+	*Fixed bug with RelativeDate formatted strings that whoe a wrong rounded value 
+
+2005-jul-30:
+	*Fix charge conditions didn't work on user search
+	*Readd missing comment plugin on user search
+	*Dialer to Message System interface implemented
+	*Add two indexes to boost user search speed on user attributes
+
+2005-jul-28:
+	*Revamping user information page by using tabs. Simple and nice :)
+	*Add Primary key or unique constraint to all tables, so we are slony replication 
+	 solution compatible now
+
+2005-jul-25:
+	*Fix rare happening bug that server doesn't correctly shutdown when IBSng doesn't start successfully
+	*Message system, user can message admin and vice versa
+	*Add periodic accounting attributes in users area
+	*Add jpgraph2 to be compatible with php5 (and fedora 4)
+	*Upgrade jpgraph1 from 1.17 to 1.19
+
+2005-jul-24:
+	*Change mostly used queries to database stored function
+	*Optimize user pool loading of multiple users by maximizing use of bulk load
+	*Fix bug that user loader bulk user load used "single load" where "bulk load" was possible
+	*Add limit station ip address plugin(vahid)
+	*Optimize user search database query
+	*Fix Relative Expiration Date calculation and checkings
+	*Fix getEpochFromRadiusTime function to correctly convert time for not-in-sync cisco time
+
+2005-jul-19:
+	*Fix Order of username/user_id in add user saves
+	*At last! user audit log icon for search user added
+	*Write PID of running ibs to /var/run/IBSng.pid and use it when stopping IBSng service
+	
+2005-jul-18:
+	*Redirect all useless popen and system ouputs to /dev/null
+	*A1.12 Enterprise Release
+
+2005-jul-17:
+	*Add warning on admin login page about non-ssl login
+	*Add logrotate configuration files, ask for installing them on setup
+	
+2005-jul-14:
+	*Tenor ras online user hanging fixes
+	*Add Framed-Protocol and Service-Type to cisco ras auth reply of internet users
+	
+2005-jul-11:
+	*Group Periodic Accounting Interfaces
+	*Fix bug with floating credits and gnugk ras
+	*Fix bug with multiple login voip users
+	*Fix periodic accounting audit log formats
+	*Fix some paccounting bugs
+
+2005-jul-9:
+	*Add Online flag to user information
+	*Change AttrUpdater Initializer to obtain name of AttrHandler Automatically
+	*Implement periodic accouting
+	*User periodic accounting interfaces
+	*Add row no. to some lists
+	*Fix lock and lock reason in user search
+	*Workaround missing voip stop acccounting in Quintum Tenor
+	
+2005-jul-4:
+	*Fix bug with firefox and large 'online user detail layer'
+	*Upgrade to xmlrpc 1.1.1
+	*Implement portslave ras
+	*Allow -(dash) in names and allow normal usernames to start with a digit
+
+2005-jul-2:
+	*Don't play with internet user instances that accounting hasn't been started yet in 
+	    canStayOnline of charge
+	*Fix problem with attribute editing for persistent lan and caller id which edit session timeout 
+	    instead of specified attribute
+	*Fix bug that cisco ras doesn't accept ippool addresses
+
+2005-jun-30:
+	*Fix bug with GROUP ACCESS
+	*Fix bug with CHANGE VOIP ATTRIBUTES
+	*RadiusAttributes plugin now requires GOD access
+	*A1.11 enterprise release
+
+2005-jun-29:
+	*Implement Negative credit checker. It's runned each CHECK_ONLINES_INTERVAL, and try to kick users
+	 with negative credit
+	*Change pppd ras to use update accounting
+	*Kill or Clear users on IBSng shutdown. Default is kill, and can be set via advanced configuration
+	*Fix bug with connection log durations
+	
+2005-jun-28:
+	*Fix bug of missing attributes in loading multiple users
+	*Update xmlrpc lib to version 1.1
+	*Post report pages on user search
+	*Auto refresh pages are now start counting after completion of page load
+	*A1.10 enterprise release
+	*Allow normal&voip username/password be uploaded from a file
+	
+2005-jun-23:
+	*Fix bug with changing username while user is online
+	*Change SearchUser page and separate edit/shot attributes
+	*Change -f behaviour of client. Now the file is imports as a module instead of
+	 direct executing
+	*Fix bug with reloadOnlineUser
+	*Fix internet explorer warning when online users is browsing using SSL
+	*Fix a bug with multi session users
+	*A1.09 enterprise release
+	*Fix rx leaf bug in static ip
+	*Add username to connection logs
+	*Allow users with MD5crypted passwords to log into users area
+	*Fix problem with some Cisco-Nas-Port formats in cisco ras
+	
+2005-jun-22:
+	*Add Onlines Snapshot
+	*Fix some interface bugs
+	*Fix first problem with groups in nearestExpDate plugin. It looks for first_login in group attrs
+	    by mistake
+	*Add snapshots to report cleaner
+	*Optimize database where clauses by spliting some queries
+	*Add index to user tables for better performance
+	*Use prepared queries for commonly used queries
+	*Add ability to fetch multiple users by one query 
+	*Add select attribute to add user page
+
+2005-jun-20:
+	*Allow menu to be hidden by default, and hide it on online users
+	*Fix db releasing problem on reports if an exception happens during query
+	*Implement VoIP for Cisco Ras
+	*Fix some bugs in online user handlings. This has been produced by previous changes
+	*Fix bug with AbsDateWithUnit in reports. 
+	*getInOutBytes will return 0 before start accounting of user
+
+2005-jun-14:
+	*Add BW RealTime Graphs for all and individual users
+	*Fix negative duration issue with plan, when authentication wasn't successful
+	*Add ras_ip argument to pppd kill_user script
+	*A1.08 Enterprise release
+
+2005-jun-13:
+	*RealTime SnapShot Core and Interface
+	*RealTime graphs
+	*Fix bug with plan which caused ras not to retry login of users
+
+2005-jun-9:
+	*Add Fast User Search, it really not so much faster
+	*Add row no. to onlines
+
+2005-jun-8:
+	*Fix bug with internet_charge. rule_start_time was reset on each checkLimits call.
+	*Fix Cisco In/Out bytes bug because of recent changes
+	*Using mod_expire and mod_deflate in apache configuration to optimize browsing speed
+	*byte smarty modifier	
+	*A1.07 Enterprise release
+
+2005-jun-7:
+	*Add Rate to Rases and getInOutBytes method
+	*Split VoIP and Internet Onlines Sort Bys.
+	*Fix bug with voip charge and before_start_accounting flag.
+	 This would cause exceptions on special cases.
+	*Change SortedList to be able to handle multiple order_bys in one page
+
+2005-jun-6:
+	*Fix ordering bug with request.fixList
+	*Fix many permissions bugs with Restricted values
+	*Fix bug with AbsDateWithUnit
+
+2005-jun-5:
+	*Quintum Tenor Ras
+	*VoIP Caller ID: Allow voip users to login, using caller id, instead of entering PIN
+	*Rel Exp Date plugin fixes
+	*Add User Save search bug fixes
+	*Change receive iptables mangle chain to POSTROUTING, this allows bw_manager to do nat
+	*Fix bug with start_with string operator
+	*Add VoIP Error Handling
+	*Split VoIP Authenticate/Authorize
+	*A1.06 Enterprise release
+
+2005-jun-3:
+	*Fix Add User Save bug
+	*make normal_username and voip_username username assignment sorted	
+
+2005-jun-2:
+	*A1.05 Enterprise release
+
+2005-jun-1:
+	*Impement clean logs/core and interface.
+	 Now it supports connection/credit/user_audit logs
+        *Change multi_str ranges to be end inclusive
+
+2005-may-31:
+	*audit log handler and interface
+
+2005-may-30:
+	*Add IAS API
+	*delete view on ras table
+	*audit log core
+
+2005-may-29:
+	*A1.04 Enterprise and Free release
+
+2005-may-28:
+	*Cisco Ras:Check for username on update packets. This check fixes exceptions 
+	    for missing username key, on certain update packets
+	    (ex. Update accounting of a serial interface)
+	
+	*DATE_TYPE system wide default, allow date_type to be set per session
+	*Chmod core log files 0600
+	*Comma seperate in_bytes and out_bytes on onlines and connection log
+	*Fix a bug with multi logged on users , on online.py
+	*Rename all interface function, to face. This should fix problem with php 5
+
+2005-may-27:
+	*Fix request_key variable name in msgs.py
+	*Fix IPpool update bug
+	*Add Free edition logo
+
+2005-may-25:
+	*SIGUSR1 Signal handler for reopening logs
+	*SIGUSR2 Signal handler for recreating bw manager tree
+	*Caller id limit core plugin
+	*Caller id limit interface
+	*Group caller_id_limit,mac_address_limit,session_timeout in one box of attributes 
+	*Voip charge interface for group
+
+2005-may-21: 
+	*Add online checking, that doesn't allow two users with same global unique id
+	*clean logger, and seperate logger class in another file. Fix a bug with LOG_DEBUG flag
+
+2005-may-20: 
+	*Fix Cisco ras check onlines and update in/out bugs
+	*nearest exp date plugin and post parse plugin access

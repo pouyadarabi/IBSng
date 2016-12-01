@@ -1,0 +1,28 @@
+1. Installation
+    1. Copy agi-bin directory from asterisk add-ons to /var/lib/asterisk/asterisk
+    2. Copy sound file /var/lib/asterisk/ivr
+    3. Make directory /var/lib/asterisk/greetings for user greetings
+
+2. Configuration 
+    All Configuration options are currently in ibs_agi.py
+
+3. Asterisk extentions.conf
+
+[ibs]
+exten => s,1,Goto(ibs,1,1)
+exten => 1,1,Answer
+exten => 1,2,deadagi,ibs_agi_starter.py
+
+
+4. Cisco Configuration
+
+voice-port 2/1/1
+  connection plar 1
+  
+dial-peer voice 5000 voip 
+ destination-pattern 1T 
+ session protocol sipv2 
+ session target ipv4:ASTERISK_IP
+ dtmf-relay cisco-rtp rtp-nte h245-signal h245-alphanumeric 
+ no vad
+

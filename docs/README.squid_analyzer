@@ -1,0 +1,4 @@
+cd /usr/local/IBSng/addons/squid_analyzer/
+cp init.d/squid_analyzer /etc/init.d
+chkconfig --add squid_analyzer
+chkconfig squid_analyzer on

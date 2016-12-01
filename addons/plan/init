@@ -1,0 +1,20 @@
+#!/bin/bash
+
+init_chain()
+{ #$1: filter chain name $2: ibs chain name $3: extra arguments for filter chain
+    
+    iptables -nL $2 >/dev/null 2>&1
+
+    if [ $? = 0 ] ; then
+	iptables -F $2
+	iptables -D $1 -j $2 $3
+	iptables -X $2
+    fi
+
+    iptables -N $2
+    iptables -A $1 -j $2 $3
+    iptables -A $2 -j DROP
+}
+
+init_chain "FORWARD" "IBSng_FORWARD"
+#init_chain "INPUT" "IBSng_INPUT" "-p tcp --dport 3128"

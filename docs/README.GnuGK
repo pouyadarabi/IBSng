@@ -1,0 +1,28 @@
+
+It's currently only support RadAuth, and needs H.235 Tokens. 
+
+IBSng supports both RRQ and ARQ authentication. On RRQ only username and password
+are checked. Login actually happens on ARQ. IBSng uses H323-credit-time radius attribute
+to inform gnugk about available call time of user.
+
+Multiple calls with one account is now possible, by setting gnugk_multiple_login attribute.
+
+A sample configuration can be found via /usr/local/IBSng/addons/gnugk/gnugk.ini
+I've tested this with openphone and ohphone and gnugk 2.2.1 on linux.
+
+IBSng now uses update accounting packets, to ensure user is online on gnugk. Please
+make sure you have the coressponding config in GnuGK. Ras attribute gnugk_acct_update_interval
+is related to same option in gnugk. It's the interval in minutes.
+
+There's a problem that calling a destination that is defined in IBSng voip tariff and
+GnuGK can't connect to it(either by it's destination is not known in GnuGk, or is unreachable)
+will cause user to remain online. This is because GnuGK doesn't send any notification to IBSng
+that user couldn't start the call. By use of update accounting, IBSng now can detemine
+that user is not online, but it takes about 2 minutes on default configuration.
+
+
+
+
+
+
+Please send corrections/updates to farshad@parspooyesh.com.

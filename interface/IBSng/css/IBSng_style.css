@@ -1,0 +1,1440 @@
+/*---------------------------------------------------------*/
+/*  Page Main 						   */
+/*   Classes:						   */
+/*      1.table.Main_Page				   */
+/*      2.a:link.link_in_body				   */
+/*      2.a:link.link_in_body_black			   */
+/*      3.a:visited.link_in_body			   */
+/*      4.a:hover.link_in_body				   */
+/*      2.p:in_body					   */
+/*      2.a:link.page_menu				   */
+/*      3.a:visited.page_menu				   */
+/*      4.a:hover.page_menu				   */
+/*---------------------------------------------------------*/
+table.Main_Page {  
+	padding: 0;
+	border-collapse: collapse ;
+	direction:ltr;
+	text-align:center;
+	width:100%;
+	height:73%;
+	font-size: 7pt; 
+}
+
+a:link.link_in_body{
+    color: #990000;
+}
+a:visited.link_in_body{
+    color: #990000;
+}
+a:hover.link_in_body{ 
+    color: #CC6600;
+}
+
+
+
+a:link.link_in_body_black{
+    color: #353535;
+}
+a:visited.link_in_body_black{
+    color: #353535;
+}
+a:hover.link_in_body_black{ 
+    color: #CC6600;
+}
+
+
+p.in_body
+{
+    text-indent:6px;
+    line-height:120%;
+    text-align:justify;
+}
+a:link.page_menu{
+    color: #333333;
+    text-decoration:none
+}
+
+a:visited.page_menu{
+	color: #333333;
+	text-decoration:none
+
+}
+a:hover.page_menu{ 
+    color: #CC6600;
+    text-decoration:none
+}
+
+/*-------------------------------------------------*/
+/*  Header 	 				   */
+/*   Classes:					   */
+/*      1.td.Header_color			   */
+/*      2.tr.Header_Top_Link			   */
+/*      3.Table.Header_Submenu			   */
+/*      4.td.Header_Submenu			   */
+/*      5.td.Header_Line_Between_Submenus	   */
+/*      6.td.Page_Header_Date			   */
+/*      7.td.Page_Header_Line			   */
+/*      8.td.Page_Title				   */
+/*      9.td.Page_Top_Space			   */
+/*      10.td.Page_Top_Link			   */
+/*      11.a:link.Header_Top_Links		   */
+/*      12.a:visited.Header_Top_Links		   */
+/*      13.a:hover.Header_Top_Links		   */
+/*-------------------------------------------------*/
+
+td.Header_color{ 
+	background-color:#990000;
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+}
+
+tr.Header_Top_Link{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:19;
+	direction:ltr ;
+	background-color:#740A0A 
+}
+td.Header_Submenu{ 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #222222; 
+	font-weight:bold; 
+	height:18;
+	text-align:right;
+	direction:ltr ;
+	background-color:#FFAA00 
+}
+Table.Header_Submenu{ 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #222222; 
+	font-weight:bold; 
+	height:18;
+	text-align:right;
+	direction:ltr ;
+	background-color:#FFAA00 
+}
+td.Header_Line_Between_Submenus{
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #222222; 
+	font-weight:bold; 
+	height:18;
+	text-align:center;
+	width:10
+}
+
+td.Page_Header_Info{ 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #999999; 
+	font-weight:bold; 
+	height:23;
+	direction:ltr ;
+	text-align:right ;
+	white-space:nowrap
+
+}
+td.Page_Header_Line{ 
+	height:3;
+	background-image:url('/IBSng/images/header/background_line_header.gif') 
+}
+
+td.Page_Title{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #666666; 
+	font-weight:bold; 
+	height:17;
+	direction:ltr ;
+	background-image:url('/IBSng/images/header/background_page_title.gif') ;
+	text-align:center ;
+	white-space:nowrap
+
+}
+td.Page_Top_Space{ 
+	height:10
+}
+td.Page_Top_Link{ 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	direction:ltr ;
+	text-align:center ;
+	white-space:nowrap
+}
+
+a:link.Header_Top_Links{
+    color: #FFFFFF;
+    text-decoration:none
+}
+
+a:visited.Header_Top_Links{
+	color: #FFFFFF;
+	text-decoration:none
+}
+
+a:hover.Header_Top_Links{ 
+    color: #FF9C00;
+    text-decoration:none
+}
+
+
+a:link.Header_Submenu{
+    color: #222222;
+    text-decoration:none
+}
+
+a:visited.Header_Submenu{
+	color: #222222;
+	text-decoration:none
+}
+
+a:hover.Header_Submenu{ 
+    color: #990000
+ }
+
+/*-------------------------------------------------*/
+/*  Footer 	 				   */
+/*   Classes:					   */
+/*      1.td.Page_Footer_Line			   */
+/*      2.td.Page_Footer			   */
+/*      3.td.Header_Submenu			   */
+/*      4.a:link.Footer_Link			   */
+/*      5.a:visited.Footer_Link			   */
+/*      6.a:hover.Footer_Link			   */
+/*      7.td.Page_Bottom_Space			   */
+/*-------------------------------------------------*/
+
+td.Page_Footer_Line{ 
+	height:2;
+	background-color:#E0DEDE 
+}
+td.Page_Footer{ 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color: #353535; 
+	font-weight:bold; 
+	height:23;
+	direction:ltr ;
+	text-align:left ;
+	background-color:#E0DEDE 
+
+}
+
+a:link.Footer_Link{
+    color: #800000;
+    text-decoration:none
+}
+
+a:visited.Footer_Link{
+	color: #800000;
+	text-decoration:none
+}
+
+a:hover.Footer_Link{ 
+    color: #CC6600;
+    text-decoration:none
+}
+
+td.Page_Bottom_Space{ 
+	height:10
+}
+
+/*-------------------------------------------------*/
+/*  Form Main 					   */
+/*   Classes:					   */
+/*      1.table.Form_Main			   */
+/*-------------------------------------------------*/
+table.Form_Main {  
+	padding: 0;
+	border-collapse: collapse ;
+	direction:ltr;
+}
+
+/*------------------------------------------------------*/
+/*  Form Title						*/
+/*    Classes: 						*/
+/*	1.table.Form_Title				*/
+/*	2.td.Form_Title_red				*/
+/*      3.td.Form_Title_Begin				*/
+/*      4.td.Form_Title_End				*/
+/*      5.td.Form_Title_Top_Line			*/
+/*      6.td.Form_Title_End_Line			*/
+/*	7.td.Form_Title_orange				*/
+/*	8.td.Form_Title_green				*/
+/*	9.td.Form_Title_blue				*/
+/*	10.td.Form_Title_aqua				*/
+/*	11.td.Form_Title_brown				*/
+/*	12.td.Form_Title_violet				*/
+/*------------------------------------------------------*/
+
+table.Form_Title {  
+	padding: 0;
+	border-collapse: collapse ;
+	direction:ltr;
+	width:100%;
+}
+
+td.Form_Title_red{ 
+	font-family: Tahoma; 
+	font-size: 9pt; 
+	color: #FFFFFF ; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#9A1111 ;
+	white-space:nowrap
+}
+
+td.Form_Title_Begin{ 
+	height:20;
+	width:8
+}
+
+td.Form_Title_End{ 
+	height:20;
+	width:4
+}
+
+td.Form_Title_Top_Line{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #555555; 
+	font-weight:bold;
+	height:17;
+	background-color:#FFFFFF ;
+	white-space:nowrap;
+	text-align:right
+	
+}
+td.Form_Title_End_Line{ 
+	height:3;
+	background-color:#9A1111
+}
+
+td.Form_Title_orange{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#ff9c00 ;
+	white-space:nowrap
+}
+td.Form_Title_green{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#178009 ;
+	white-space:nowrap
+}
+
+td.Form_Title_blue{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#10418f ;
+	white-space:nowrap
+}
+
+td.Form_Title_aqua{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#0D738D ;
+	white-space:nowrap
+}
+
+td.Form_Title_brown{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#CC7A00 ;
+	white-space:nowrap
+}
+
+td.Form_Title_violet{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #FFFFFF;
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#571978 ;
+	white-space:nowrap
+}
+
+/*------------------------------------------------------*/
+/*  Form Foot  						*/
+/*    Classes: 						*/
+/*	1.table.Form_Foot				*/
+/*	2.td.Form_Foot					*/
+/*      3.td.Form_Foot_End				*/
+/*      4.td.Form_Foot_Below_Line_red			*/
+/*      5.td.Form_Foot_Begin_Line_red			*/
+/*      6.td.Form_Foot_Buttons  			*/
+/*      7.td.Form_Foot_Below_Line_orange		*/
+/*      8.td.Form_Foot_Begin_Line_orange		*/
+/*------------------------------------------------------*/
+
+table.Form_Foot {  
+	padding: 0;
+	border-collapse: collapse ;
+	direction:ltr;
+	width:100%;
+}
+
+td.Form_Foot_End{ 
+	height:20;
+	width:14
+}
+
+td.Form_Foot_Below_Line_red{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #c0c0c0; 
+	font-weight:bold;
+	height:18;
+	width:100%;
+	background-color:#FFFFFF ;
+	white-space:nowrap
+
+}
+td.Form_Foot_Begin_Line_red{ 
+	height:2;
+	background-color:#9A1111
+}
+td.Form_Foot_Buttons{ 
+	height:20;
+	direction:ltr ;
+	Text-align:right ;
+	background-color:#FFFFFF
+}
+
+td.Form_Foot_Below_Line_orange{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #c0c0c0; 
+	font-weight:bold;
+	height:18;
+	width:100%;
+	background-color:#FFFFFF ;
+	white-space:nowrap
+
+}
+
+td.Form_Foot_Begin_Line_orange{ 
+	height:2;
+	background-color:#ff9c00
+}
+
+/*--------------------------------------------------------------*/
+/*  Form Content 1col & 2col & Userinfo & GroupInfo		*/
+/*    Classes:  						*/
+/*	1.td.Form_Content_Row_Begin				*/
+/*	2.td.Form_Content_Row_End				*/
+/*      3.td.Form_Content_Row_Left_light			*/
+/*      4.td.Form_Content_Row_Right_light			*/
+/*      5.td.Form_Content_Row_Left_2Col_light			*/
+/*      6.td.Form_Content_Row_Right_2Col_light			*/
+/*      7.td.Form_Content_Row_Left_dark				*/
+/*      8.td.Form_Content_Row_Right_dark			*/
+/*      9.td.Form_Content_Row_Left_2Col_dark			*/
+/*      10.td.Form_Content_Row_Right_2Col_dark			*/
+/*      11.td.Form_Content_Row_Space				*/
+/*      12.td.Form_Content_Col_Space				*/
+/*      13.td.Form_Content_Row_Left_userinfo_light		*/
+/*      14.td.Form_Content_Row_Right_userinfo_light		*/
+/*      15.td.Form_Content_Row_groupinfo_light			*/
+/*      16.td.Form_Content_Row_Left_userinfo_dark		*/
+/*      17.td.Form_Content_Row_Right_userinfo_dark		*/
+/*      18.td.Form_Content_Row_groupinfo_dark			*/
+/*      19.td.Menu_Content_Row_light				*/
+/*      20.td.Menu_Content_Row_white				*/
+/*--------------------------------------------------------------*/
+
+td.Form_Content_Row_End{ 
+	height:20;
+	width:8;
+}
+
+td.Form_Content_Row_Begin{ 
+	height:20;
+	width:8
+}
+
+td.Form_Content_Row_Left_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:50%;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	color: black; 
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Right_light{ 
+	font-weight: bold; 
+	color: #353535; 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:50%;
+	height:20;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}	
+
+td.Form_Content_Row_Left_2Col_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:25%;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	color: black; 
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Right_2Col_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	font-weight:bold; 
+	width:25%;
+	height:20;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}
+td.Form_Content_Row_Left_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:50%;
+	direction:ltr ;
+	color: black; 
+	background-color:#D9D9D9 ;
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Right_dark{ 
+	color: #353535; 
+	font-weight:bold; 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:50%;
+	height:20;
+	direction:ltr ;
+	background-color:#D9D9D9;
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Left_2Col_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:25%;
+	direction:ltr ;
+	background-color:#D9D9D9 ;
+	color: black; 
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Right_2Col_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	font-weight:bold; 
+	width:25%;
+	height:20;
+	direction:ltr ;
+	background-color:#D9D9D9;
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}
+
+td.Form_Content_Row_Space{ 
+	height:1;
+	width:100%;
+	background-color:#FFFFFF
+}
+td.Form_Content_Col_Space{ 
+	font-family: Tahoma; 
+	font-size: 6pt; 
+	height:20;
+	width:1;
+	background-color:#FFFFFF
+}
+td.Form_Content_Row_Left_userinfo_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:35%;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	color: black; 
+	white-space:nowrap
+
+}
+
+td.Form_Content_Row_Right_userinfo_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	font-weight:bold; 
+	width:35%;
+	height:20;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	letter-spacing: 0.03em;
+	white-space:nowrap
+
+}
+
+td.Form_Content_Row_groupinfo_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:30%;
+	height:20;
+	direction:ltr ;
+	background-color:#ECECEC;
+	color: #353535; 
+	font-weight:bold; 
+	letter-spacing: 0.03em;
+	white-space:nowrap
+
+}
+td.Form_Content_Row_Left_userinfo_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	height:20;
+	width:35%;
+	direction:ltr ;
+	background-color:#D9D9D9;
+	color: black; 
+	white-space:nowrap
+
+}
+
+td.Form_Content_Row_Right_userinfo_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:35%;
+	height:20;
+	direction:ltr ;
+	background-color:#D9D9D9 ;
+	color: #353535; 
+	font-weight:bold; 
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}
+
+td.Form_Content_Row_groupinfo_dark{
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:30%;
+	height:20;
+	direction:ltr ;
+	background-color:#D9D9D9 ;
+	color: #353535; 
+	font-weight:bold; 
+	letter-spacing: 0.03em;
+	white-space:nowrap
+}
+
+td.Menu_Content_Row_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #800000; 
+	height:20;
+	width:100%;
+	direction:ltr ;
+	background-color:#ECECEC ;
+	white-space:nowrap
+}
+td.Menu_Content_Row_white	
+{ 
+	font-family: Tahoma; 
+	font-size: 10pt; 
+	color: #353535; 
+	font-weight:bold; 
+	height:40;
+	width:100%;
+	direction:ltr ;
+	background-color:#FFFFFF ;
+	white-space:nowrap
+}
+
+/*----------------------------------------------------------------------*/
+/*  Form Content textarea	  					*/
+/*    Classes:  							*/
+/*	1.td.Form_Content_Row_Left_textarea				*/
+/*	2.td.Form_Content_Row_Right_textarea				*/
+/*      3.td.Form_Content_Row_Left_textarea_td_light			*/
+/*      4.td.Form_Content_Row_Right_textarea_td_light			*/
+/*      5.td.Form_Content_Row_Top_textarea_line_light			*/
+/*      6.td.Form_Content_Row_Bottom_textarea_line_light		*/
+/*      7.td.Form_Content_Row_Left_textarea_td_dark			*/
+/*      8.td.Form_Content_Row_Right_textarea_td_dark			*/
+/*      9.td.Form_Content_Row_Top_textarea_line_dark			*/
+/*      10.td.Form_Content_Row_Bottom_textarea_line_dark		*/
+/*      11.td.Form_Content_Row_Textarea_corner				*/
+/*      12.td.Form_Content_Row_Left_textarea_userinfo			*/
+/*      13.td.Form_Content_Row_Right_textarea_userinfo			*/
+/*      14.td.Form_Content_Row_Right_textarea_groupinfo			*/
+/*	15.Form_Content_Row_Right_textarea_line_light 			*/
+/*	16.Form_Content_Row_Left_textarea_line_light 			*/
+/*	17.Form_Content_Row_Right_textarea_line_dark 			*/
+/*	18.Form_Content_Row_Left_textarea_line_dark			*/
+/*	19.td.Form_Content_Row_Left_textarea_2col			*/
+/*	20.td.Form_Content_Row_Right_textarea_2col			*/
+/*----------------------------------------------------------------------*/
+
+td.Form_Content_Row_Left_textarea{ 
+	width:50%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+td.Form_Content_Row_Right_textarea{ 
+	width:50%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+td.Form_Content_Row_Left_textarea_td_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:100%;
+	height:20;
+	direction:ltr ;
+	background-color:#ECECEC;
+	color: black; 
+	white-space:nowrap
+
+}
+td.Form_Content_Row_Right_textarea_td_light{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	font-weight:bold; 
+	width:100%;
+	height:10;
+	direction:ltr ;
+	background-color:#ECECEC
+}
+td.Form_Content_Row_Top_textarea_line_light{ 
+	font-size: 1pt; 
+	height:5;
+	width:100%;
+	background-color:#ECECEC
+}
+td.Form_Content_Row_Bottom_textarea_line_light{ 
+	font-size: 1pt; 
+	height:5;
+	width:100%;
+	background-color:#ECECEC
+}
+
+td.Form_Content_Row_Left_textarea_td_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	width:100%;
+	height:20;
+	direction:ltr ;
+	background-color:#D9D9D9 ;
+	color: black; 
+	white-space:nowrap
+
+}
+td.Form_Content_Row_Right_textarea_td_dark{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	font-weight:bold; 
+	width:100%;
+	height:10;
+	direction:ltr ;
+	background-color:#D9D9D9
+}
+td.Form_Content_Row_Top_textarea_line_dark{ 
+	font-size: 1pt; 
+	height:5;
+	width:100%;
+	background-color:#D9D9D9
+}
+td.Form_Content_Row_Bottom_textarea_line_dark{ 
+	font-size: 1pt; 
+	height:5;
+	width:100%;
+	background-color:#D9D9D9
+}
+
+td.Form_Content_Row_Textarea_corner{ 
+	height:5;
+	width:5;
+	background-color:#FFFFFF
+}
+
+td.Form_Content_Row_Left_textarea_userinfo{ 
+	width:35%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+td.Form_Content_Row_Right_textarea_userinfo{ 
+	width:35%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+td.Form_Content_Row_Right_textarea_groupinfo{ 
+	width:30%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+td.Form_Content_Row_Right_textarea_line_light{ 
+	font-size: 1pt; 
+	background-color:#ECECEC
+}
+td.Form_Content_Row_Left_textarea_line_light{ 
+	font-size: 1pt; 
+	background-color:#ECECEC
+}
+td.Form_Content_Row_Right_textarea_line_dark{ 
+	font-size: 1pt; 
+	background-color:#D9D9D9
+}
+td.Form_Content_Row_Left_textarea_line_dark{ 
+	font-size: 1pt; 
+	background-color:#D9D9D9
+}
+
+td.Form_Content_Row_Left_textarea_2col{ 
+	width:25%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+td.Form_Content_Row_Right_textarea_2col{ 
+	width:25%;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+
+/*-------------------------------------------------*/
+/*  List Main 					   */
+/*   Classes:					   */
+/*      1.table.List_Main			   */
+/*-------------------------------------------------*/
+table.List_Main {  
+	padding: 0;
+	direction:ltr;
+}
+
+/*------------------------------------------------------*/
+/*  List Rows				   		*/
+/*    Classes:  					*/
+/*		1.tr.List_Row_LightColor		*/
+/*		2.tr.List_Row_DarkColor			*/
+/*		3.tr.List_col_Body_Icon			*/
+/*		4.tr.List_Col				*/
+/*		5.tr.List_Foot_Line			*/
+/*------------------------------------------------------*/
+
+tr.list_Row_LightColor{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	direction:ltr ;
+	background-color:#ECECEC;
+	Text-align:center;
+	height:20;
+}
+tr.List_Row_DarkColor{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	direction:ltr ;
+	background-color:#D9D9D9;
+	Text-align:center;
+	height:20;
+
+}
+tr.list_Row_Perm{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	font-weight:bold; 
+	color: #222222; 
+	direction:ltr ;
+	background-color:#c0c0c0;
+	Text-align:center;
+	height:20;
+}
+
+td.List_col_Body_Icon{ 
+	font-size: 8pt; 
+	direction:ltr ;
+	background-color:#FFFFFF;
+	Text-align:center;
+	height:20;
+	padding-left:0px;
+	padding-right:0px
+}
+
+td.List_Col{ 
+	padding-left:3px;
+	padding-right:3px
+}
+td.List_Col_Group{ 
+	padding-left:3px;
+	padding-right:3px
+}
+
+
+tr.List_Foot_Line_red{ 
+	height:3;
+	background-color:#9A1111;
+}
+
+tr.List_Foot_Line_orange{ 
+	height:3;
+	background-color:#FF9c00
+}
+
+/*------------------------------------------------------*/
+/*  List Title   					*/
+/*    Classes:  					*/
+/*	1.table.List_Title				*/
+/*	2.td.List_Title					*/
+/*      3.td.List_Title_Begin				*/
+/*      4.td.List_Title_End				*/
+/*      5.td.List_Title_Top_Line			*/
+/*      6.td.List_Title_End_Line			*/
+/*      7.tr.list_Head					*/
+/*	8.td.List_Title_Icon				*/
+/*------------------------------------------------------*/
+
+table.List_Title {  
+	padding: 0;
+	border-collapse: collapse ;
+	direction:ltr;
+	width:100%;
+}
+
+td.List_Title{ 
+	font-family: Tahoma; 
+	font-size: 9pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	background-color:#9A1111 ;
+	width:50% ;
+	white-space:nowrap
+
+}
+td.List_Title_Begin{ 
+	height:20;
+	width:8
+}
+
+td.List_Title_End{ 
+	height:20;
+	width:4
+}
+
+td.List_Title_Top_Line{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #555555; 
+	font-weight:bold;
+	height:17;
+	background-color:#FFFFFF ;
+	white-space:nowrap;
+	text-align:right
+
+}
+
+table.List_Top_Line{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #555555; 
+	font-weight:bold;
+	background-color:#FFFFFF;
+	white-space:nowrap;
+	text-align:right
+}
+
+td.List_Title_End_Line{ 
+	height:3;
+	background-color:#9A1111
+}
+
+tr.list_Head{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #FFFFFF; 
+	font-weight:bold; 
+	height:19;
+	direction:ltr ;
+	background-color:#9A1111;
+	Text-align:center
+}
+td.List_Title_Icon{ 
+	width:19;
+	direction:ltr;
+	background-color:#FFFFFF;
+	text-align:center;
+	padding-left:0px;
+	padding-right:0px
+
+	
+}
+
+/*----------------------------------------------------*/
+/*  Input 					      */
+/*   Classes:					      */									  
+/*   	1.Text					      */									  
+/*   	2.Num					      */									  
+/*----------------------------------------------------*/
+
+input.text{
+	border:1px solid #c0c0c0; 
+	font-weight:bold; 
+	font-size: 8pt;
+	font-family:Tahoma;
+	color: #800000;
+	height:18px;
+	width:110px;
+}
+
+input.text:focus{
+	background-color: #fff6f6
+}
+
+input.small_text{
+	border:1px solid #c0c0c0; 
+	font-weight:bold; 
+	font-size: 8pt;
+	font-family:Tahoma;
+	color: #800000;
+	height:18px;
+	width:30px
+}
+
+input.small_text:focus{
+	background-color: #fff6f6
+}
+
+input.medium_text{
+	border:1px solid #c0c0c0; 
+	font-weight:bold; 
+	font-size: 8pt;
+	font-family:Tahoma;
+	color: #800000;
+	height:18px;
+	width:50px
+}
+
+input.medium_text:focus{
+	background-color: #fff6f6
+}
+
+input.large_text{
+	border:1px solid #c0c0c0; 
+	font-weight:bold; 
+	font-size: 8pt;
+	font-family:Tahoma;
+	color: #800000;
+	height:18px;
+	width:200px
+}
+
+input.large_text:focus{
+	background-color: #fff6f6
+}
+
+
+input.Num{
+	border-style:solid; 
+	border-width:1;
+	font-weight:bold; 
+	font-size: 9pt;
+	font-family:Courier New;
+	color: #000000;
+	height:18px;
+	direction:ltr
+}
+
+input.checkbox{
+	border:0px solid #c0c0c0; 
+	color: #800000;
+	height:13px;
+	padding:0px
+}
+
+/*----------------------------------------------------*/
+/*  Select 					      */
+/*   Classes:					      */									  
+/*   	1.'general'				      */									  
+/*----------------------------------------------------*/
+select       { 
+	border:1px solid #c0c0c0; 
+	padding:0px; 
+	font-family: Tahoma; 
+	font-size: 7pt; 
+	color:#353535; 
+	background-color:#FFFFFF;
+	font-weight:bold
+}
+
+/*----------------------------------------------------*/
+/*  Textarea 					      */
+/*   Classes:		    	                      */									  
+/*   	1.text			                      */									  
+/*----------------------------------------------------*/
+textarea.text { 
+	border:1px solid #c0c0c0; 
+	direction: ltr; 
+	text-align: left; 
+	font-family:Tahoma; 
+	font-size:8pt; 
+	color:#800000; 
+	background-color:#FFFFFF;
+	height:56px;
+	width:100%
+}
+
+textarea.text:focus { 
+	background-color: #fff6f6
+}
+/*------------------------------------------------------*/
+/* 	Error Table & Message				*/
+/*	  Classes 					*/
+/*	     1.td.error_messages			*/
+/*	     2.span.messages				*/
+/*------------------------------------------------------*/	
+
+td.error_messages{ 
+	font-family: Tahoma; 
+	font-size: 9pt; 
+	color: #BB0000; 
+	font-weight:bold; 
+	height:18;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+span.message{ 
+	font-family: Tahoma; 
+	font-size: 9pt; 
+	color: #BB0000; 
+	font-weight:bold; 
+	height:18;
+	direction:ltr ;
+	background-color:#FFFFFF
+}
+
+/*--------------------------------------------------------*/
+/*  Right Side Bar					  */
+/*   Classes:						  */									  
+/*   	1.td.RightSide_Color_dark	                  */									  
+/*   	2.td.RightSide_Color_light	                  */									  
+/*   	3.td.RightSide_seperator	                  */									  
+/*   	4.td.RightSide_Links		                  */									  
+/*   	5.td.RightSide_Arrow		                  */									  
+/*   	6.a:link.RightSide_Links	                  */
+/*   	7.a:visited.RightSide_Links			  */
+/*   	8.a:hover.RightSide_Links			  */
+/*   	9.td.RightSide_about_title			  */
+/*   	10.td.RightSide_about_body			  */
+/*   	11.p.about_page					  */
+/*--------------------------------------------------------*/
+
+td.RightSide_Color_dark{ 
+	background-color:#DFDDDD
+}
+
+td.RightSide_Color_light{ 
+	background-color:#EFEFEF
+}
+
+td.RightSide_seperator{ 
+	width:100%;
+	height:1;
+	background-image:url('/IBSng/images/sidebar/dash_line.gif') 
+}
+
+td.RightSide_Links{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #990000; 
+	height:19;
+	width:130
+}
+
+td.RightSide_Arrow{ 
+	font-family: Tahoma; 
+	font-size: 8.2pt; 
+	color: #990000; 
+	height:19;
+	width:8
+}
+
+a:link.RightSide_Links{
+    color: #333333;
+    text-decoration:none
+}
+
+a:visited.RightSide_Links{
+	color: #333333;
+	text-decoration:none
+}
+
+a:hover.RightSide_Links{ 
+    color: #CC6600
+}
+
+td.RightSide_about_title{
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #990000; 
+	font-weight:bold; 
+	height:20;
+	direction:ltr ;
+	Text-align:left
+
+}
+
+td.RightSide_about_body{
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535;
+	direction:ltr ;
+	Text-align:left
+}
+p.about_page
+{
+    text-indent:6px;
+    line-height:130%;
+    text-align:left;
+}
+
+/*------------------------------*/
+/* 			tab 				*/
+/*------------------------------*/
+
+td.Tab_Title_begin{ 
+	height:20;
+	width:8;
+	background-color:#FFFFFF
+}
+td.Tab_Title_end{ 
+	height:20;
+	width:5;
+	background-color:#FFFFFF
+}
+td.Tab_Title_Top_Line{ 
+	font-family: Tahoma; 
+	font-size: 6pt; 
+	color: #c0c0c0; 
+	font-weight:bold;
+	height:17;
+	background-color:#FFFFFF;
+	text-align:right;
+	width:100%
+}
+td.Tab_Title_End_Line_red{ 
+	height:3;
+	background-color:#9A1111;
+	font-size: 1px; 
+}
+
+td.Tab_Title_End_Line_orange{ 
+	height:3;
+	background-color:#ff9c00;
+	font-size: 1px; 
+}
+
+td.Tab_Title{ 
+	width:15;
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #FFFFFF; 
+	font-weight:bold;
+	white-space:nowrap
+}
+
+td.Tab_Foot_line_red{ 
+	height:3;
+	background-color:#9A1111;
+}
+
+td.Tab_Foot_line_orange{ 
+	height:3;
+	background-color:#ff9c00;
+}
+
+
+/*------------------------------*/
+/* 	multi 	*/
+/*------------------------------*/
+
+td.Form_Content_multi_left{
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #800000; 
+	font-weight:bold; 
+	direction:ltr ;
+	white-space:nowrap ;
+	width: 10;
+}
+
+
+/*------------------------------*/
+/* 	Search Page		*/
+/*------------------------------*/
+
+a:link.page_num{
+    font-size: 9pt;
+    font-weight:bold; 
+    font-family: Tahoma; 
+    color: #9a1111;
+}
+
+a:visited.page_num{
+    font-size: 9pt;
+    font-weight:bold; 
+    font-family: Tahoma; 
+    color: #9a1111;
+}
+
+a:hover.page_num{ 
+    font-size: 9pt;
+    font-weight:bold; 
+    font-family: Tahoma; 
+    color: #CC6600;
+}
+
+font.page_num
+{
+    font-size: 10pt;
+    font-family: Tahoma; 
+    color: #000000;
+    font-weight:bold; 
+}
+
+/*------------------------------*/
+/* 	BW_node			*/
+/*------------------------------*/
+
+td.bw_leaf_limit_content{
+	font-family: Tahoma; 
+	font-size: 8pt;
+	color: #353535; 
+	direction:ltr ;
+	text-align:left ;
+	white-space:nowrap ;
+	background-color:#ECECEC
+
+}
+
+a:link.bw_node{
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: #FFFFFF;
+    text-decoration:none
+}
+
+a:visited.bw_node{
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: #FFFFFF;
+    text-decoration:none
+}
+a:hover.bw_node{ 
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: yellow;
+    text-decoration:none
+}
+
+a:link.bw_layer{
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: #990000;
+    font-weight:bold; 
+    text-decoration:none
+}
+
+a:visited.bw_layer{
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: #990000;
+    font-weight:bold; 
+    text-decoration:none
+}
+a:hover.bw_layer{ 
+    font-size: 8pt;
+    font-family: Tahoma; 
+    color: #CC6600;
+    font-weight:bold; 
+    text-decoration:none
+}
+
+/*------------------------------*/
+/* 	Layer			*/
+/*------------------------------*/
+
+tr.Layer_Row_LightColor{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	direction:ltr ;
+	background-color:#FFFFFF;
+	Text-align:left;
+	height:20;
+	font-weight:bold; 
+	padding-left:3px;
+	padding-right:3px
+}
+
+tr.Layer_Row_DarkColor{ 
+	font-family: Tahoma; 
+	font-size: 8pt; 
+	color: #353535; 
+	direction:ltr ;
+	background-color:#EcEcEC;
+	Text-align:left;
+	height:20;
+	font-weight:bold; 
+	padding-left:3px;
+	padding-right:3px
+}

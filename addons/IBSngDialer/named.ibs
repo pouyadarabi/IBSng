@@ -1,0 +1,11 @@
+$TTL    86400
+
+@       IN      SOA  server.ibs.  root.server.ibs. (
+        1 ; serial
+        28800 ; refresh
+        3600 ; retry
+        64800 ; expire
+        86400 ; default_ttl
+        )
+@ IN NS 1.2.3.4
+@ IN A 1.2.3.4

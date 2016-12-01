@@ -1,0 +1,23 @@
+lock
+debug
+name pptpd
+proxyarp
+nobsdcomp 
+nodeflate
+
+#+mschap
+#-chap
+#-pap
++mschap-v2
+require-mppe-128
+
+ms-dns 192.168.0.1
+
+plugin radius.so
+lcp-echo-interval 20
+lcp-echo-failure 6
+nologfd
+
+#mtu 1496
+#nomppe-lower-mtu
+#connect-delay 5000

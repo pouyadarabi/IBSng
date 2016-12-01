@@ -1,0 +1,18 @@
+#!/usr/bin/python -O
+"""
+sys.argv[0]: ras ip
+print pppif_num in_bytes out_bytes
+"""
+
+import re
+
+fd=open("/proc/net/dev","r")
+lines=fd.readlines()
+fd.close()
+del(lines[0])
+for line in lines:
+    match=re.match("^[\s]*ppp([0-9]+)[\s:]*([0-9]+)[\s]*[0-9]+[\s]*[0-9]+[\s]*[0-9]+[\s]*[0-9]+[\s]*[0-9]+[\s]*[0-9]+[\s]*[0-9]+[\s]*([0-9]+)",line)
+    if match!=None:
+	(ifnum,in_bytes,out_bytes)=match.groups()
+	print "%s %s %s"%(ifnum,out_bytes,in_bytes) #server in/out should be reversed
+    

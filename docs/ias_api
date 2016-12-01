@@ -1,0 +1,11 @@
+ias.getEvents() => [[event_id, event_type, actor, amount, extended_info],...]
+		     event_id: unique integer
+		     event_type: CHANGE_USER_CREDIT,  CHANGE_ADMIN_DEPOSIT, ADD_USER, DEL_USER
+		     actor: username of admin performing the job
+		     amount: integer amount of credit change
+		     extended_info: dictionary of other informations. user_id=>user_id
+		    						      admin_username=>admin_username
+
+ias.delEvent([event_id, ....]):	delete event with id event_id
+
+ias.getCreditUsage(user_id, date_from): 

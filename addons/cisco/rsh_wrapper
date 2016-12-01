@@ -1,0 +1,35 @@
+#!/usr/bin/python
+import signal
+import sys
+import os
+
+sys.path.append("/usr/local/IBSng/addons/pexpect")
+import pexpect
+
+TIMEOUT=10
+
+def main():
+    doRSH(sys.argv[1], sys.argv[2],TIMEOUT)
+
+def doRSH(host, command, timeout):
+
+    child = pexpect.spawn("/usr/bin/rsh",[host,command],timeout)
+    output = ""
+
+    while True:
+	try:
+	    output += child.read_nonblocking(1024*1024, timeout)
+	except pexpect.EOF:
+	    success = True
+	    break
+	except pexpect.TIMEOUT:
+	    success = False
+	    break
+	
+    sys.stdout.write(output)
+    if not success:
+	sys.stderr.write("Timeout occured\n")
+	
+
+
+main()

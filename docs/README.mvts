@@ -1,0 +1,14 @@
+[Radius]
+local_address=192.168.1.1
+auth_enable=1
+acct_enable=1
+acct_type=1
+acct_leg_type=2
+secret=test
+acct_address=192.168.1.10
+acct_port=1813
+auth_address=192.168.1.10
+auth_port=1812
+local_auth_port=1912
+local_acct_port=1913
+acct_interim_update=60

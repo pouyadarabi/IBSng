@@ -1,0 +1,53 @@
+Attributes in Ras Msg
+
+start_accounting(boolean): can be set on login and update, to tell the charge module to 
+			   start accounting of user.
+
+multi_login(boolean): can be set on login and tell that this ras prevent user from havin multiple 
+		      logins
+
+unique_id(string): should be set on all calls, and show the unique id of user
+
+			      
+
+update_attrs(list of str): MUST be set on update calls, and tell the plugins, these attributes has been updated
+			   can be an empty list
+
+connect_time(string): can be set on logout call of voip sessions
+disconnect_time(string): can be set on logout call of voip sessions
+
+persistent_lan(boolean): set on login calls of persistent lan users
+
+no_commit(boolean): can be set on logout calls, and tells that this call should not be commited or charged
+
+no_connection_log(boolean): can be set on login/logout calls, and tell that this call should not be logged in
+			    connection_log
+			    
+			    
+single_session_h323(boolean): tells the voip module, that this is a single session h323
+			      voip module then calls ras_obj.setSingleH323CreditTime
+			      and ras_obj.setSingleH323CreditAmount (to set the H323-credit-time and H323-credit-amount
+			      in reply packet). This should be set on update and login of session.
+
+try_single_session_h323(boolean): if user can't have multiple logins, the session is change to single_session_h323
+			          otherwise it's a multi login one.
+				  attribute single_session_h323 will be set in ras_msg to show this is a single_session_h323
+				  
+
+
+h323_authentication
+h323_pre_authentication or pre_authentication(boolean):tells the voip_module that this is a pre authentication request
+h323_authorization
+
+error_key(string): set in ras_msg to inform ras about the error occured in users area
+		   set in auth packets
+
+calc_remaining_time(boolean): tells the user module to calculate remaining time for user if possible
+			      remaining time will be set in instance info 
+
+ip_assignment(boolean): tells the ippool and assign ip plugins if they need to set ip in this session
+			if not set or set to true, ip will be assigned
+			if set to false, this session will be ignored by ippool plugin
+
+re_onlined(boolean): This user was re-onlined instead of normal authentication procedure.
+		     Reonlined users are recognized by ras and asked to get online again.

@@ -1,0 +1,12 @@
+#!/usr/bin/python -O
+"""
+sys.argv[1]: ras ip
+sys.argv[2]: ras port
+
+"""
+import sys
+import os
+
+port=sys.argv[2]
+os.system("/usr/local/IBSng/addons/pppd/ppp-off ppp%s 2>&1"%port)
+

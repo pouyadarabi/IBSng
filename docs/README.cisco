@@ -1,0 +1,28 @@
+Prepaid Calling Card:
+aaa authentication login h323 group radius
+aaa accounting delay-start
+aaa accounting update periodic 1
+aaa accounting connection h323 start-stop group radius
+gw-accounting aaa
+radius-server retransmit 3
+radius-server authorization permit missing Service-Type
+radius-server vsa send accounting
+radius-server vsa send authentication
+
+NOTE1: Set NTP Server on Cisco Router to ensure time is correct.
+NOTE2: Make sure you use valid timezone on router
+    
+
+DialUP:
+
+aaa authentication ppp default group radius
+aaa authorization network default group radius none
+aaa accounting update periodic 1
+aaa accounting network default start-stop group radius                                                         
+aaa accounting delay-start
+
+snmp-server community dailin RW 15
+radius-server host x.x.x.x auth-port 1812 acct-port 1813 key 0 ooo
+radius-server retransmit 3
+radius-server vsa send accounting
+radius-server vsa send authentication

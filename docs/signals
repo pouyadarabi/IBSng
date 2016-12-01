@@ -1,0 +1,9 @@
+
+SIGUSR1: IBSng will reopen all it's log files, useful after rotating logs
+
+SIGUSR2: IBSng will recreate the bw manager tree. All user leaves would be lost by this action
+	 this should be done only in bw manager init script, when bw manager is booting up
+
+
+WARNING: Signal Handlers are set AFTER IBSng initializations, and during initialization, 
+         they're used for other purposes.

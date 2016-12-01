@@ -1,0 +1,5 @@
+#!/bin/bash
+# $1 is user username
+
+rm -rf /home/mailmaster/$1
+exit $?

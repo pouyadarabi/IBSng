@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -rf interface/IBSng/user/dialer
+rm -f interface/IBSng/inc/dialer.php
+rm -f docs/ias_api
+mv interface/IBSng/images/free_edition.gif interface/IBSng/images/edition.gif

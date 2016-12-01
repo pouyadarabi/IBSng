@@ -1,0 +1,11 @@
+/var/log/IBSng/squid_analyzer.log{
+    daily
+    rotate 3
+    copytruncate
+    compress
+    notifempty
+    missingok
+    postrotate
+      /bin/kill -USR2 `cat /var/run/squid_analyzer.pid 2>/dev/null` 2> /dev/null || true
+    endscript
+}

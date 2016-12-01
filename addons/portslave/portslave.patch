@@ -1,0 +1,75 @@
+diff -u -r portslave-patched/src/auth.h portslave-2002.10.21/src/auth.h
+--- portslave-patched/src/auth.h	2003-10-22 21:03:26.000000000 +0330
++++ portslave-2002.10.21/src/auth.h	2002-10-08 03:31:43.000000000 +0330
+@@ -111,7 +111,6 @@
+ 	char *called_station;  /* number they apparently called to get us */
+ 	char *calling_station; /* apparent phone number of the user */
+ 	int done_chap_once;    /* chap is done in two stages */
+-	char *reply_message;
+ };
+ 
+ int login_local(struct auth *pai);
+diff -u -r portslave-patched/src/ctlportslave.c portslave-2002.10.21/src/ctlportslave.c
+--- portslave-patched/src/ctlportslave.c	2003-11-06 15:24:53.000000000 +0330
++++ portslave-2002.10.21/src/ctlportslave.c	2002-07-04 10:31:07.000000000 +0430
+@@ -323,7 +323,7 @@
+                     i, name, addr, type, show_status, tm, in, out, idle, eol);
+         break;
+       case DETAIL:  
+-        printf("S%-3d %-15s %-16.16s %-7.7s %-28.28s%s",
++        printf("S%-3d %-15.15s %-16.16s %-7.7s %-28.28s%s",
+                     i, name, addr, type, show_status, eol);
+         printf(" IOT: %10d %10d %7d KB        Start:%6d  Idle:%5d%s",
+                     in, out,  (in + out) / 1024, tm, idle, eol);
+diff -u -r portslave-patched/src/depends portslave-2002.10.21/src/depends
+--- portslave-patched/src/depends	2003-11-06 15:26:24.000000000 +0330
++++ portslave-2002.10.21/src/depends	2002-08-02 19:13:15.000000000 +0430
+@@ -4,10 +4,10 @@
+ auth.o: ../ppp-2.4.1/pppd/patchlevel.h rwconf.h auth.h
+ chat.o: ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
+ chat.o: ../ppp-2.4.1/pppd/patchlevel.h server.h rwconf.h auth.h
+-ctlportslave.o: server.h ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
+-ctlportslave.o: ../ppp-2.4.1/pppd/patchlevel.h rwconf.h auth.h
+ ctlp-subs.o: server.h ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
+ ctlp-subs.o: ../ppp-2.4.1/pppd/patchlevel.h rwconf.h auth.h
++ctlportslave.o: server.h ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
++ctlportslave.o: ../ppp-2.4.1/pppd/patchlevel.h rwconf.h auth.h
+ getty.o: server.h ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
+ getty.o: ../ppp-2.4.1/pppd/patchlevel.h rwconf.h auth.h
+ lib.o: server.h ../pslave_cfg.h ../ppp-2.4.1/pppd/pppd.h
+Only in portslave-patched/src: depends.bak
+diff -u -r portslave-patched/src/libpsr.c portslave-2002.10.21/src/libpsr.c
+--- portslave-patched/src/libpsr.c	2003-10-22 21:06:13.000000000 +0330
++++ portslave-2002.10.21/src/libpsr.c	2002-10-08 03:45:19.000000000 +0330
+@@ -136,7 +136,7 @@
+   return 1; /* always allow PAP */
+ }
+ 
+-int ul_pap_login(char *User, char *Passwd, char **msgp
++int ul_pap_login(char *User, char *Passwd, char **unused
+                , struct wordlist **addrs, struct wordlist **opts)
+ {
+   char tmp[255];
+@@ -149,10 +149,7 @@
+   snprintf(thisauth.login, sizeof (thisauth.login), "%s", User);
+   snprintf(thisauth.passwd, sizeof (thisauth.passwd), "%s", Passwd);
+   if(do_local_or_server_authentication(&thisauth, 1))
+-  {
+-    *msgp=thisauth.reply_message;
+     return 0;
+-  }
+   if(thisauth.proto == P_PPP_ONLY)
+     return 0;
+   if(thisauth.netmask && thisauth.netmask != 0xFFFFFFFF)
+diff -u -r portslave-patched/src/radclient.c portslave-2002.10.21/src/radclient.c
+--- portslave-patched/src/radclient.c	2003-10-22 20:59:14.000000000 +0330
++++ portslave-2002.10.21/src/radclient.c	2002-09-17 02:11:37.000000000 +0430
+@@ -668,8 +668,6 @@
+         ai->frn++;
+       break;
+       case PW_REPLY_MESSAGE:
+-	if (strlen(ptr->strvalue)<256)
+-          ai->reply_message=xstrdup(ptr->strvalue);
+         if(ai->msn >= MAX_RADIUS_MESSAGES)
+           break;
+         ai->message[ai->msn] = xstrdup(ptr->strvalue);

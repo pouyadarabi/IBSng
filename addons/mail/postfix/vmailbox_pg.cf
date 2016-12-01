@@ -1,0 +1,5 @@
+hosts = 127.0.0.1
+user = ibs
+password = 
+dbname = IBSng
+query = select get_mail_dir('%s');

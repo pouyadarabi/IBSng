@@ -1,0 +1,18 @@
+#!/usr/bin/python -O
+"""
+sys.argv[1]: Ras IP
+sys.argv[2]: Client IP
+
+output should be writted to stdout, and is mac address of user, or empty if it's not available
+"""
+import os
+import sys
+
+fd=os.popen("arp -n %s"%sys.argv[2])
+lines=fd.readlines()
+fd.close()
+
+if len(lines)>1:
+    sp=lines[1].split()
+    if sp[0]==sys.argv[2]:
+	print sp[2]

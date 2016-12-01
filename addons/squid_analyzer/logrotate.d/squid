@@ -1,0 +1,34 @@
+/var/log/squid/access.log {
+    daily
+    rotate 3
+    copytruncate
+    compress
+    notifempty
+    missingok
+    postrotate
+      /bin/kill -USR1 `cat /var/run/squid_analyzer.pid 2>/dev/null` 2> /dev/null || true
+    endscript
+}
+/var/log/squid/cache.log {
+    daily
+    rotate 3
+    copytruncate
+    compress
+    notifempty
+    missingok
+}
+
+/var/log/squid/store.log {
+    daily
+    rotate 3
+    copytruncate
+    compress
+    notifempty
+    missingok
+# This script asks squid to rotate its logs on its own.
+# Restarting squid is a long process and it is not worth
+# doing it just to rotate logs
+    postrotate
+      /usr/sbin/squid -k rotate
+    endscript
+}

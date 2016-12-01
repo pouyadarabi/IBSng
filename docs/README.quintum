@@ -1,0 +1,32 @@
+
+
+PSTN or PBX TG:
+
+Ivr Type = Prepaid calling card
+Ivr Card Digit Length  = Variables
+Disabled Voice Prompt 0
+Ivr Preauthentication = 1
+Ivr Language = None
+MultiSession code: = **
+
+
+
+
+Radius User:
+
+
+host p 1.2.3.4
+authenticationport p 1812
+accountingport p 1813
+
+host s 0.0.0.0
+authenticationport s 1812
+accountingport s 1813
+
+retry = 3
+timeout = 5
+accountingtype = 2
+billingvendor 1
+sharedsecret ****
+
+

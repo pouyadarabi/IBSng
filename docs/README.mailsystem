@@ -1,0 +1,59 @@
+NOTE: There's a known issue that newly created users can't log in before they receive 
+      their first mail. This happens because the Maildir directory isn't created
+      before the first mail arrives.
+
+
+1- Download postfix source from http://www.postfix.org/
+
+2- Download postfix VDA patch from http://web.onda.com.br/nadal/
+
+3- Apply the patch to source 
+   zcat postfix-2.2.5-vda.patch.gz |patch -p
+
+4- Compile postfix by
+
+make -f Makefile.init makefiles \
+            'CCARGS=-DHAS_PGSQL -I/usr/include/pgsql -DUSE_SASL_AUTH -I/usr/include/sasl' \
+	    'AUXLIBS=-L/usr/lib/pgsql -lpq -L/usr/lib/sasl2 -lsasl'
+make
+make install
+
+5- useradd mailmaster
+
+6- cp -f /usr/local/IBSng/addons/mail/postfix/* /etc/postfix
+
+7- edit main.cf 
+    I. change myhostname 
+    II. change mynetworks 
+    III. Change mailmaster uids if necessary
+    IV. Change virtual_mailbox_domains if necessary
+
+8- ln -sf /usr/sbin/sendmail.postfix /etc/alternatives/mta
+
+9- Download Courier-Imap and Courier-Authlib from http://www.courier-mta.org/
+
+10- rpmbuild -ta /root/courier-authlib-0.57.tar.bz2
+    install the built rpms from /usr/src/redhat
+
+11- using a non-root user
+    mkdir $HOME/rpm    
+    mkdir $HOME/rpm/SOURCES    
+    mkdir $HOME/rpm/SPECS    
+    mkdir $HOME/rpm/BUILD    
+    mkdir $HOME/rpm/SRPMS    
+    mkdir $HOME/rpm/RPMS    
+    mkdir $HOME/rpm/RPMS/i386
+    
+    echo "%_topdir    $HOME/rpm" >> $HOME/.rpmmacros
+    
+    rpmbuild -ta courier-imap-4.0.5.tar.bz2
+    
+12- cp /usr/local/IBSng/addons/mail/courier_authlib/authpgsqlrc /etc/authlib
+    Edit file to change mailmaster uid and DEFAULT_DOMAIN
+    
+    Note: Make sure postgresql listens on TCP/IP socket
+
+13- service courier-authlib start
+    service courier-imap start    
+
+14- postmap virtual

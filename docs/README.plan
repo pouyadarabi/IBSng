@@ -1,0 +1,41 @@
+What is Persistent Lan?
+
+The Idea behind persistent lan is to allow a user with specific mac and ip address, use the service(usually internet) 
+without the need for vpn connections. Persistent lan users, use normal charge as charge attribute, so a persistent
+lan can login on vpn too if necessary. 
+
+Persistent lan users doesn't need to login manually. login is tried at IBSng startup and periodic intervals.
+If a user can't login because of a restriction, he will be queued, and retried later. 
+Retry interval can be set via ras attribute "plan_login_retry_interval". The value is in minutes.
+
+When a user logins script /usr/local/IBSng/addons/plan/login is called. A sample script is provided that
+open forward for user ip and mac. Normally the forward policy should be drop (like what's done in init script), 
+and successfully logged on users, are allowed via this script. 
+Three other scripts (/usr/local/IBSng/addons/plan/kill 
+		     /usr/local/IBSng/addons/plan/inout_usage
+		     /usr/local/IBSng/addons/plan/init
+		     )
+		    are also provided for their functionalities.
+
+Installation:
+    It's easy if IBSng and plan on same machine. If not, you should consider using ssh or rsh to run scripts 
+    on remote plan machin.
+    Add a Persistent Lan Ras, Define a new normal charge, add a user, change normal charge and persistent lan
+    attributes, and it should work.
+    Don't forget to run /usr/local/IBSng/addons/plan/init script on ras, before running IBSng. 
+    This is automatically done by IBSng init.d script on startup if init_plan is true.
+    
+
+Bandwidth manager:
+    Using Plan with Bw Manager is easy again, if IBSng,plan,bw manager are on same machine.
+    Though BW Manager setup may be difficult sometimes, it should work pretty easy.
+    Define your tree, use them in normal charge rules and you're done.
+    
+Problems:
+    Current PLan scripts, add rules to iptables FORWARD chain.  You shouldn't save this rules for startup
+    and you shouldn't restart IBSng while there are plan users. If you do so, flush FORWARD chain to primary
+    state before starting IBSng.
+    
+    Same thing happens for BW Manager. It uses mangle table to mark packets, so you should not save them
+    and you should flush them before restarting IBSng.
+        

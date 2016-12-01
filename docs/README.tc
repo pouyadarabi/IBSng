@@ -1,0 +1,21 @@
+
+Sample Configuration
+
+I. Radius Accounting
+
+set accoUNTING prIMARY_server <IBSng_SERVER>
+set accounting priMARY_desTINATION_PORT 1813
+
+set authENTICATION primARY_SErver <IBSng_SERVER>
+set authenTICATION primary_desTINATION_PORT 1812
+
+set authentication primary_secret <SECRET>
+set accounting primary_secret <SECRET>
+
+enaBLE raDIUS inteRIM_ACCOUNTING_INTERVAL
+set radIUS inTERIM_ACCOUNTING_INTERVAL 60
+	
+
+II. SNMP
+
+add snmp community <COMMUNITY> address <IBSng_SERVER> access admin

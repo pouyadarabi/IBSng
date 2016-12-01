@@ -1,0 +1,131 @@
+IBS is a billing system for ISPs. 
+IBS Next Generation (IBSng) is a total rewrite of IBS to create modular and maintanable code.
+
+--IBSng-Free-A1.13
+    This is release is mostly useful for GnuGK users. 
+    Demanded multiple session users should work now. 
+    There were also enhancements and bug fixes for 
+    PPPd and Persistent Lan users too.
+    
+    Main Changes since last release are:
+	-Many Performance Improvementes
+	-GnuGK Ras Fixes
+	-VoIP Module Fixes
+	-Onlines Graph
+	-Portslave Ras
+	-PHP5 fixes
+	
+    More Detailed change log is located in docs/CHANGE_LOG
+    A list of diffrences with Enteprise version is located in docs/free_enterprise_diff
+
+  IF YOU ARE UPGRADING FROM OLDER VERSION:
+   1- Import the upgrade sql file(s) in /usr/local/IBSng/db
+      corresponding to your version(Normally from_A1.04_upgrade.sql, from_A1.08_upgrade.sql
+    				    from_A1.10_upgrade.sql, from_A1.12_upgrade.sql)
+
+      Sample: psql -U ibs IBS < /usr/local/IBSng/db/from_A1.12_upgrade.sql
+      
+   2- From this version IBSng users database plpgsql language, so you
+      should enable that in your database by:
+		 
+      #su - postgres
+      $createlang plpgsql IBSng
+		       
+      After creating language you should import IBSng plpgsql functions by:
+      #psql -U ibs IBSng < /usr/local/IBSng/db/functions.sql
+    
+
+--IBSng-A1.04
+    IBSng is now quiet stable, and if nothing bad happens,will enter beta stage
+    after this release. I've changed the versioning, moved project cvs, and branched
+    the free and enterprise lines.
+
+    Main Changes since last release are:
+        -Cisco Ras Fixes
+        -Users interfaces in /IBSng/user
+        -IPpool bug fixes
+        -Cisco Ras bug fixes
+        -Caller ID limit plugin
+        -Fix log files permissions, and allow them to rotate while ibs running
+        -PHP5 fixes
+
+    More Detailed change log is located in docs/CHANGE_LOG
+
+
+-- IBSng-alpha-2005-04-27
+    Main Changes since last release are:
+	-GnuGK update accounting handling
+	    This workaround some problems with GnuGK keep stale users online
+	    And Also make GnuGK more reliable
+
+	-GnuGK Multiple login flag
+	    This can be set via ras attributes. But GnuGK doesn't allow multiplt registration
+	    from same account
+
+	-Admin Deposit Change
+
+	-Clear Functionality in online reports, for both VoIP and Internet Users.
+	    Clear differs from kick in fact that clear only deletes user from online list
+	    and doesn't deduct user credit usage. Kick tries to kick user from ras, and waits
+	    for stop event to arrive normally.
+	    The Clear icon isn't designed yet, and current icon is temporary.
+	    
+	-VoIP Charge Bug Fixes
+	    Users with time limitaions in charge rule were able to continue call in 
+	    Not-Defined times.
+
+	-Fix a bug in showing float numbers (Thanks to Stoyko Neychev)
+
+	-Fix multiple bugs in connection logs (Thanks to Stoyko Neychev)
+	
+NOTE: If you're upgrading from older versions of IBSng, make sure you enter these sql 
+      queries in IBSng database
+
+#psql -U ibs IBSng </usr/local/IBSng/db/from_alpha-2005-04-18_upgrade.sql
+
+    
+
+
+-- IBSng-alpha-2005-04-18
+    Main Changes since last release are:
+     -VoIP module and Charge
+     -VoIP Tariff
+     -GnuGk Ras (RadAuth support only)
+     -Limit Mac Address Plugin
+     -Multi Login bug fixes
+     -IPpool bug fixes
+     -User pool bug fixes
+
+    GnuGK Ras currently only support RadAuth, and doesn't support multiple login of users. 
+    See README.GnuGK for more details.
+    
+    PPPd and Plan rases are in good state, and has been tested alot more since last release.
+    
+NOTE: If you're upgrading from older versions of IBSng, make sure you enter these sql 
+      queries in IBSng database
+
+#psql -U ibs IBSng </usr/local/IBSng/db/from_alpha-2005-02-28_upgrade.sql
+    
+    
+
+-- IBSng-alpha-2005-02-28
+   This is first alpha release of IBSng. This version supports PPPD, Persistent Lan and Cisco Ras.
+   Main Features of this release are:
+    -chap/mschap/mschap2
+    -mppe
+    -transfer accounting
+    -attribute based users
+    -action on group of users
+    -IP pools
+
+    PPPd ras has been tested with poptop, and is in "works for me" state. This release is mostly useful
+	for poptop users.
+
+    Plan ras needs more testings, but it works for me again.
+    
+    Cisco ras has dialup support and hasn't been tested yet. If you have dialup lines on cisco, and
+	can offer us testing platform please send me a mail at farshad@parspooyesh.com.
+
+    This is an early alpha release, so there'll be updated releases with bug fixes and features soon.
+    
+    Thanks for testing IBSng.

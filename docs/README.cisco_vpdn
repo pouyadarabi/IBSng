@@ -1,0 +1,39 @@
+Cisco VPDN ras is for Virtual Private Dialup Network cisco feature.
+VPDN is used for PPPoE, l2tp and ISDN calls. The main diffrence between
+VPDN and normal cisco ras is VPDN interfaces are dynamically created and
+User real interface(called Virtual Access Interface) isn't available at
+user login time.
+
+Sample Cisco Configuration:
+
+aaa authentication ppp ibs group radius
+aaa authorization network ibs group radius
+aaa accounting delay-start
+aaa accounting update periodic 1
+aaa accounting network ibs start-stop group radius
+aaa session-id common
+
+no ip rcmd domain-lookup
+ip rcmd rsh-enable
+ip rcmd remote-host root IBS_SERVER root enable
+
+vpdn enable
+vpdn-group test 
+    accept-dialin  
+    protocol pppoe  
+    virtual-template 1 
+    
+
+interface Virtual-Template1 
+    mtu 1492 
+    ip unnumbered Loopback0 
+    ppp authentication ms-chap-v2 pap ibs 
+    ppp authorization ibs 
+    ppp accounting ibs
+
+
+radius-server attribute 44 include-in-access-req
+radius-server host IBS_SERVER auth-port 1812 acct-port 1813 key kkkoo
+radius-server vsa send accounting
+radius-server vsa send authentication
+

@@ -1,0 +1,53 @@
+#!/usr/bin/python
+#XXX: Use regular expressions instead of string parsing
+#print output in format MAC_ADDRESS IN_BYTES OUT_BYTES
+import os
+
+
+
+def getOutput():
+    fd=os.popen("iptables -nL IBSng_FORWARD -v -x","r") 
+    lines=fd.readlines()
+    fd.close()
+    return lines[2:]
+
+
+def parse(lines):
+    """
+	we assumed that login script always put user send rule before recieve rule
+    """
+    ips={}
+    for line in lines:
+	sp=line.strip().split()
+	if len(sp)==11:
+	    ips[sp[7]]={"mac_ip":"%s_%s"%(sp[10],fixIPFormat(sp[7])),"out_bytes":sp[1],"out_pkts":sp[0]}
+	elif len(sp)==9 and ips.has_key(sp[8]):
+	    ips[sp[8]]["in_bytes"]=sp[1]
+	    ips[sp[8]]["in_pkts"]=sp[0]
+    return ips
+
+def printOut(ips):
+    for ip in ips:
+	info=ips[ip]
+	try:
+	    print "%s %s %s"%(info["mac_ip"],info["in_bytes"],info["out_bytes"])
+	except KeyError:
+	    continue
+
+
+def fixIPFormat(ip_addr):
+    """
+	single ip address don't have netmask, appends /32 if there's no netmask
+    """
+    if ip_addr.find("/")==-1:
+	ip_addr+="/32"
+
+    return ip_addr
+
+def main():
+    lines=getOutput()
+    ips=parse(lines)
+    printOut(ips)
+
+
+main()

@@ -1,0 +1,9 @@
+/var/log/IBSng/ibs_*.log {
+     daily
+	 rotate 3
+	 size = 10M
+	 missingok
+	 postrotate
+	        /bin/kill -USR1 `cat /var/run/IBSng.pid 2>/dev/null` 2> /dev/null || true
+	 endscript
+}

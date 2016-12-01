@@ -1,0 +1,2 @@
+#!/bin/bash
+kill -USR2 `cat /var/run/IBSng.pid 2>/dev/null`

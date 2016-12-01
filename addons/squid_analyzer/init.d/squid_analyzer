@@ -1,0 +1,93 @@
+#!/bin/sh
+# Startup script for Squid Analyzer daemon
+#
+# chkconfig: 2345 95 05
+# description: Run/Shutdown web analyzer daemon
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+####
+web_analyzer_root="/usr/local/IBSng/addons/squid_analyzer"
+
+#web_analyzer_root="/home/projects/squid_analyzer"
+prog="squid_analyzer.py"
+
+### functions ####
+start(){
+    
+    if [ -f /var/run/squid_analyzer.pid ]; then
+	echo $"Already started, pid file exists."
+    else
+	daemon $web_analyzer_root/$prog
+	RETVAL=$?
+	success
+	return $RETVAL
+    fi
+}
+
+
+stop(){
+    echo $"Stopping $prog: "
+    if [ -f /var/run/squid_analyzer.pid ]; then
+	pid=`cat /var/run/squid_analyzer.pid`
+	/bin/kill -SIGTERM $pid > /dev/null 2>&1
+	RETVAL=$?
+	c=0
+	while [ \( "`ps hc $pid`" != "" \) -a \( $c -lt 30 \) ]; do
+	    sleep 1
+	    echo -n "."
+	    c=$((c+1))
+	done
+        /bin/kill -9 `cat /var/run/squid_analyzer.pid` > /dev/null 2>&1
+	rm -f /var/run/squid_analyzer.pid >/dev/null 2>&1
+    else
+	RETVAL=255
+    fi
+    
+    if [ $RETVAL = 0 ]; then
+	success
+    else
+	failure
+    fi
+    echo 
+    return $RETVAL
+}
+
+###
+case "$1" in
+	start)
+	    start
+	    ;;
+	
+	stop)
+	    stop
+	    ;;
+	
+	status)
+	    if [ -f /var/run/squid_analyzer.pid ]; then
+		pid=`cat /var/run/squid_analyzer.pid`
+		
+		if [ `ps hc $pid` != "" ]; then
+		    echo "Squid Analyzer is running with pid $pid"
+		else
+		    echo "Squid Analyzer is not running with stale pid file"
+		fi
+	
+	    else
+		echo "Squid Analyzer is not runing"
+	    fi
+		
+	    ;;
+	restart)
+	    stop
+	    sleep 1
+	    start
+	    ;;
+	*)
+	    echo $"Usage: $0 {start|stop|restart|status}"
+	    exit 1
+esac
+
+exit 0
+

@@ -1,0 +1,33 @@
+IBSng/Poptop Quick Install
+Please send corrections/updates to farshad@parspooyesh.com.
+
+I.
+Download ppp-2.4.3-4.fc3.i386.rpm and pptpd-1.2.1.tar.gz from http://www.poptop.org/
+
+II. Compile poptop
+[farshad@farshad ~]$ ll pptpd-1.2.1.tar.gz
+-rw-rw-r--  1 farshad farshad 180974 Feb 27 15:46 pptpd-1.2.1.tar.gz
+[farshad@farshad ~]$ tar xzf pptpd-1.2.1.tar.gz
+[farshad@farshad ~]$ cd pptpd-1.2.1
+[farshad@farshad pptpd-1.2.1]$ ./configure; make
+[farshad@farshad pptpd-1.2.1]$ sudo make install
+[farshad@farshad pptpd-1.2.1]$ sudo cp /usr/local/IBSng/addons/poptop/pptpd.conf /etc
+[farshad@farshad pptpd-1.2.1]$ sudo cp /usr/local/IBSng/addons/poptop/options.pptpd /etc/ppp
+[farshad@farshad pptpd-1.2.1]$ sudo /usr/local/sbin/pptpd
+
+III. Install pppd
+    Install PPPd RPM. You need radiusclient configuration directory in /etc/radiusclient, So may
+    need to install radiusclient too.
+
+IV. Add Ras
+    Add a new ras, with type pppd in settings->ras. ras ip is 127.0.0.1 if poptop and ibs are on same machine.
+    And radius secret is "my_rad_secret"
+
+
+Note 1: Some sample configurations can be found in addons/poptop directory
+
+Note 2: IBSng supports pap/chap/ms-chap/mschap-v2 password authentication, and also 
+	supports MPPE with ms-chap and ms-chapv2.
+        You can find kernel module for MPPE support on poptop download page.
+
+Note 3: You can Download a nice client freely at http://www.parspooyesh.com/download.php?product=ibsngdialer
