@@ -13,13 +13,13 @@
 		<td rowspan="3" width="100%" class="Header_Color"></td>
 		<!-- Top right Link -->
 		<td class="Header_Color" width="204"></td>
-		<td width="180" height="19">
+		<td width="100%" height="19">
 		<table height="19" border="0" width="100%" cellspacing="0" cellpadding="0">
 			<tr class="Header_Top_link">
 				<td width="7"><img border="0" src="/IBSng/images/header/top_right_links_begin.gif"></td>
 				<td class="Page_Top_Link">User</td>
 				<td class="Page_Top_Link">&nbsp;</td>
-				<td class="Page_Top_Link">Username:<font color="#FF9C00">{$auth_name|capitalize}</font></td>
+				<td class="Page_Top_Link">Username:<font color="#FF9C00" style="margin-left: 10px">{$auth_name|capitalize}</font></td>
 				<td class="Page_Top_Link"><img border="0" src="/IBSng/images/menu/line_between_topmenu.gif"></td>
 				<td class="Page_Top_Link"><a class="Header_Top_links" href="/IBSng/user/?logout=1">Logout</a></td>
 			</tr>

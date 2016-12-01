@@ -137,9 +137,9 @@
 		<a onClick="showReportLayer('{$info_dic.ras_ip}_{$info_dic.unique_id_val}',this); return false;" href="#">
 		    {listTableBodyIcon action="details" }
 		</a>
-		{reportDetailLayer name=`$info_dic.ras_ip`_`$info_dic.unique_id_val` title="Report Details"}
+		{reportDetailLayer name="$info_dic.ras_ip_$info_dic.unique_id_val" title="Report Details"}
 		    {layerTable}
-		    {foreach from=`$info_dic.attrs` key=key item=item}
+		    {foreach from=$info_dic.attrs key=key item=item}
     			{layerTR cycle_color=TRUE}
 			    {listTD}
 				{$key}
