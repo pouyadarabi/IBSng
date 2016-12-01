@@ -1,8 +1,8 @@
 <?php
 
-require_once (IBSINC."generator/generator.php");
+require_once (IBSINC."generator/mygenerator.php");
 
-class ReportGenerator extends Generator
+class ReportGenerator extends MyGenerator
 {
 	function ReportGenerator()
 	{
@@ -41,5 +41,3 @@ class ReportGenerator extends Generator
 		return "";
 	}
 }
-
-?>

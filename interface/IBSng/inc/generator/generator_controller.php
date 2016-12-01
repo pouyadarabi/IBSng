@@ -1,10 +1,6 @@
 <?php
 
 
-/**
- * 
- * */
-
 class GeneratorController
 	{
     function GeneratorController()
@@ -96,4 +92,3 @@ class GeneratorController
 	    return $this->__generators;
 	}
 }
-?>

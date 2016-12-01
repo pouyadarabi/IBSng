@@ -143,5 +143,3 @@ function deletePrefixFromFormula($prefixes, $formula_name)
 {
     return str_replace($prefixes, "", $formula_name);
 }
-
-?>

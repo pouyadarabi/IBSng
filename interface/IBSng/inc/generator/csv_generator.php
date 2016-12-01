@@ -6,7 +6,7 @@ require_once (IBSINC."generator/header_generator.php");
 /**
  * used to crate CSV output
  */
-class OutputCSVGenerator extends Generator
+class OutputCSVGenerator extends MyGenerator
 {
 	/**
 	 * @access public
@@ -22,4 +22,3 @@ class OutputCSVGenerator extends Generator
 		$this->csv->doArray($array);
 	}
 }
-?>

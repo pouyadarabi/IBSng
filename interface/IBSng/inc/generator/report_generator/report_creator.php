@@ -255,4 +255,3 @@ class ReportCreator extends Creator {
 	      return NULL;
 	  }
 }
-?>

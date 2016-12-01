@@ -5,12 +5,6 @@
  */
 class HeaderGenerator
 {
-    /**
-     * @param $type type of attachment
-     * @param $filename name of your file
-     * @author hossein
-     * access public
-     */
     function assignHeader($type, $fileName = "")
     {
         header("Content-Type: text/{$type}");
@@ -18,5 +12,3 @@ class HeaderGenerator
 	    header("Content-Disposition: attachment; filename={$fileName}");	
     }
 }
-
-?>

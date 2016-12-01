@@ -6,7 +6,7 @@ define("MONEY_UNIT","UNITS");
 define("DEFAULT_LANGUAGE","en");
 
 
-define("IBSNG_VERSION","A1.24");
+define("IBSNG_VERSION","P1.24");
 
 define("IBS_ROOT","/usr/local/IBSng/");
 define("INTERFACE_ROOT",IBS_ROOT."interface/");
@@ -24,5 +24,3 @@ define("SMARTY_DIR",SMARTY_ROOT."libs/");
 define("XMLRPC_SERVER_IP","127.0.0.1");
 define("XMLRPC_SERVER_PORT","1235");
 define("XMLRPC_TIMEOUT",240);
-
-?>

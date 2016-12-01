@@ -36,4 +36,3 @@ class CSVReportGenerator extends ReportGenerator
 	}
 
 }
-?>

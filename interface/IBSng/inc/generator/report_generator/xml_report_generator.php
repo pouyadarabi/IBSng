@@ -40,4 +40,3 @@ class XmlReportGenerator extends ReportGenerator
 		print $this->xml_doc->dispose();
 	}
 }
-?>

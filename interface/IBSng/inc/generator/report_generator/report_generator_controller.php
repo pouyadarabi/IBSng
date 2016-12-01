@@ -85,4 +85,3 @@ function createSemiColonCSVGenerator()
 {
 	return new CSVReportGenerator(";");
 }
-?>

@@ -61,4 +61,3 @@ function linkGroupNameToGroupInfo ($group_name)
     $a_href = '<a href="IBSng/admin/group/group_info.php?group_name='.$group_name.'" class="link_in_body">';
     return $a_href.$group_name."</a>";
 }
-?>

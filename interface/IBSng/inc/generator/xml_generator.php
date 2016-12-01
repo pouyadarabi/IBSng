@@ -1,11 +1,11 @@
 <?php
 
 require_once (IBSINC."xml.php");
-require_once (IBSINC."generator/generator.php");
+require_once (IBSINC."generator/mygenerator.php");
 
 /**
  */
-class XmlGenerator extends Generator
+class XmlGenerator extends MyGenerator
 {
 	/**
 	 * @access public
@@ -31,4 +31,3 @@ class XmlGenerator extends Generator
 	}
 
 }
-?>
