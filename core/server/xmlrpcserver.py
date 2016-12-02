@@ -8,6 +8,7 @@ import BaseHTTPServer
 import sys
 import time
 
+from decimal import Decimal
 from core import main
 from core.server import handlers_manager
 from core.threadpool import thread_main
@@ -26,6 +27,14 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     """
 
     DEBUG=False
+    def convert_decimal_to_float(self,ob):
+        if isinstance(ob, Decimal):
+            return float(ob)
+        if isinstance(ob, (tuple, list)):
+            return [self.convert_decimal_to_float(v) for v in ob]
+        if isinstance(ob, dict):
+            return {k: self.convert_decimal_to_float(v) for k, v in ob.iteritems()}
+        return ob
 
     def do_POST(self):
         """Handles the HTTP POST request.
@@ -41,9 +50,11 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
             # generate response
             try:
+                #response = self._dispatch(method, params)
                 response = self._dispatch(method, params)
+                response = (self.convert_decimal_to_float(response),)
                 # wrap response in a singleton tuple
-                response = (response,)
+                #response = (response,)
             except XMLRPCFault:
                 # report exception back to server
                 response = xmlrpclib.dumps(
@@ -154,4 +165,3 @@ class XMLRPCServer(IBSServer):
         self.funcs = {}
         self.instance = None
         SocketServer.TCPServer.__init__(self, addr, requestHandler)
-

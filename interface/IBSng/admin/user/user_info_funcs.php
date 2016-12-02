@@ -66,5 +66,3 @@ function intShowSingleUserInfoInput(&$smarty)
 {
     $smarty->display("admin/user/single_user_info_input.tpl");
 }
-
-?>

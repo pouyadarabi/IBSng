@@ -123,10 +123,3 @@ function getEditTemplateArray()
         return $edit_templates;
     }
 }
-
-///////////////////////////////////////////////////
-
-
-
-
-?>
