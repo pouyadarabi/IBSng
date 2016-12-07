@@ -1,3 +1,4 @@
+#coding:utf-8
 """ IPy - class and tools for handling of IPv4 and IPv6 Addresses and Networks.
 
 $Id: IPy.py,v 1.1 2004/08/21 16:55:13 farshad_kh Exp $
