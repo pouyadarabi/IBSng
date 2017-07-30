@@ -4,6 +4,7 @@
 define("DATE_TYPE","gregorian"); //gregorian or jalali, this can be overide per request/session
 define("MONEY_UNIT","UNITS");
 define("DEFAULT_LANGUAGE","en");
+define("TimeZone","Asia/Tehran");
 
 
 define("IBSNG_VERSION","P1.24");
