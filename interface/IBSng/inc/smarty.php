@@ -7,7 +7,7 @@ class IBSSmarty extends Smarty
 {
    function IBSSmarty()
    {
-        $this->Smarty();
+        parent::__construct();
 
         $this->template_dir = SMARTY_ROOT.'templates/';
         $this->compile_dir = SMARTY_ROOT.'templates_c/';
