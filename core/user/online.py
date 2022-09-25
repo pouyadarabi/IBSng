@@ -34,8 +34,8 @@ class OnlineUsers:
         """
         global_unique_id = (ras_msg.getRasID(), ras_msg.getUniqueIDValue())
         
-        if self.ras_onlines.has_key( global_unique_id ):
-            current_online_user_obj = apply(self.getUserObjByUniqueID,global_unique_id)
+        if global_unique_id in self.ras_onlines:
+            current_online_user_obj = self.getUserObjByUniqueID(*global_unique_id)
             current_online_user_id = current_online_user_obj.getUserID()
             
             getLogConsole().log(current_online_user_obj.getUserRepr(), 
@@ -69,7 +69,7 @@ class OnlineUsers:
             return True if user with "user_id" is online
             better called when self.loading_user lock held
         """
-        return self.user_onlines.has_key(user_id)
+        return user_id in self.user_onlines
 
     def getUserObj(self,user_id):
         """
@@ -160,7 +160,7 @@ class OnlineUsers:
 
     def __killUsersInCanStayOnlineResult(self,user_obj,result):
         kill_dic = result.getKillDic()
-        instances = kill_dic.keys()
+        instances = list(kill_dic.keys())
 
         instances.sort()
         instances.reverse() #kill downward, prevent from instance shift
@@ -173,7 +173,7 @@ class OnlineUsers:
         """
             check ibs current list of online users, by asking ras to say if user is online or not
         """
-        for user_id in self.user_onlines.keys():
+        for user_id in list(self.user_onlines.keys()):
             self.loading_user.loadingStart(user_id)
             try:
                 try:
@@ -224,10 +224,10 @@ class OnlineUsers:
         if  credit < 0 : #neg credit checker
             toLog("Found User with negative credit %s:%s"%(user_obj.getUserID(), credit), LOG_ERROR)
             
-            for instance in xrange(1,user_obj.instances+1):
+            for instance in range(1,user_obj.instances+1):
                 instance_info = user_obj.getInstanceInfo(instance)
 
-                if not instance_info.has_key("neg_credit_killed"):
+                if "neg_credit_killed" not in instance_info:
                     user_obj.setKillReason(instance,errorText("USER_LOGIN","KILLED_BY_NEG_CREDIT_CHECKER",False))
                     
                 instance_info["neg_credit_killed"] = True                   
@@ -238,10 +238,10 @@ class OnlineUsers:
         """
             check and re-kill users that has been killed previously
         """
-        for instance in xrange(1,user_obj.instances+1):
+        for instance in range(1,user_obj.instances+1):
             instance_info = user_obj.getInstanceInfo(instance)
-            if instance_info.has_key("killed"):
-                if instance_info.has_key("seen_by_killed_checker"):
+            if "killed" in instance_info:
+                if "seen_by_killed_checker" in instance_info:
                     toLog("Killed Checker Found User:Instance %s:%s Info:%s"%(user_obj.getUserID(), instance, instance_info), LOG_ERROR)
                     instance_info["seen_by_killed_checker"] += 1
                     user_obj.getTypeObj().killInstance(instance)
@@ -264,7 +264,7 @@ class OnlineUsers:
         if no_commit:
             ras_msg["no_commit"]=True
             
-        return apply(method,[ras_msg])
+        return method(*[ras_msg])
 
     def __createForceLogoutRasMsg(self,user_obj,instance):
         instance_info=user_obj.getInstanceInfo(instance)
@@ -342,7 +342,7 @@ class OnlineUsers:
             Kill all online users
             kill_or_clear(boolean): if set to true, kill the users, else, clear the users
         """
-        for user_id in self.user_onlines.keys():
+        for user_id in list(self.user_onlines.keys()):
             self.loading_user.loadingStart(user_id)
             try:
                 try:
@@ -350,7 +350,7 @@ class OnlineUsers:
                 except KeyError: #he's no longer online
                     continue
                     
-                for instance in xrange(user_obj.instances, 0, -1): #prevent from instance shifts
+                for instance in range(user_obj.instances, 0, -1): #prevent from instance shifts
                     try:
                         if kill_or_clear:
                             user_obj.setKillReason(instance,kill_reason)

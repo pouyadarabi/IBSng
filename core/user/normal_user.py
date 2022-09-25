@@ -13,7 +13,7 @@ class NormalUser(user_type.UserType):
 
 #############################################
     def isPersistentLanClient(self,instance):
-        return self.user_obj.getInstanceInfo(instance)["attrs"].has_key("persistent_lan") \
+        return "persistent_lan" in self.user_obj.getInstanceInfo(instance)["attrs"] \
                and self.user_obj.getInstanceInfo(instance)["attrs"]["persistent_lan"]
 
 ##############################################
@@ -22,7 +22,7 @@ class NormalUser(user_type.UserType):
             return (rx_bytes,tx_bytes,rx_rate,tx_rate) tuple of send/receive of "instance" of user
         """
         #in/out bytes is not meaningful before start accounting
-        if self.user_obj.getInstanceInfo(instance).has_key("start_accounting"):
+        if "start_accounting" in self.user_obj.getInstanceInfo(instance):
             user_msg=self.user_obj.createUserMsg(instance,"GET_INOUT_BYTES")
             return user_msg.send()
         else:
@@ -33,9 +33,9 @@ class NormalUser(user_type.UserType):
             return ip address of "instance" of user
         """
         user_attrs=self.user_obj.getInstanceInfo(instance)["attrs"]
-        if user_attrs.has_key("remote_ip"):
+        if "remote_ip" in user_attrs:
             return user_attrs["remote_ip"]
-        elif user_attrs.has_key("ip_pool_assigned_ip"):
+        elif "ip_pool_assigned_ip" in user_attrs:
             return user_attrs["ip_pool_assigned_ip"]
         else:
             raise GeneralException(errorText("USER_LOGIN","USER_IP_NOT_AVAILABLE")%self.user_obj.getUserID())
@@ -79,7 +79,7 @@ class NormalUser(user_type.UserType):
         if not instance_info["successful_auth"]: #Failed Authentication
             return instance_info["login_time"]
 
-        elif instance_info.has_key("logout_ras_msg"):
+        elif "logout_ras_msg" in instance_info:
             return instance_info["logout_ras_msg"].getTime()
         else:
             return time.time()
@@ -96,7 +96,7 @@ class NormalUser(user_type.UserType):
             online users report
         """
         (in_bytes,out_bytes,in_rate,out_rate)=self.getInOutBytes(instance)
-        if self.user_obj.getInstanceInfo(instance)["attrs"].has_key("username"):
+        if "username" in self.user_obj.getInstanceInfo(instance)["attrs"]:
             normal_username = self.user_obj.getInstanceInfo(instance)["attrs"]["username"]
         elif self.user_obj.getUserAttrs().hasAttr("normal_username"):
             normal_username = self.user_obj.getUserAttrs()["normal_username"]

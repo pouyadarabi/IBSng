@@ -70,8 +70,8 @@ class ChargeRule:
             2 if ras is __not__ wildcard and port is wildcard
             1 if port is __not__ wildcard and ras is wildcard
             0 if both are wildcards
-        """     
-    
+        """
+
         ret_val=0
         if self.ras_id!=self.ALL:
             ret_val+=2
@@ -85,28 +85,28 @@ class ChargeRule:
     def start(self,user_obj,instance):
         """
             called when this rule starts for user_obj
-            
+
             user_obj (User.User instance): object of user that this rule change for
-            instance (integer): instance number of user 
+            instance (integer): instance number of user
         """
         user_obj.charge_info.rule_start[instance-1]=time.time()
 
     def end(self,user_obj,instance):
         """
-            called when this rule ends for user_obj     
-            
-            user_obj (User.User instance): object of user that this rule change for         
-            instance (integer): instance number of user             
+            called when this rule ends for user_obj
+
+            user_obj (User.User instance): object of user that this rule change for
+            instance (integer): instance number of user
         """
         user_obj.charge_info.credit_prev_usage_instance[instance-1]+=self.charge_obj.calcInstanceRuleCreditUsage(user_obj,instance,False)
 
     def hasOverlap(self,new_charge_rule):
         """
-            new_charge_rule (ChargeRule instance): 
-        
+            new_charge_rule (ChargeRule instance):
+
             check wheter this rule has overlap with new_charge_rule
             return False when there is no overlap and True when overlap found
-        
+
         """
 
         port_match=False
@@ -115,7 +115,7 @@ class ChargeRule:
                 if port in new_charge_rule.ports:
                     port_match=True
                     break
-                    
+
             if port_match:
                 if self.interval.hasOverlap(new_charge_rule.interval):
                     return True
@@ -134,13 +134,13 @@ class ChargeRule:
             return False if this rule is not applicable for _time and user_obh
             otherwise returns applicability amount of this rule
         """
-	if secondsFromMorning(_time) == 23*3600+59*60+59:
-	    _time += 1
-	
-        if not self.interval.containsTime(_time):
-            return False
-        return self.anytimeAppliable(user_obj, instance)
-        
+        if secondsFromMorning(_time) == 23*3600+59*60+59:
+            _time += 1
+
+            if not self.interval.containsTime(_time):
+                return False
+            return self.anytimeAppliable(user_obj, instance)
+
 
     def anytimeAppliable(self,user_obj,instance):
         """
@@ -149,7 +149,7 @@ class ChargeRule:
         """
         if self.ras_id==self.ALL and self.ALL in self.ports:
             return True
-        
+
         (ras_id,port)=user_obj.getGlobalUniqueID(instance)
         if self.ras_id==ras_id or self.ras_id==self.ALL:
             if port in self.ports or self.ALL in self.ports:

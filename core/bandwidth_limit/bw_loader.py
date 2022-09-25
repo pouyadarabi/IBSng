@@ -64,40 +64,40 @@ class BWLoader:
 #############################################################
     def loadAll(self):
         interface_ids=self.__getAllInterfaceIDs()
-        map(self.loadInterface,interface_ids)
-        map(self.loadNodesByInterfaceID,interface_ids)
-        map(self.loadLeavesByInterfaceID,interface_ids)
+        list(map(self.loadInterface,interface_ids))
+        list(map(self.loadNodesByInterfaceID,interface_ids))
+        list(map(self.loadLeavesByInterfaceID,interface_ids))
         self.loadAllStaticIPs()
 
     def __getAllInterfaceIDs(self):
         int_ids_db=self.__getAllInterfaceIDsDB()
-        return map(lambda _dic:_dic["interface_id"],int_ids_db) 
+        return [_dic["interface_id"] for _dic in int_ids_db] 
     
     def __getAllInterfaceIDsDB(self):
         return db_main.getHandle().get("bw_interface","",0,-1,"interface_id",["interface_id"])
     
     def loadNodesByInterfaceID(self,interface_id):
         node_ids=self.__getNodesWithInterfaceID(interface_id)
-        map(self.loadNode,node_ids)
+        list(map(self.loadNode,node_ids))
 
     def __getNodesWithInterfaceID(self,interface_id):
         node_ids_db=db_main.getHandle().get("bw_node","",0,-1,"node_id",["node_id"])
-        return map(lambda _dic:_dic["node_id"],node_ids_db)
+        return [_dic["node_id"] for _dic in node_ids_db]
 
     def loadLeavesByInterfaceID(self,interface_id):
         leaf_ids=self.__getLeavesWithInterfaceID(interface_id)
-        map(self.loadLeaf,leaf_ids)
+        list(map(self.loadLeaf,leaf_ids))
 
     def __getLeavesWithInterfaceID(self,interface_id):
         leaf_ids_db=db_main.getHandle().get("bw_leaf","",0,-1,"leaf_id",["leaf_id"])
-        return map(lambda _dic:_dic["leaf_id"],leaf_ids_db)
+        return [_dic["leaf_id"] for _dic in leaf_ids_db]
 
 ##############################################################
     def interfaceNameExists(self,interface_name):
-        return self.__interfaces_name.has_key(interface_name)
+        return interface_name in self.__interfaces_name
 
     def getAllInterfaceNames(self):
-        return self.__interfaces_name.keys()
+        return list(self.__interfaces_name.keys())
 
     def loadInterface(self,interface_id):
         interface_obj=self.__createInterfaceObj(interface_id)
@@ -122,7 +122,7 @@ class BWLoader:
 
 ###############################################################
     def getAllNodeIDs(self):
-        return self.__nodes_id.keys()
+        return list(self.__nodes_id.keys())
 
     def loadNode(self,node_id):
         node_obj=self.__createNodeObj(node_id)
@@ -148,10 +148,10 @@ class BWLoader:
     
 ################################################################
     def leafNameExists(self,leaf_name):
-        return self.__leaves_name.has_key(leaf_name)
+        return leaf_name in self.__leaves_name
 
     def getAllLeafNames(self):
-        return self.__leaves_name.keys()
+        return list(self.__leaves_name.keys())
 
     def loadLeaf(self,leaf_id):
         leaf_obj=self.__createLeafObj(leaf_id)
@@ -184,7 +184,7 @@ class BWLoader:
 
     def __getleafServicesObjs(self,leaf_id):
         services_infos=self.__getLeafServicesDB(leaf_id)
-        return map(self.__createLeafServicesObj,services_infos)
+        return list(map(self.__createLeafServicesObj,services_infos))
 
     def __createLeafServicesObj(self,service_info):
         return LeafService(service_info["leaf_service_id"],service_info["leaf_id"],service_info["protocol"],service_info["filter"],service_info["rate_kbits"],service_info["ceil_kbits"])
@@ -197,7 +197,7 @@ class BWLoader:
     ###########################################################
     def loadAllStaticIPs(self):
         static_ip_ids=self.__getAllStaticIPIDs()
-        map(self.loadStaticIP,static_ip_ids)
+        list(map(self.loadStaticIP,static_ip_ids))
 
     def loadStaticIP(self,static_ip_id):
         static_ip_obj=self.__createStaticIPObj(static_ip_id)
@@ -209,18 +209,18 @@ class BWLoader:
         del(self.__static_ips_ip[static_ip_obj.getIP()])
 
     def getAllStaticIPs(self):
-        return self.__static_ips_ip.keys()
+        return list(self.__static_ips_ip.keys())
 
     def runOnAllStaticIPs(self,function):
         """
             function(function instance): function to be called with static_ip_obj as argument
         """
-        map(function,self.__static_ips_id.values())
+        list(map(function,list(self.__static_ips_id.values())))
 
 
     def __getAllStaticIPIDs(self):
         ids_db=db_main.getHandle().get("bw_static_ip","",0,-1,"bw_static_ip_id",["bw_static_ip_id"])
-        return map(lambda x:x["bw_static_ip_id"],ids_db)
+        return [x["bw_static_ip_id"] for x in ids_db]
 
     def __keepStaticIP(self,static_ip_obj):
         self.__static_ips_ip[static_ip_obj.getIP()]=static_ip_obj

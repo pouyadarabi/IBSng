@@ -63,7 +63,7 @@ def getAllIPs(ip_addr):
     if ip_addr.find("/")==-1:
         return [ip_addr]
     else:
-        return map(str,IPy.IP(ip_addr))
+        return list(map(str,IPy.IP(ip_addr)))
 
 #########################################
 class IP:

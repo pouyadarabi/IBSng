@@ -15,7 +15,7 @@ class UtilHandler(handler.Handler):
 
     def multiStrGetAll(self,request):
         request.checkArgs("str","left_pad")
-        return map(lambda x:x,MultiStr(request["str"],request["left_pad"]))
+        return [x for x in MultiStr(request["str"],request["left_pad"])]
 
     def runDebugCode(self,request):
         request.needAuthType(request.ADMIN)
@@ -24,7 +24,7 @@ class UtilHandler(handler.Handler):
         if not requester.isGod():
             return "Access Denied"
 
-        if request.has_key("no_output"):
+        if "no_output" in request:
             self.__execCode(request)
             return True
         else:
@@ -40,7 +40,7 @@ class UtilHandler(handler.Handler):
                 self.__execCode(request)
             except:
                 (_type,value,tback)=sys.exc_info()
-                print "".join(traceback.format_exception(_type, value, tback))
+                print("".join(traceback.format_exception(_type, value, tback)))
             
             sys.stdout.flush()
             os._exit(0)
@@ -63,7 +63,7 @@ class UtilHandler(handler.Handler):
 
 
     def __execCode(self, request):
-        if request.has_key("read_from_file"):
+        if "read_from_file" in request:
             module_name = os.path.basename(request["command"])[:-3]
             directory = os.path.dirname(request["command"])
             (file,pathname,desc)=imp.find_module(module_name,[directory])

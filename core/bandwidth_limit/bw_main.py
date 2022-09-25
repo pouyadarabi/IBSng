@@ -63,19 +63,15 @@ def getActionsManager():
 
 #################
 def registerInParents():
-    map(lambda node_id:getLoader().getNodeByID(node_id).registerInParent(),
-        getLoader().getAllNodeIDs())
+    list([getLoader().getNodeByID(node_id).registerInParent() for node_id in getLoader().getAllNodeIDs()])
 
-    map(lambda leaf_name:getLoader().getLeafByName(leaf_name).registerInParent(),
-        getLoader().getAllLeafNames())
+    list([getLoader().getLeafByName(leaf_name).registerInParent() for leaf_name in getLoader().getAllLeafNames()])
 
 def initTree():
-    map(lambda interface_name:getLoader().getInterfaceByName(interface_name).createTree(),
-        getLoader().getAllInterfaceNames())
+    list([getLoader().getInterfaceByName(interface_name).createTree() for interface_name in getLoader().getAllInterfaceNames()])
 
 def applyStatics():
-    map(lambda ip:getLoader().getStaticIPByIP(ip).apply(),
-        getLoader().getAllStaticIPs())
+    list([getLoader().getStaticIPByIP(ip).apply() for ip in getLoader().getAllStaticIPs()])
 
 ####################
 def setReCreateTreeSignalHandler():

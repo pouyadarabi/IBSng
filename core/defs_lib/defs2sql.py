@@ -2,7 +2,7 @@
 
 import sys
 sys.path.append("/usr/local/IBSng")
-from def_var import RawDefVar
+from .def_var import RawDefVar
 
 class Def2Sql:
     def __init__(self,python_file):
@@ -54,7 +54,7 @@ def checkArgs():
         sys.exit(1)
 
 def printUsage():
-    print """
+    print("""
 defs2sql.py: Utility to convert IBS python defs file to sql script
 Usage: defs2sql.py <-i|-u> <python_file.py> <sql_file.sql>
        -i : use insert queries
@@ -62,7 +62,7 @@ Usage: defs2sql.py <-i|-u> <python_file.py> <sql_file.sql>
                
        python_file.py : defs variables in python format
        sql_file.sql : sql scripts to be created
-"""
+""")
 
 
 def write2sqlfile(query):

@@ -51,7 +51,7 @@ class Time:
             return completed time_str on success
         """
         time_str=self.__completeTime(time_str)
-        (hour,minute,second)=map(int,time_str.split(":"))
+        (hour,minute,second)=list(map(int,time_str.split(":")))
         if hour>24 or hour<0 or minute>60 or minute<0 or second>60 or second<0:
             raise GeneralException(errorText("GENERAL","TIME_OUT_OF_RANGE"))
         return (time_str,hour,minute,second)

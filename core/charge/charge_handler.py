@@ -43,11 +43,11 @@ class ChargeHandler(handler.Handler):
         charge_names=charge_main.getLoader().getAllChargeNames()
 
         def filter_func(charge_name):
-            if request.has_key("charge_type") and charge_main.getLoader().getChargeByName(charge_name).getType()!=request["charge_type"]:
+            if "charge_type" in request and charge_main.getLoader().getChargeByName(charge_name).getType()!=request["charge_type"]:
                 return False
             return requester.canUseCharge(charge_name) 
             
-        charge_names = filter(filter_func,charge_names)
+        charge_names = list(filter(filter_func,charge_names))
 
         sorted_charge_names = SortedList(charge_names)
         sorted_charge_names.sort(False)
@@ -55,9 +55,9 @@ class ChargeHandler(handler.Handler):
 
     def getChargeInfo(self,request):
         request.needAuthType(request.ADMIN)
-        if request.has_key("charge_name"):
+        if "charge_name" in request:
             charge_obj=charge_main.getLoader().getChargeByName(request["charge_name"])
-        elif request.has_key("charge_id"):
+        elif "charge_id" in request:
             charge_obj=charge_main.getLoader().getChargeByID(to_int(request["charge_id"],"charge id"))
         else:
             request.raiseIncompleteRequest("charge_name")
@@ -118,7 +118,7 @@ class ChargeHandler(handler.Handler):
         request.checkArgs("charge_name")
         request.getAuthNameObj().canUseCharge(request["charge_name"])
         charge_rules=charge_main.getLoader().getChargeByName(request["charge_name"]).getRules()
-        infos=map(lambda charge_rule_obj:charge_rule_obj.getInfo(),charge_rules.values())
+        infos=[charge_rule_obj.getInfo() for charge_rule_obj in list(charge_rules.values())]
         sorted=SortedList(infos)
         sorted.sortByPostText('["rule_id"]',0)
         return sorted.getList()

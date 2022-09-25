@@ -53,7 +53,7 @@ class ThreadPoolWrapper:
             toLog("ThreadWrapper %s: Queued job %s %s"%(self.getName(), method, args), LOG_DEBUG)
             threadpool.getThreadPool().logThreads()
     
-        self.__queue.append([method,args, long(time.time())])
+        self.__queue.append([method,args, int(time.time())])
     
     def threadReleased(self):
         """

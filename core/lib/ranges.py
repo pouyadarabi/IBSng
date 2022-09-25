@@ -46,7 +46,7 @@ class RangeString:
             create a list from "str_list" strings, that each member supports iteration.
             this is done, by wrapping ranges into "Range" instances and normal strings into a tuple
         """
-        return map(self.__createIterator,str_list)
+        return list(map(self.__createIterator,str_list))
 
     def __createIterator(self,_str):
         """
@@ -100,7 +100,7 @@ class Range:
             self.__findRangeStrLength(start,end)
             self.range=self.__leftPadIntRange(int_range)
         else:
-            self.range=map(str,int_range)
+            self.range=list(map(str,int_range))
 
     def __iter__(self):
         return iter(self.range)
@@ -122,7 +122,7 @@ class Range:
         """
             create self.range from start and end
         """
-        return range(start,end+1)
+        return list(range(start,end+1))
 
     def __findStartEnd(self,start_str,end_str):
         """
@@ -178,4 +178,4 @@ class Range:
             left pad nums in self.int_range with 0 until their length is self.str_length
             save em into self.range
         """
-        return map(self.__leftPadNum,int_range)
+        return list(map(self.__leftPadNum,int_range))

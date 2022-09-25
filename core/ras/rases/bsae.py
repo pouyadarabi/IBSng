@@ -61,14 +61,14 @@ class BSAERas(GeneralUpdateRas):
         """
             remove stale onlines here
         """
-        for port in self.internet_onlines.keys():
+        for port in list(self.internet_onlines.keys()):
             if self.internet_onlines[port]["last_update"] < time.time() - int(self.getAttribute("bsae_update_accounting_interval"))* 60 * 10:
                 del(self.internet_onlines[port])
                 
 ####################################
     def isOnline(self, user_msg):
         port=user_msg["port"]
-        return self.internet_onlines.has_key(port) and \
+        return port in self.internet_onlines and \
                self.internet_onlines[port]["last_update"]>=time.time()-int(self.getAttribute("bsae_update_accounting_interval"))*60
 
 ###################################
@@ -172,7 +172,7 @@ class BSAERas(GeneralUpdateRas):
     def __internetAcctUpdate(self, ras_msg):
         req_pkt = ras_msg.getRequestPacket()
 
-        if not req_pkt.has_key("User-Name"):
+        if "User-Name" not in req_pkt:
             return
         
         self.__addUniqueIDToRasMsg(ras_msg)
@@ -206,7 +206,7 @@ class BSAERas(GeneralUpdateRas):
         self.internet_onlines[port]["in_rate"]=0
         self.internet_onlines[port]["out_rate"]=0
 
-        if pkt.has_key("Acct-Output-Octets"):
+        if "Acct-Output-Octets" in pkt:
             start_in_bytes = pkt["Acct-Output-Octets"][0]
             start_out_bytes = pkt["Acct-Input-Octets"][0]
         else:
@@ -225,7 +225,7 @@ class BSAERas(GeneralUpdateRas):
         if port in self.internet_onlines and update_pkt["User-Name"][0]==self.internet_onlines[port]["username"]:
             now = time.time()
 
-            if update_pkt.has_key("Acct-Output-Octets"):
+            if "Acct-Output-Octets" in update_pkt:
                 
                 out_bytes = update_pkt["Acct-Input-Octets"][0] + 2**32 * update_pkt["Acct-Input-Gigawords"][0]
                 in_bytes = update_pkt["Acct-Output-Octets"][0] + 2**32 * update_pkt["Acct-Output-Gigawords"][0]

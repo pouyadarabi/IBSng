@@ -39,7 +39,7 @@ class RadiusAttrsAttrUpdater(AttrUpdater):
         groups=re.findall("(.+)=\"(.*)\"",radius_attrs)
         attrs={}
         for group in groups:
-            if not rad_main.getDictionary().has_key(group[0]):
+            if group[0] not in rad_main.getDictionary():
                 raise GeneralException(errorText("USER_ACTIONS","INVALID_RADIUS_ATTRIBUTE")%group[0])
             attrs[group[0]]=group[1]
         self.useGenerateQuery({"radius_attrs":pickle.dumps(attrs)})
@@ -54,7 +54,7 @@ class RadiusAttrsAttrUpdater(AttrUpdater):
 class RadiusAttrsAttrHolder(AttrHolder):
     def __init__(self,radius_attrs):
         self.attr_dic=pickle.loads(radius_attrs)
-        self.attr_str="\n".join(map(lambda attr:"%s=\"%s\""%(attr,self.attr_dic[attr]),self.attr_dic))
+        self.attr_str="\n".join(["%s=\"%s\""%(attr,self.attr_dic[attr]) for attr in self.attr_dic])
 
     def getParsedDic(self):
         return {"radius_attrs":self.attr_str}

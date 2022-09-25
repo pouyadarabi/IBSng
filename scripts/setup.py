@@ -4,6 +4,7 @@ import sys
 import os
 import stat
 import re
+import importlib
 
 def cursesMain(stdscr):
     setupMainWindow(stdscr)
@@ -130,7 +131,7 @@ def testDB(stdscr,menu,log):
 
 def getDBConnection():
     from core import db_conf
-    reload(db_conf)
+    importlib.reload(db_conf)
     import pg
     con=pg.connect("IBSng",db_conf.DB_HOST,db_conf.DB_PORT,None,None,db_conf.DB_USERNAME,db_conf.DB_PASSWORD)
     return con
@@ -477,7 +478,7 @@ class MenuWindow:
                 continue
             break
         if method!=None:
-            return apply(method,[stdscr,menu,log])
+            return method(*[stdscr,menu,log])
         else:
             return ch
 
@@ -507,7 +508,7 @@ class LogWindow:
         """
             write line(s) to log window
         """
-        map(self.__write,_str.split("\n"))      
+        list(map(self.__write,_str.split("\n")))      
     
     def __write(self,_str):
         self.window.addstr(self.lasty,0,_str)

@@ -18,7 +18,7 @@ class UserActions:
         """
             return a list of LoadedUser instances for users with ids "user_ids"
         """
-        user_ids=map(lambda x:to_int(x,"user id"),user_ids)
+        user_ids=[to_int(x,"user id") for x in user_ids]
         loaded_users=user_main.getUserPool().getUsersByID(user_ids, keep_order)
         return loaded_users
 
@@ -35,7 +35,7 @@ class UserActions:
         """
             return a list of LoadedUser instances for users with normal_usernames "normal_usernames"
         """
-        loaded_users=map(user_main.getUserPool().getUserByNormalUsername,normal_usernames)
+        loaded_users=list(map(user_main.getUserPool().getUserByNormalUsername,normal_usernames))
         return loaded_users
     
     def getUserInfoByNormalUsername(self,normal_username,date_type):
@@ -51,7 +51,7 @@ class UserActions:
         """
             return a list of LoadedUser instances for users with voip_usernames "voip_usernames"
         """
-        loaded_users=map(user_main.getUserPool().getUserByVoIPUsername,voip_usernames)
+        loaded_users=list(map(user_main.getUserPool().getUserByVoIPUsername,voip_usernames))
         return loaded_users
 
 ########################################################
@@ -161,7 +161,7 @@ class UserActions:
             generate "_count" number of user ids and return them in a list
             _count(integer): count of user ids that will be generated
         """
-        return map(lambda x:self.__getNewUserID(),range(_count))
+        return [self.__getNewUserID() for x in range(_count)]
         
     def __getNewUserID(self):
         """
@@ -220,7 +220,7 @@ class UserActions:
                 raise GeneralException(errorText("USER_ACTIONS","CAN_NOT_NEGATE_CREDIT")%(loaded_user.getUserID(),loaded_user.getBasicUser().getCredit()))
             
     def __changeCreditQuery(self,user_ids,credit):
-        where_clause=" or ".join(map(lambda user_id:"user_id = %s"%user_id,user_ids))
+        where_clause=" or ".join(["user_id = %s"%user_id for user_id in user_ids])
         return ibs_db.createUpdateQuery("users",{"credit":"credit+%s"%credit},where_clause)
 
 ######################################################
@@ -231,7 +231,7 @@ class UserActions:
         """
         (ibs_query, changed_attr_updaters, deleted_attr_updaters, users) = self.updateUserAttrsQuery(loaded_users,admin_obj,attrs,to_del_attrs)
         ibs_query.runQuery()
-        self.broadcastChange(users.iterkeys())
+        self.broadcastChange(iter(users.keys()))
         self.__callPostUpdates(changed_attr_updaters,deleted_attr_updaters)
 
     def updateUserAttrsQuery(self,loaded_users,admin_obj,attrs,to_del_attrs):
@@ -278,7 +278,7 @@ class UserActions:
             normally user_pool should be told to refresh the user
         """
         userChanged=user_main.getUserPool().userChanged
-        map(userChanged,user_ids)
+        list(map(userChanged,user_ids))
 #########################################################
     def getUserInfosFromLoadedUsers(self,loaded_users,date_type):
         """
@@ -290,7 +290,7 @@ class UserActions:
         def addToUserInfo(loaded_user):
             user_infos[str(loaded_user.getUserID())]=loaded_user.getUserInfo(date_type) #python xmlrpc required keys not to be integers
             
-        map(addToUserInfo,loaded_users)
+        list(map(addToUserInfo,loaded_users))
         return user_infos
 
 ##########################################################
@@ -314,7 +314,7 @@ class UserActions:
         """
         self.__delUserCheckInput(user_ids,comment,del_connections,del_audit_logs,admin_name,remote_address)
         admin_obj=admin_main.getLoader().getAdminByName(admin_name)
-        map(lambda user_id:user_main.getUserPool().addToBlackList,user_ids)
+        list(map(lambda user_id:user_main.getUserPool().addToBlackList,user_ids))
         try:
             loaded_users=self.getLoadedUsersByUserID(user_ids)
             total_credit=self.__delUserCheckUsers(loaded_users)
@@ -333,9 +333,9 @@ class UserActions:
             self.__delUserQuery(ibs_query,user_ids,del_connections,del_audit_logs)
             ibs_query.runQuery()
             admin_obj.consumeDeposit(admin_deposit)
-            map(user_main.getUserPool().userChanged,user_ids)
+            list(map(user_main.getUserPool().userChanged,user_ids))
         finally:
-            map(lambda user_id:user_main.getUserPool().removeFromBlackList,user_ids)
+            list(map(lambda user_id:user_main.getUserPool().removeFromBlackList,user_ids))
 
         self.__postDelUser(loaded_users)
 
@@ -435,7 +435,7 @@ class UserActions:
         """
         user_ids=db_main.getHandle().get("users","%s=%s"%(attr_name,attr_value),
                                          0,-1,("user_id",True),["user_id"])
-        return map(lambda dic:dic["user_id"],user_ids)
+        return [dic["user_id"] for dic in user_ids]
 ################################################################
     def getUserIDsWithAttr(self,attr_name,attr_value):
         """
@@ -444,7 +444,7 @@ class UserActions:
         user_ids=db_main.getHandle().get("user_attrs","attr_name=%s and attr_value=%s"%(dbText(attr_name),dbText(attr_value)),
                                          0,-1,("user_id",True),["user_id"])
                 
-        return map(lambda dic:dic["user_id"],user_ids)
+        return [dic["user_id"] for dic in user_ids]
 #################################################################
     def getPersistentLanUsers(self,ras_id):
         """
@@ -527,7 +527,7 @@ class UserActions:
         credit=loaded_user.getBasicUser().getCredit()
         approx=[]
     
-        for rule_obj in charge_obj.getRules().itervalues():
+        for rule_obj in charge_obj.getRules().values():
             cpm=0
             if rule_obj.cpm:
                 cpm += rule_obj.cpm

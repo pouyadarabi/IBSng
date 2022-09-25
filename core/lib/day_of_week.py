@@ -67,7 +67,7 @@ class DayOfWeekIntContainer:
             day_of_weeks: list of DayOfWeekInt instances
         """
         self.day_of_weeks=[]
-        apply(self.append,day_of_weeks)
+        self.append(*day_of_weeks)
 
     def __iter__(self):
         return iter(self.day_of_weeks)
@@ -93,4 +93,4 @@ class DayOfWeekIntContainer:
         """
             return a list of day names, that we contain
         """
-        return map(lambda x:x.getDayString(),self.day_of_weeks)
+        return [x.getDayString() for x in self.day_of_weeks]

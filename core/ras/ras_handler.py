@@ -103,7 +103,7 @@ class RasHandler(handler.Handler):
         request.checkArgs("ras_ip")
         creator_obj=request.getAuthNameObj()
         creator_obj.canDo("GET RAS INFORMATION")
-        sorted=SortedList(ras_main.getLoader().getRasByIP(request["ras_ip"]).getPorts().values())
+        sorted=SortedList(list(ras_main.getLoader().getRasByIP(request["ras_ip"]).getPorts().values()))
         sorted.sortByPostText("[\"port_name\"]",0)
         return sorted.getList()
     
@@ -190,7 +190,7 @@ class RasHandler(handler.Handler):
         request.getAuthNameObj().canDo("GET RAS INFORMATION")
         request.checkArgs("ras_ip")
         ippool_ids=ras_main.getLoader().getRasByIP(request["ras_ip"]).getIPpools()
-        ippool_names=map(lambda ippool_id:ippool_main.getLoader().getIPpoolByID(ippool_id).getIPpoolName(),ippool_ids)
+        ippool_names=[ippool_main.getLoader().getIPpoolByID(ippool_id).getIPpoolName() for ippool_id in ippool_ids]
         return ippool_names
 
         

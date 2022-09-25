@@ -53,7 +53,7 @@ class BWManager:
         infos={}
         leaves=copy.copy(self.user_leaves)
         for ip in leaves:
-            infos[ip]=map(lambda uleaf:uleaf.getInfo(),leaves[ip])
+            infos[ip]=[uleaf.getInfo() for uleaf in leaves[ip]]
         return infos
 
 class UpdateCounters(periodic_events.PeriodicEvent):

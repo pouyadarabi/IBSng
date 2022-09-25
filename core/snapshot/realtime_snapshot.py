@@ -77,9 +77,9 @@ class BWGenericSnapShotManager(GenericSnapShotManager):
     def update(self):
         onlines = user_main.getOnline().getOnlineUsers()
         state = {}
-        for user_obj in onlines.itervalues():
+        for user_obj in list(onlines.values()):
             if user_obj.isNormalUser():
-                for instance in xrange(1,user_obj.instances+1):
+                for instance in range(1,user_obj.instances+1):
                         try:
                             _in,out,in_rate,out_rate = user_obj.getTypeObj().getInOutBytes(instance)
                             self.callUpdateMethods(user_obj, instance, _in, out, in_rate, out_rate)
@@ -92,9 +92,9 @@ class OnlineSnapShotManager(GenericSnapShotManager):
     def update(self):
         onlines = user_main.getOnline().getOnlineUsers()
         state = {}
-        for user_obj in onlines.itervalues():
+        for user_obj in list(onlines.values()):
             if user_obj.isNormalUser():
-                for instance in xrange(1,user_obj.instances+1):
+                for instance in range(1,user_obj.instances+1):
                         try:
                             _in,out,in_rate,out_rate = user_obj.getTypeObj().getInOutBytes(instance)
                             self.callUpdateMethods(user_obj, instance, _in, out, in_rate, out_rate)

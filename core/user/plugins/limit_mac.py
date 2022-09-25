@@ -36,7 +36,7 @@ class LimitMacPlugin(user_plugin.AttrCheckUserPlugin):
 class LimitMacAttrUpdater(AttrUpdater):
 
     def changeInit(self,macs):
-        mac_list=map(lambda mac:mac.strip(),MultiStr(macs))
+        mac_list=[mac.strip() for mac in MultiStr(macs)]
 
         for mac in mac_list:
             if not maclib.checkMacAddress(mac):

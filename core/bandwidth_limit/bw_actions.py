@@ -27,8 +27,8 @@ class BWActions:
 
     def getSubTree(self,node_id):
         node_obj=bw_main.getLoader().getNodeByID(node_id)
-        children=map(lambda child:self.getSubTree(child),node_obj.getChildren())
-        leaf_children=map(lambda leaf:bw_main.getLoader().getLeafByID(leaf).getLeafName(),node_obj.getLeafChildren())
+        children=[self.getSubTree(child) for child in node_obj.getChildren()]
+        leaf_children=[bw_main.getLoader().getLeafByID(leaf).getLeafName() for leaf in node_obj.getLeafChildren()]
         return [node_id,children,leaf_children]
 
     ##############################################

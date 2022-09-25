@@ -5,8 +5,8 @@ class UserMsgDispatcher:
     def dispatch(self,user_msg):
         dispatch_methods={"GET_INOUT_BYTES":self._getInOutBytes,"KILL_USER":self._killUser,"SIMPLE_BANDWIDTH_LIMIT":self._applySimpleBwLimit,"IS_ONLINE":self._isOnline}
         action=user_msg.getAction()
-        if dispatch_methods.has_key(action):
-            return apply(dispatch_methods[action],[user_msg])
+        if action in dispatch_methods:
+            return dispatch_methods[action](*[user_msg])
         else:
             return self._dispatchByRas(user_msg)
 

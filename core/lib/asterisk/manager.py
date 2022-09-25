@@ -20,7 +20,7 @@ class AsteriskManager:
         self.secret=secret
         self.timeout=timeout
         
-        self.action_id=0L
+        self.action_id=0
 
     def run(self, action, dic_args):
         """

@@ -2,9 +2,9 @@
 # Written by Brian Quinlan (brian@sweetapp.com).
 # Based on code written by Fredrik Lundh.
 
-import xmlrpclib
-import SocketServer
-import BaseHTTPServer
+import xmlrpc.client
+import socketserver
+import http.server
 import sys
 import time
 
@@ -17,7 +17,7 @@ from core.ibs_exceptions import *
 from core.lib.general import *
 from core import defs
 
-class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class XMLRPCRequestHandler(http.server.BaseHTTPRequestHandler):
     """XML-RPC request handler class.
 
     Handles all HTTP POST requests and attempts to decode them as
@@ -33,7 +33,7 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         if isinstance(ob, (tuple, list)):
             return [self.convert_decimal_to_float(v) for v in ob]
         if isinstance(ob, dict):
-            return {k: self.convert_decimal_to_float(v) for k, v in ob.iteritems()}
+            return {k: self.convert_decimal_to_float(v) for k, v in list(ob.items())}
         return ob
 
     def do_POST(self):
@@ -46,7 +46,7 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             # get arguments
             data = self.rfile.read(int(self.headers["content-length"]))
-            params, method = xmlrpclib.loads(data)
+            params, method = xmlrpc.client.loads(data)
 
             # generate response
             try:
@@ -57,11 +57,11 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 #response = (response,)
             except XMLRPCFault:
                 # report exception back to server
-                response = xmlrpclib.dumps(
-                    xmlrpclib.Fault(1, "%s" % (sys.exc_info()[1]))
+                response = xmlrpc.client.dumps(
+                    xmlrpc.client.Fault(1, "%s" % (sys.exc_info()[1]))
                     )
             else:
-                response = xmlrpclib.dumps(response, methodresponse=1)
+                response = xmlrpc.client.dumps(response, methodresponse=1)
         except:
             logException(LOG_ERROR,"XMLRPCServer")
             # internal error, report as HTTP server error
@@ -91,7 +91,7 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 format="N/A N/A %s %s"
                 args=[method,str(params)]
         
-            apply(self.log_message,[format]+args)
+            self.log_message(*[format]+args)
             
 
         #handle request
@@ -106,19 +106,19 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         stat_main.getStatKeeper().max("server_max_response_time", duration)
 
         if defs.LOG_SERVER_REQUESTS:
-            apply(self.log_message,[format+ " duration: %s"]+args+[duration])
+            self.log_message(*[format+ " duration: %s"]+args+[duration])
 
         return ret_val
 
     def __convToUTF8(self,param):
-        if type(param)==types.DictType:
+        if type(param)==dict:
             for key in param:
                 param[key]=self.__convToUTF8(param[key])
 
-        elif type(param)==types.ListType or type(param)==types.TupleType:
-            param=map(self.__convToUTF8,param)
+        elif type(param)==list or type(param)==tuple:
+            param=list(map(self.__convToUTF8,param))
 
-        elif type(param)==types.UnicodeType:
+        elif type(param)==str:
             param=param.encode("utf-8")
         
         return param
@@ -127,7 +127,7 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         """Selectively log an accepted request."""
 
         if self.DEBUG and defs.LOG_SERVER_REQUESTS:
-            BaseHTTPServer.BaseHTTPRequestHandler.log_request(self, code, size)
+            http.server.BaseHTTPRequestHandler.log_request(self, code, size)
             
     def log_message(self, format, *args):
         toLog("%s - - [%s] %s\n" %
@@ -137,7 +137,7 @@ class XMLRPCRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         
 
-class IBSServer(SocketServer.ThreadingMixIn,SocketServer.TCPServer): #overide process request method
+class IBSServer(socketserver.ThreadingMixIn,socketserver.TCPServer): #overide process request method
         allow_reuse_address=True
         
         def process_request(self,request,client_address):
@@ -164,4 +164,4 @@ class XMLRPCServer(IBSServer):
     def __init__(self, addr, requestHandler=XMLRPCRequestHandler):
         self.funcs = {}
         self.instance = None
-        SocketServer.TCPServer.__init__(self, addr, requestHandler)
+        socketserver.TCPServer.__init__(self, addr, requestHandler)

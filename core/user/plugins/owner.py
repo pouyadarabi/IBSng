@@ -22,7 +22,7 @@ class OwnerNameAttrUpdater(AttrUpdater):
             if admin_obj.getUsername()!=self.admin_name:
                 admin_obj.canDo("CHANGE USERS OWNER")
 
-        map(checkChangeOwnerPerms,arg_dic["users"])
+        list(map(checkChangeOwnerPerms,arg_dic["users"]))
         admin_main.getLoader().checkAdminName(self.admin_name)  
 
     def updateQuery(self,ibs_query,src,action,**args):

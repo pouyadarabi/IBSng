@@ -8,7 +8,7 @@ import socket
 import select
 
 # Import package components
-import error
+from . import error
 
 class Error(error.Generic):
     """Base class for role module
@@ -73,14 +73,14 @@ class manager:
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('socket() error: ' + str(why))
 
         # See if we need to bind to specific interface on client machine
         try:
             self.socket.bind(self.iface)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('bind() error: %s: %s' % (self.iface, why))
 
         # Connect to default destination if given
@@ -88,7 +88,7 @@ class manager:
             try:
                 self.socket.connect(self.agent)
 
-            except socket.error, why:
+            except socket.error as why:
                 raise NetworkError('connect() error: %s: %s' % (self.agent, why))
 
         return self.socket
@@ -111,7 +111,7 @@ class manager:
             else:    
                 self.socket.send(request)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('send() error: ' + str(why))
 
     def read(self):
@@ -129,7 +129,7 @@ class manager:
         try:
             (message, src) = self.socket.recvfrom(65536)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('recv() error: ' + str(why))
 
         return (message, src)
@@ -204,7 +204,7 @@ class manager:
             try:
                 self.socket.close()
 
-            except socket.error, why:
+            except socket.error as why:
                 raise NetworkError('close() error: ' + str(why))
 
             # Initialize it to None to indicate it's closed
@@ -248,7 +248,7 @@ class agent:
         try:
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('socket() error: ' + str(why))
 
         # Bind to specific interfaces at server machine
@@ -256,7 +256,7 @@ class agent:
             try:
                 self.socket.bind(iface)
 
-            except socket.error, why:
+            except socket.error as why:
                 raise NetworkError('bind() error: %s: %s' % (iface, why))
 
         return self.socket
@@ -275,7 +275,7 @@ class agent:
         try:
             self.socket.sendto(message, dst)
                 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('send() error: ' + str(why))
 
     def read(self):
@@ -293,7 +293,7 @@ class agent:
         try:
             (message, peer) = self.socket.recvfrom(65536)
 
-        except socket.error, why:
+        except socket.error as why:
             raise NetworkError('recvfrom() error: ' + str(why))
 
         return (message, peer)
@@ -365,7 +365,7 @@ class agent:
             try:
                 self.socket.close()
 
-            except socket.error, why:
+            except socket.error as why:
                 raise NetworkError('close() error: ' + str(why))
 
             # Initialize it to None to indicate it's closed

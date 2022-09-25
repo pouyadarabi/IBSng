@@ -72,7 +72,7 @@ def voipUsernameExists(voip_username):
         return []
 
     exists = []
-    conds = map(lambda username:"voip_username=%s"%dbText(username),voip_username)
+    conds = ["voip_username=%s"%dbText(username) for username in voip_username]
     i = 0
     while i<len(conds):
         where_clause=" or ".join(conds[i:i+defs.POSTGRES_MAGIC_NUMBER])
@@ -107,23 +107,23 @@ class VoIPUserAttrUpdater(AttrUpdater):
 
     #################################################
     def __parseVoIPAttrs(self):
-        self.usernames=map(None,MultiStr(self.voip_username))
+        self.usernames=list(MultiStr(self.voip_username))
         if self.generate_password==0:
             pass_multi=MultiStr(self.voip_password)
-            self.passwords=map(lambda x:Password(pass_multi[x]),range(len(self.usernames)))
+            self.passwords=[Password(pass_multi[x]) for x in range(len(self.usernames))]
         else:
             self.passwords=getPasswords(len(self.usernames),self.generate_password,self.password_len)
         
     ##################################################
     def checkInput(self,src,action,dargs):
-        map(dargs["admin_obj"].canChangeVoIPAttrs,dargs["users"].itervalues())
+        list(map(dargs["admin_obj"].canChangeVoIPAttrs,iter(dargs["users"].values())))
 
     def __changeCheckInput(self,users,admin_obj):
         self.__checkUsernames(users)
         self.__checkPasswords()
 
     def __checkPasswords(self):
-        map(lambda password:password.checkPasswordChars(),self.passwords)
+        list(map(lambda password:password.checkPasswordChars(),self.passwords))
         if self.password_len<0 or self.password_len>30:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_PASSWORD_LENGTH")%self.password_len)
 
@@ -133,7 +133,7 @@ class VoIPUserAttrUpdater(AttrUpdater):
             raise GeneralException(errorText("USER_ACTIONS","VOIP_USER_COUNT_NOT_MATCH")%(len(users),len(self.usernames)))
         
         cur_voip_usernames = []
-        for loaded_user in users.itervalues():
+        for loaded_user in users.values():
             if loaded_user.userHasAttr("voip_username"):
                 cur_voip_usernames.append(loaded_user.getUserAttrs()["voip_username"])
         
@@ -155,7 +155,7 @@ class VoIPUserAttrUpdater(AttrUpdater):
     def changeQuery(self,ibs_query,src,action,**args):
         admin_obj=args["admin_obj"]
         users=args["users"]
-        user_ids = users.keys()
+        user_ids = list(users.keys())
         user_ids.sort()
 
         
@@ -304,14 +304,14 @@ class VoIPUserHandler(handler.Handler):
         request.checkArgs("voip_username","current_username")
         request.getAuthNameObj().canChangeVoIPAttrs(None)
         usernames=self.__filterCurrentUsernames(request)
-        bad_usernames=filter(lambda username: not _checkVoIPUsernameChars(username),usernames)
+        bad_usernames=[username for username in usernames if not _checkVoIPUsernameChars(username)]
         exist_usernames=voipUsernameExists(usernames)
         return self.__createCheckAddReturnDic(bad_usernames,exist_usernames)
 
     def __filterCurrentUsernames(self,request):
         username=MultiStr(request["voip_username"])
         current_username=MultiStr(request["current_username"])
-        return filter(lambda username: username not in current_username,username)
+        return [username for username in username if username not in current_username]
 
     def __createCheckAddReturnDic(self,bad_usernames,exist_usernames):
         ret={}

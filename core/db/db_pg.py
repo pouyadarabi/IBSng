@@ -9,13 +9,13 @@ except ImportError:
     from pg import Error as PGError
 
 class db_pg (ibs_db):
-    
+
     def connect(self,dbname,host,port,user,password):
         try:
-            self.connHandle=pg.connect(dbname,host,port,None,None,user,password)
-        except Exception,e:
+            self.connHandle=pg.connect(dbname=dbname,host=host,port=port,user=user,passwd=password)
+        except Exception as e:
             raise ibs_exceptions.DBException(str(e))
-        except PGError,e:
+        except PGError as e:
             raise ibs_exceptions.DBException(str(e))
 
     def prepareQuery(self,plan_name, args , query):
@@ -31,7 +31,7 @@ class db_pg (ibs_db):
         """
         connection=self.getConnection()
         return connection.query(query)
-        
+
     def transactionQuery(self,query):
         ibs_db.transactionQuery(self,query)
         query_len=len(query)
@@ -46,19 +46,19 @@ class db_pg (ibs_db):
             self.__transactionQuery("COMMIT;")
         else:
             return self.__transactionQuery("BEGIN; %s COMMIT;"%query)
-    
+
     def __transactionQuery(self,command):
         try:
             return self._runQuery(command)
-        except PGError,e:
+        except PGError as e:
             try:
                 self._runQuery("ABORT;")
             except:
                 pass
-        
+
             raise ibs_exceptions.DBException("%s query: %s" %(e,command))
 
-        except Exception,e:
+        except Exception as e:
             try:
                 self._runQuery("ABORT;")
             except:
@@ -70,25 +70,24 @@ class db_pg (ibs_db):
     def query(self,command):
         try:
             return self._runQuery(command)
-        except PGError,e:
+        except PGError as e:
             raise ibs_exceptions.DBException("%s query: %s" %(e,command))
 
-        except Exception,e:
+        except Exception as e:
             raise ibs_exceptions.DBException("%s query: %s" %(e,command))
 
     def runIBSQuery(self,ibs_query):
         self.__transactionQuery("BEGIN;")
-        map(self.__transactionQuery,ibs_query)
+        list(map(self.__transactionQuery,ibs_query))
         self.__transactionQuery("COMMIT;")
-    
+
     def check(self):
         try:
             self.query("BEGIN;ROLLBACK;")
-        except Exception,e:
+        except Exception as e:
             try:
                 self.reset()
-            except Exception,e:
+            except Exception as e:
                 raise ibs_exceptions.DBException("check function on reseting connection %s"%e)
-            except PGError,e:
+            except PGError as e:
                 raise ibs_exceptions.DBException("check function on reseting connection %s"%e)
-    

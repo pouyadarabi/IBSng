@@ -26,7 +26,7 @@ class Scheduler:
 
     def __getEventIndex(self, time_to_run, priority):
         i = 0
-        for i in xrange(len(self.__events)): #sequential search, list is sorted, so there are better 
+        for i in range(len(self.__events)): #sequential search, list is sorted, so there are better 
             if self.__events[i]["timeToRun"] == time_to_run:
                 if priority > self.__events[i]["priority"]:
                     i -= 1
@@ -106,7 +106,7 @@ class Scheduler:
             toLog("Event Scheduler: Running Method:%s Arguments: %s"%(job["method"],job["args"]),LOG_DEBUG)
         
         if job["priority"]==100: #run shutdown method in main thread, not a new thread
-            apply(job["method"],job["args"])
+            job["method"](*job["args"])
         else:
 
             if job["priority"] < 10:
@@ -120,11 +120,11 @@ class Scheduler:
                 logException(LOG_ERROR,"Unhandled exception on event loop")
         
     def now(self):
-        return long(time.time())
+        return int(time.time())
 
     def printMe(self):
         for evt in self.__events:
-            print "%s %s is going to run on %s"%(evt["method"],evt["args"],evt["timeToRun"] - time.time())
+            print(("%s %s is going to run on %s"%(evt["method"],evt["args"],evt["timeToRun"] - time.time())))
 
 def initSched():
     global sched

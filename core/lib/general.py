@@ -19,7 +19,7 @@ def isValidName(name):
 escape_tags=re.compile("<(?!br( /){0,1}>)(.*?)>")
 
 def escapeStr(_str):
-    if type(_str) == types.UnicodeType:
+    if type(_str) == str:
         pass
     else:
         _str=str(_str)
@@ -50,8 +50,8 @@ def requestDicToList(var):
         some xml implementions return dictionaries even the unserialized data was in array.
         This function convert it to list if it's a dic
     """
-    if type(var)==types.DictType:
-        return var.values()
+    if type(var)==dict:
+        return list(var.values())
     else:
         return var
 
@@ -76,7 +76,7 @@ def isInt(var):
         check if "var" type is integer
         return 1 if it's an integer or 0 if it's not
     """
-    if type(var)==types.IntType:
+    if type(var)==int:
         return True
     return False
 
@@ -85,7 +85,7 @@ def isLong(var):
         check if "var" type is Long
         return 1 if it's long or 0 if it's not
     """
-    if type(var)==types.LongType:
+    if type(var)==int:
         return True
     return False
 
@@ -94,7 +94,7 @@ def isFloat(var):
         check if "var" type is flot
         return 1 if it's an flot or 0 if it's not
     """
-    if type(var)==types.FloatType:
+    if type(var)==float:
         return True
     return False
 
@@ -107,7 +107,7 @@ def to_int(_str,excp):
     try:
         _int=int(_str)
     except:
-        if type(excp)==types.StringType:
+        if type(excp)==bytes:
             raise GeneralException(errorText("GENERAL","INVALID_INT_VALUE")%excp)
         else:
             raise excp
@@ -119,9 +119,9 @@ def to_long(_str,excp):
         excp(str or Exception instance): raise this exception if _str is not convertable to long
     """
     try:
-        _long=long(_str)
+        _long=int(_str)
     except:
-        if type(excp)==types.StringType:
+        if type(excp)==bytes:
             raise GeneralException(errorText("GENERAL","INVALID_INT_VALUE")%excp)
         else:
             raise excp
@@ -209,10 +209,10 @@ def fixXMLRPCList(_dic):
         if keys are all string representing integers and has all necessary indexes convert it
         to list else return the _dic itself
     """
-    dic_keys=_dic.keys()
+    dic_keys=list(_dic.keys())
     dic_keys.sort()
-    if map(str,range(len(_dic)))==dic_keys:
-        return map(_dic.get,map(str,range(len(_dic))))
+    if list(map(str,list(range(len(_dic)))))==dic_keys:
+        return list(map(_dic.get,list(map(str,list(range(len(_dic)))))))
     else:
         return _dic
         

@@ -43,7 +43,7 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
         if self.hasAttr():
             self.__initBasicValues()
             if self.user_obj.getUserAttrs().userHasAttr("%s_reset"%self.key):
-                self.next_reset = long(self.user_obj.getUserAttrs()["%s_reset"%self.key]) #epoch
+                self.next_reset = int(self.user_obj.getUserAttrs()["%s_reset"%self.key]) #epoch
                 self.__setInitialUsage()
                 self.first_login = False #is this the first time we logged in with this value of paccounting
                 self.commit_next_reset = False
@@ -58,11 +58,11 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
     
     def __initBasicValues(self):
         self.value = self.user_obj.getUserAttrs()[self.key] #jalali/gregorian/number of days
-        self.limit = long(self.user_obj.getUserAttrs()["%s_limit"%self.key]) #seconds
+        self.limit = int(self.user_obj.getUserAttrs()["%s_limit"%self.key]) #seconds
         
 
     def __setInitialUsage(self):
-        self.initial_usage = long(self.user_obj.getUserAttrs()["%s_usage"%self.key])  #seconds
+        self.initial_usage = int(self.user_obj.getUserAttrs()["%s_usage"%self.key])  #seconds
     ################################
     def _checkResetTimer(self):
         """
@@ -87,7 +87,7 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
             else:
                 base = time.time() - secondsFromMorning()
 
-            increment = long(value) * 3600 * 24
+            increment = int(value) * 3600 * 24
             
             next_reset = base + increment
             while next_reset < time.time():
@@ -112,8 +112,8 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
     ###################################
     def s_commit(self):
         logout_instance = 0
-        for instance in xrange(1,self.user_obj.instances+1):
-            if self.user_obj.getInstanceInfo(instance).has_key("logout_ras_msg"):
+        for instance in range(1,self.user_obj.instances+1):
+            if "logout_ras_msg" in self.user_obj.getInstanceInfo(instance):
                 logout_instance = instance
                 break
         
@@ -135,7 +135,7 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
         return query
 
     def _commitUsageQuery(self, first_login):
-        usage = long(self.usage + self.initial_usage)
+        usage = int(self.usage + self.initial_usage)
         if first_login:
             return user_main.getActionManager().insertUserAttrQuery(self.user_obj.getUserID(),
                                                                 "%s_usage"%self.key,
@@ -150,11 +150,11 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
         if first_login:
             return user_main.getActionManager().insertUserAttrQuery(self.user_obj.getUserID(),
                                                                 "%s_reset"%self.key,
-                                                                long(self.next_reset))
+                                                                int(self.next_reset))
         else:
             return user_main.getActionManager().updateUserAttrQuery(self.user_obj.getUserID(),
                                                                 "%s_reset"%self.key,
-                                                                long(self.next_reset))
+                                                                int(self.next_reset))
     ###################################
     def _calcUsage(self):
         """
@@ -201,7 +201,7 @@ class BasePeriodicAccounting(user_plugin.AttrCheckUserPlugin):
     
     ################################
     def _setStartValues(self):
-        for instance in xrange(1,self.user_obj.instances+1):
+        for instance in range(1,self.user_obj.instances+1):
             self.instance_start_value[instance-1] = self._getStartValue(instance)
 
     def s_canStayOnline(self):
@@ -271,7 +271,7 @@ class TimePeriodicAccounting(BasePeriodicAccounting):
 
     def _calcTimelyUsage(self):
         usage = 0
-        for instance in xrange(1,self.user_obj.instances+1):
+        for instance in range(1,self.user_obj.instances+1):
             usage += self._calcTimelyUsageForInstance(instance)
         return usage + self.usage + self.initial_usage
 
@@ -305,7 +305,7 @@ class TrafficPeriodicAccounting(BasePeriodicAccounting):
     
         instance_share = (self.limit - self._calcUsage()) / self.user_obj.instances
         remaining_time = 0
-        for instance in xrange(1, self.user_obj.instances+1):
+        for instance in range(1, self.user_obj.instances+1):
             try:
                 remaining_time += instance_share / (self.user_obj.charge_info.effective_rules[instance-1].getAssumedKPS() * 1024.0)
             except:
@@ -324,7 +324,7 @@ class TrafficPeriodicAccounting(BasePeriodicAccounting):
             return 0
             
         usage = 0
-        for instance in xrange(1,self.user_obj.instances+1):
+        for instance in range(1,self.user_obj.instances+1):
             usage += self._calcTrafficUsageForInstance(instance)
         return usage + self.usage + self.initial_usage
 
@@ -384,7 +384,7 @@ class PeriodicAccountingAttrUpdater(AttrUpdater):
 
         if action == "change":
             try:
-                self.limit=long(self.limit)
+                self.limit=int(self.limit)
             except ValueError:
                 raise GeneralException(errorText("USER_ACTIONS","PERIODIC_ACCOUNING_LIMIT_INVALID"))
 
@@ -420,9 +420,9 @@ class PeriodicAccountingAttrUpdater(AttrUpdater):
 
     def auditLogPrepareValue(self,attr_name, value):
         if attr_name.startswith("traffic") and attr_name.endswith("_limit"):
-            return "%sM"%(long(value)/(1024*1024))
+            return "%sM"%(int(value)/(1024*1024))
         elif attr_name.startswith("time") and attr_name.endswith("_limit"):
-            return formatDuration(long(value))
+            return formatDuration(int(value))
         elif attr_name.endswith("_reset") or attr_name.endswith("_usage") and value == None:
             return self.AUDIT_LOG_NOVALUE
         else:
@@ -473,7 +473,7 @@ class PeriodicAccountingUsageAttrUpdater(AttrUpdater):
 
         if action == "change":
             try:
-                self.usage = long(self.usage)
+                self.usage = int(self.usage)
             except ValueError:
                 raise GeneralException(errorText("USER_ACTIONS","PERIODIC_ACCOUNING_USAGE_INVALID"))
 
@@ -490,7 +490,7 @@ class PeriodicAccountingUsageAttrUpdater(AttrUpdater):
 
             if loaded_user.userHasAttr(self.usage_name):
 
-                usage = long(loaded_user.getUserAttrs()[self.usage_name]) + self.usage
+                usage = int(loaded_user.getUserAttrs()[self.usage_name]) + self.usage
                 ibs_query += user_main.getActionManager().updateUserAttrQuery(loaded_user.getUserID(),
                                                                               self.usage_name,
                                                                               usage)
@@ -510,9 +510,9 @@ class PeriodicAccountingUsageAttrUpdater(AttrUpdater):
 
     def auditLogPrepareValue(self,attr_name, value):
         if attr_name.startswith("traffic") and attr_name.endswith("_usage"):
-            return "%sM"%(long(value)/(1024*1024))
+            return "%sM"%(int(value)/(1024*1024))
         elif attr_name.startswith("time") and attr_name.endswith("_usage"):
-            return formatDuration(long(value))
+            return formatDuration(int(value))
 
 
 ###############################################################################
@@ -535,7 +535,7 @@ def periodicAccountingPostParser(_id, _type, raw_attrs, parsed_attrs, date_type)
         for key in ("time_periodic_accounting_monthly","traffic_periodic_accounting_monthly","time_periodic_accounting_daily","traffic_periodic_accounting_daily"):
             if loaded_user.userHasAttr("%s_reset"%key):
                 parsed_attrs["%s_usage"%key]=loaded_user.getUserAttrs()["%s_usage"%key]
-                parsed_attrs["%s_reset"%key]=AbsDateFromEpoch(long(loaded_user.getUserAttrs()["%s_reset"%key])).getDate(date_type)
+                parsed_attrs["%s_reset"%key]=AbsDateFromEpoch(int(loaded_user.getUserAttrs()["%s_reset"%key])).getDate(date_type)
             
 
 

@@ -13,9 +13,9 @@ class IDPool:
 
     def __getIDsFromRange(self,_count,_range):
         if _range[0]+_count<=_range[1]:
-            return range(_range[0],_range[0]+_count)
+            return list(range(_range[0],_range[0]+_count))
         else:
-            return range(_range[0],_range[1]+1)
+            return list(range(_range[0],_range[1]+1))
         
     def __insertToFreeRanges(self,new_range):
         i=0
@@ -71,7 +71,7 @@ class IDPool:
         """
         ids.sort()
         _ranges=self.__convertToRanges(ids)
-        map(self.__insertToFreeRanges,_ranges)
+        list(map(self.__insertToFreeRanges,_ranges))
 
     def __convertToRanges(self,ids):
         _ranges=[]
@@ -86,7 +86,7 @@ class IDPool:
         return _ranges
 
     def printPool(self):
-        print self.__free_ranges
+        print((self.__free_ranges))
 
 """
 def test():

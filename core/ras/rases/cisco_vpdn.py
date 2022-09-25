@@ -103,14 +103,14 @@ class CiscoVPDNRas(GeneralUpdateRas):
         """
             remove stale onlines here
         """
-        for session_id in self.internet_onlines.keys():
+        for session_id in list(self.internet_onlines.keys()):
             if self.internet_onlines[session_id]["last_update"] < time.time() - int(self.getAttribute("cisco_update_accounting_interval"))* 60 * 10:
                 del(self.internet_onlines[session_id])
                 
 ####################################
     def isOnline(self, user_msg):
         session_id=user_msg["acct_session_id"]
-        return self.internet_onlines.has_key(session_id) and \
+        return session_id in self.internet_onlines and \
                self.internet_onlines[session_id]["last_update"]>=time.time()-int(self.getAttribute("cisco_update_accounting_interval"))*60
 
 ###################################
@@ -182,7 +182,7 @@ class CiscoVPDNRas(GeneralUpdateRas):
         ras_msg.setAction("INTERNET_UPDATE")
 
     def __getMacAddressFromPacket(self, pkt):
-        if pkt.has_key("Cisco-AVPair"):
+        if "Cisco-AVPair" in pkt:
             for item in pkt["Cisco-AVPair"]:
                 match=self.find_mac_pattern.match(item)
                 if match:
@@ -205,7 +205,7 @@ class CiscoVPDNRas(GeneralUpdateRas):
     def __internetAcctUpdate(self, ras_msg):
         req_pkt = ras_msg.getRequestPacket()
 
-        if not req_pkt.has_key("User-Name"):
+        if "User-Name" not in req_pkt:
             return
         
         self.__addUniqueIDToRasMsg(ras_msg)
@@ -236,7 +236,7 @@ class CiscoVPDNRas(GeneralUpdateRas):
         self.internet_onlines[session_id]["username"] = pkt["User-Name"][0]
         self.internet_onlines[session_id]["last_update"] = time.time()
 
-        if pkt.has_key("Acct-Output-Octets"):
+        if "Acct-Output-Octets" in pkt:
             start_in_bytes = pkt["Acct-Output-Octets"][0]
             start_out_bytes = pkt["Acct-Input-Octets"][0]
         else:
@@ -260,9 +260,9 @@ class CiscoVPDNRas(GeneralUpdateRas):
         """
 
         if session_id in self.internet_onlines and update_pkt["User-Name"][0]==self.internet_onlines[session_id]["username"]:
-            now = long(time.time())
+            now = int(time.time())
 
-            if update_pkt.has_key("Acct-Output-Octets"):
+            if "Acct-Output-Octets" in update_pkt:
                 in_bytes=update_pkt["Acct-Output-Octets"][0]
                 out_bytes=update_pkt["Acct-Input-Octets"][0]
                   

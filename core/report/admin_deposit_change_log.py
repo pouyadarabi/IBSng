@@ -14,7 +14,7 @@ import types
 class AdminDepositChangeLogsSearchTable(SearchTable):
     def __init__(self):
         SearchTable.__init__(self,"admin_deposit_change")
-        
+
 class AdminDepositChangeLogsSearchHelper(SearchHelper):
     def __init__(self,conds,requester_obj,requester_role):
         SearchHelper.__init__(self,conds,requester_obj,requester_role,
@@ -24,15 +24,15 @@ class AdminDepositChangeLogsSearchHelper(SearchHelper):
         cond = self.getTable("admin_deposit_change").getRootGroup().getConditionalClause()
         total_rows = self.__getTotalResultsCount(cond)
 
-	if total_rows == 0:
-	    return (0, 0, [])
+        if total_rows == 0:
+            return (0, 0, [])
 
         result = self.__getResult(cond, _from, to, order_by, desc)
         if self.hasCondFor("show_total_deposit_change"):
             total_change_deposit = self.__getTotalDepositChangeSum(cond, _from, to)
         else:
     	    total_change_deposit = 0
-    	    
+
         return (total_rows, total_change_deposit, self.__createReportResult(result, date_type))
 
 
@@ -56,7 +56,7 @@ class AdminDepositChangeLogsSearchHelper(SearchHelper):
 class AdminDepositChangeLogsSearcher:
     def __init__(self,conds,requester_obj,requester_role):
         self.search_helper=AdminDepositChangeLogsSearchHelper(conds,requester_obj,requester_role)
-        
+
     ##############################################
     def applyConditions(self):
         """
@@ -69,11 +69,11 @@ class AdminDepositChangeLogsSearcher:
 
         deposit_change_table.exactSearch(self.search_helper,"to_admin","to_admin_id",
              lambda owner_name:admin_main.getLoader().getAdminByName(owner_name).getAdminID())
-        
-        self.search_helper.setCondValue("change_time_from_op",">=")  
+
+        self.search_helper.setCondValue("change_time_from_op",">=")
         deposit_change_table.dateSearch(self.search_helper,"change_time_from","change_time_from_unit","change_time_from_op","change_time")
 
-        self.search_helper.setCondValue("change_time_to_op","<") 
+        self.search_helper.setCondValue("change_time_to_op","<")
         deposit_change_table.dateSearch(self.search_helper,"change_time_to" ,"change_time_to_unit","change_time_to_op","change_time")
 
     #################################################
@@ -91,7 +91,7 @@ class AdminDepositChangeLogsSearcher:
     def __getAdminDepositChangeLogsCheckInput(self,_from,to,order_by,desc):
         report_lib.checkFromTo(_from,to)
         self.__checkOrderBy(order_by)
-        
+
     def __checkOrderBy(self,order_by):
         if order_by not in ["admin_id", "to_admin_id", "change_time", "deposit_change"]:
             raise GeneralException(errorText("GENERAL","INVALID_ORDER_BY")%order_by)

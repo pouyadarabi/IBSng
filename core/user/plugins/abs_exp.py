@@ -20,7 +20,7 @@ class AbsExpDate(user_plugin.AttrCheckUserPlugin):
 
     def __initValues(self):
         if self.hasAttr():
-            self.abs_exp_date=long(self.user_obj.getUserAttrs()["abs_exp_date"])
+            self.abs_exp_date=int(self.user_obj.getUserAttrs()["abs_exp_date"])
 
     def __isAbsExpired(self):
         """
@@ -48,7 +48,7 @@ class AbsExpAttrUpdater(AttrUpdater):
     def changeInit(self,abs_exp_date,abs_exp_date_unit):
         try:
             self.date_obj=AbsDateWithUnit(abs_exp_date,abs_exp_date_unit, False)
-        except GeneralException,e:
+        except GeneralException as e:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_ABS_EXP_DATE")%e)
 
         self.useGenerateQuery({"abs_exp_date":self.date_obj.getDate("epoch")})
@@ -57,7 +57,7 @@ class AbsExpAttrUpdater(AttrUpdater):
         self.useGenerateQuery(["abs_exp_date"])
 
     def genQueryAuditLogPrepareOldValue(self,attr_name, old_value):
-        return AbsDateFromEpoch(long(old_value)).getDate()
+        return AbsDateFromEpoch(int(old_value)).getDate()
 
     def genQueryAuditLogPrepareNewValue(self,attr_name, new_value):
         return self.date_obj.getDate()
@@ -74,7 +74,7 @@ class AbsExpAttrSearcher(AttrSearcher):
 
 class AbsExpAttrHolder(AttrHolder):
     def __init__(self,abs_exp_date):
-        self.abs_exp_date=long(abs_exp_date)
+        self.abs_exp_date=int(abs_exp_date)
         self.date_obj=AbsDateFromEpoch(self.abs_exp_date)
 
     def getParsedDic(self):

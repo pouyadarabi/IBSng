@@ -11,7 +11,7 @@ so funky stuff lixe a netmask 0xffffff0f can't be done here.
 
     >>> ip = IP('127.0.0.0/30')
     >>> for x in ip:
-    ...  print x
+    ...  print(x)
     ...
     127.0.0.0
     127.0.0.1
@@ -34,27 +34,27 @@ and networks, parse them and distinguish between IPv4 and IPv6 addresses.
     4
     >>> IP('::1').version()
     6
-    >>> print IP(0x7f000001)
+    >>> print(IP(0x7f000001))
     127.0.0.1
-    >>> print IP('0x7f000001')
+    >>> print(IP('0x7f000001'))
     127.0.0.1
-    >>> print IP('127.0.0.1')
+    >>> print(IP('127.0.0.1'))
     127.0.0.1
-    >>> print IP('10')
+    >>> print(IP('10'))
     10.0.0.0
-    >>> print IP('1080:0:0:0:8:800:200C:417A')
+    >>> print(IP('1080:0:0:0:8:800:200C:417A'))
     1080:0000:0000:0000:0008:0800:200c:417a
-    >>> print IP('1080::8:800:200C:417A')
+    >>> print(IP('1080::8:800:200C:417A'))
     1080:0000:0000:0000:0008:0800:200c:417a
-    >>> print IP('::1')
+    >>> print(IP('::1'))
     0000:0000:0000:0000:0000:0000:0000:0001
-    >>> print IP('::13.1.68.3')
+    >>> print(IP('::13.1.68.3'))
     0000:0000:0000:0000:0000:0000:0d01:4403
-    >>> print IP('127.0.0.0/8')
+    >>> print(IP('127.0.0.0/8'))
     127.0.0.0/8
-    >>> print IP('127.0.0.0/255.0.0.0')
+    >>> print(IP('127.0.0.0/255.0.0.0'))
     127.0.0.0/8
-    >>> print IP('127.0.0.0-127.255.255.255')
+    >>> print(IP('127.0.0.0-127.255.255.255'))
     127.0.0.0/8
 
 Nearly all class methods which return a string have an optional
@@ -85,15 +85,15 @@ WantPrefixLen
     >>> IP('10.0.0.0/24').strNormal(3)
     '10.0.0.0-10.0.0.255'
     >>> ip = IP('10.0.0.0')
-    >>> print ip
+    >>> print(ip)
     10.0.0.0
     >>> ip.NoPrefixForSingleIp = None
-    >>> print ip
+    >>> print(ip)
     10.0.0.0/32
     >>> ip.WantPrefixLen = 3
-    >>> print ip
+    >>> print(ip)
     10.0.0.0-10.0.0.0
-                
+
 
 Further Information might be available at http://c0re.jp/c0de/IPy/
 
@@ -102,7 +102,7 @@ Hacked 2001 by drt@un.bewaff.net
 TODO:
       * support for base85 encoding
       * support for output of IPv6 encoded IPv4 Addresses
-      * update address type tables      
+      * update address type tables
       * first-last notation should be allowed for IPv6
       * add IPv6 docstring examples
       * check better vor negative parameters
@@ -150,7 +150,7 @@ IPv6ranges = {
     '00000001'              : 'UNASSIGNED',     # 100::/8
     '0000001'               : 'NSAP',           # 200::/7
     '0000010'               : 'IPX',            # 400::/7
-    '0000011'               : 'UNASSIGNED',     # 600::/7   
+    '0000011'               : 'UNASSIGNED',     # 600::/7
     '00001'                 : 'UNASSIGNED',     # 800::/5
     '0001'                  : 'UNASSIGNED',     # 1000::/4
     '0010000000000000'      : 'RESERVED',       # 2000::/16 Reserved
@@ -162,7 +162,7 @@ IPv6ranges = {
     '0010000000000010'      : '6TO4',           # 2002::/16 "6to4" [RFC3056]
     '0011111111111110'      : '6BONE',          # 3FFE::/16 6bone Testing [RFC2471]
     '0011111111111111'      : 'RESERVED',       # 3FFF::/16 Reserved
-    '010'                   : 'GLOBAL-UNICAST', # 4000::/3              
+    '010'                   : 'GLOBAL-UNICAST', # 4000::/3
     '011'                   : 'UNASSIGNED',     # 6000::/3
     '100'                   : 'GEO-UNICAST',    # 8000::/3
     '101'                   : 'UNASSIGNED',     # A000::/3
@@ -187,10 +187,10 @@ class IPint:
 
     Use class IP instead because some features are not implemented for
     IPint."""
-    
+
     def __init__(self, data, ipversion = 0):
         """Create an instance of an IP object.
-        
+
         Data can be a network specification or a single IP. IP
         Addresses can be specified in all forms understood by
         parseAddress.() the size of a network can be specified as
@@ -202,11 +202,11 @@ class IPint:
         If no size specification is given a size of 1 address (/32 for
         IPv4 and /128 for IPv6) is assumed.
 
-        >>> print IP('127.0.0.0/8')
+        >>> print(IP('127.0.0.0/8'))
         127.0.0.0/8
-        >>> print IP('127.0.0.0/255.0.0.0')
+        >>> print(IP('127.0.0.0/255.0.0.0'))
         127.0.0.0/8
-        >>> print IP('127.0.0.0-127.255.255.255')
+        >>> print(IP('127.0.0.0-127.255.255.255'))
         127.0.0.0/8
 
         See module documentation for more examples.
@@ -214,15 +214,15 @@ class IPint:
 
         self.NoPrefixForSingleIp = 1  # Print no Prefixlen for /32 and /128
         self.WantPrefixLen = None     # Do we want prefix printed by default? see _printPrefix()
-        
+
         netbits = 0
         prefixlen = -1
-        
+
         # handling of non string values in constructor
-        if type(data) == types.IntType or type(data) == types.LongType:
-            self.ip = long(data)
+        if type(data) == int or type(data) == int:
+            self.ip = int(data)
             if ipversion == 0:
-                if self.ip < 0x100000000L:
+                if self.ip < 0x100000000:
                     ipversion = 4
                 else:
                     ipversion = 6
@@ -231,7 +231,7 @@ class IPint:
             elif ipversion == 6:
                 prefixlen = 128
             else:
-                raise ValueError, "only IPv4 and IPv6 supported"
+                raise ValueError("only IPv4 and IPv6 supported")
             self._ipversion = ipversion
             self._prefixlen = prefixlen
         # TODO: handle class IP instance as an parameter
@@ -243,22 +243,22 @@ class IPint:
                 (ip, last) = x
                 (self.ip, parsedVersion) = parseAddress(ip)
                 if parsedVersion != 4:
-                    raise ValueError, "first-last notation only allowed for IPv4"
+                    raise ValueError("first-last notation only allowed for IPv4")
                 (last, lastversion) = parseAddress(last)
                 if lastversion != 4:
-                    raise ValueError, "last address should be IPv4, too"
+                    raise ValueError("last address should be IPv4, too")
                 if last < self.ip:
-                    raise ValueError, "last address should be larger than first"
+                    raise ValueError("last address should be larger than first")
                 size = last - self.ip
                 netbits = _count1Bits(size)
-            elif len(x) == 1:    
+            elif len(x) == 1:
                 x = data.split('/')
                 # if no prefix is given use defaults
                 if len(x) == 1:
                     ip = x[0]
                     prefixlen = -1
                 elif len(x) > 2:
-                    raise ValueError, "only one '/' allowed in IP Address"
+                    raise ValueError("only one '/' allowed in IP Address")
                 else:
                     (ip, prefixlen) = x
                     if prefixlen.find('.') != -1:
@@ -266,12 +266,12 @@ class IPint:
                         # a.b.c.d/255.255.255.0
                         (netmask, vers) = parseAddress(prefixlen)
                         if vers != 4:
-                            raise ValueError, "netmask must be IPv4"
-                        prefixlen = _netmaskToPrefixlen(netmask)                         
+                            raise ValueError("netmask must be IPv4")
+                        prefixlen = _netmaskToPrefixlen(netmask)
             elif len(x) > 2:
-                raise ValueError, "only one '-' allowed in IP Address"
+                raise ValueError("only one '-' allowed in IP Address")
             else:
-                raise ValueError, "can't parse"
+                raise ValueError("can't parse")
 
             (self.ip, parsedVersion) = parseAddress(ip)
             if ipversion == 0:
@@ -282,13 +282,13 @@ class IPint:
                 elif ipversion == 6:
                     prefixlen = 128 - netbits
                 else:
-                    raise ValueError, "only IPv4 and IPv6 supported"
+                    raise ValueError("only IPv4 and IPv6 supported")
             self._ipversion = ipversion
             self._prefixlen = int(prefixlen)
 
             if not _checkNetaddrWorksWithPrefixlen(self.ip, self._prefixlen, self._ipversion):
-                raise ValueError, "%s goes not well with prefixlen %d" % (hex(self.ip), self._prefixlen) 
-                
+                raise ValueError("%s goes not well with prefixlen %d" % (hex(self.ip), self._prefixlen))
+
 
     def int(self):
         """Return the first / base / network addess as an (long) integer.
@@ -342,7 +342,7 @@ class IPint:
         """
 
         if (self._ipversion == 4 and self._prefixlen == 32) or \
-           (self._ipversion == 6 and self._prefixlen == 128): 
+           (self._ipversion == 6 and self._prefixlen == 128):
             if self.NoPrefixForSingleIp:
                 want = 0
         if want == None:
@@ -353,7 +353,7 @@ class IPint:
             if want == 2:
                 # this should work wit IP and IPint
                 netmask = self.netmask()
-                if type(netmask) != types.IntType and type(netmask) != types.LongType:
+                if type(netmask) != int and type(netmask) != int:
                     netmask = netmask.int()
                 return "/%s" % (intToIp(netmask, self._ipversion))
             elif want == 3:
@@ -371,20 +371,20 @@ class IPint:
         # strHex        0x7F000001L  0x20010658022ACAFE0200C0FFFE8D08FA
         # strDec        2130706433   42540616829182469433547974687817795834
 
-    def strBin(self, wantprefixlen = None): 
+    def strBin(self, wantprefixlen = None):
         """Return a string representation as a binary value.
 
-        >>> print IP('127.0.0.1').strBin()
+        >>> print(IP('127.0.0.1').strBin())
         01111111000000000000000000000001
         """
 
 
         if self._ipversion == 4:
-            bits = 32 
+            bits = 32
         elif self._ipversion == 6:
             bits = 128
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
         if self.WantPrefixLen == None and wantprefixlen == None:
             wantprefixlen = 0
@@ -394,15 +394,15 @@ class IPint:
     def strCompressed(self, wantprefixlen = None):
         """Return a string representation in compressed format using '::' Notation.
 
-        >>> print IP('127.0.0.1').strCompressed()
+        >>> print(IP('127.0.0.1').strCompressed())
         127.0.0.1
-        >>> print IP('2001:0658:022a:cafe:0200::1').strCompressed()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').strCompressed())
         2001:658:22a:cafe:200::1
         """
-                
+
         if self.WantPrefixLen == None and wantprefixlen == None:
             wantprefixlen = 1
-            
+
         if self._ipversion == 4:
             return self.strFullsize(wantprefixlen)
         else:
@@ -433,46 +433,46 @@ class IPint:
     def strNormal(self, wantprefixlen = None):
         """Return a string representation in the usual format.
 
-        >>> print IP('127.0.0.1').strNormal()
+        >>> print(IP('127.0.0.1').strNormal())
         127.0.0.1
-        >>> print IP('2001:0658:022a:cafe:0200::1').strNormal()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').strNormal())
         2001:658:22a:cafe:200:0:0:1
         """
 
         if self.WantPrefixLen == None and wantprefixlen == None:
             wantprefixlen = 1
-        
+
         if self._ipversion == 4:
-            ret = self.strFullsize(0) 
+            ret = self.strFullsize(0)
         elif self._ipversion == 6:
             ret = ':'.join([hex(x)[2:] for x in [int(x, 16) for x in self.strFullsize(0).split(':')]])
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
-            
-        
+
+
         return ret + self._printPrefix(wantprefixlen)
 
     def strFullsize(self, wantprefixlen = None):
         """Return a string representation in the non mangled format.
 
-        >>> print IP('127.0.0.1').strFullsize()
+        >>> print(IP('127.0.0.1').strFullsize())
         127.0.0.1
-        >>> print IP('2001:0658:022a:cafe:0200::1').strFullsize()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').strFullsize())
         2001:0658:022a:cafe:0200:0000:0000:0001
         """
 
         if self.WantPrefixLen == None and wantprefixlen == None:
             wantprefixlen = 1
-            
+
         return intToIp(self.ip, self._ipversion).lower() + self._printPrefix(wantprefixlen)
 
     def strHex(self, wantprefixlen = None):
         """Return a string representation in hex format.
 
-        >>> print IP('127.0.0.1').strHex()
+        >>> print(IP('127.0.0.1').strHex())
         0x7F000001
-        >>> print IP('2001:0658:022a:cafe:0200::1').strHex()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').strHex())
         0x20010658022ACAFE0200000000000001
         """
 
@@ -487,9 +487,9 @@ class IPint:
     def strDec(self, wantprefixlen = None):
         """Return a string representation in decimal format.
 
-        >>> print IP('127.0.0.1').strDec()
+        >>> print(IP('127.0.0.1').strDec())
         2130706433
-        >>> print IP('2001:0658:022a:cafe:0200::1').strDec()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').strDec())
         42540616829182469433547762482097946625
         """
 
@@ -504,15 +504,15 @@ class IPint:
     def iptype(self):
         """Return a description of the IP type ('PRIVATE', 'RESERVERD', etc).
 
-        >>> print IP('127.0.0.1').iptype()
+        >>> print(IP('127.0.0.1').iptype())
         PRIVATE
-        >>> print IP('192.168.1.1').iptype()
+        >>> print(IP('192.168.1.1').iptype())
         PRIVATE
-        >>> print IP('195.185.1.2').iptype()
+        >>> print(IP('195.185.1.2').iptype())
         PUBLIC
-        >>> print IP('::1').iptype()
+        >>> print(IP('::1').iptype())
         LOOPBACK
-        >>> print IP('2001:0658:022a:cafe:0200::1').iptype()
+        >>> print(IP('2001:0658:022a:cafe:0200::1').iptype())
         ASSIGNABLE RIPE
 
         The type information for IPv6 is out of sync with reality.
@@ -521,15 +521,15 @@ class IPint:
         # this could be greatly improved
 
         if self._ipversion == 4:
-            iprange = IPv4ranges 
+            iprange = IPv4ranges
         elif self._ipversion == 6:
-            iprange = IPv6ranges 
+            iprange = IPv6ranges
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
         bits = self.strBin()
         for i in range(len(bits), 0, -1):
-            if iprange.has_key(bits[:i]):
+            if bits[:i] in iprange:
                 return iprange[bits[:i]]
         return "unknown"
 
@@ -537,7 +537,7 @@ class IPint:
     def netmask(self):
         """Return netmask as an integer.
 
-        >>> print hex(IP('195.185.0.0/16').netmask().int())
+        >>> print(hex(IP('195.185.0.0/16').netmask().int()))
         0xFFFF0000L
         """
 
@@ -547,36 +547,36 @@ class IPint:
         elif self._ipversion == 6:
             locallen = 128 - self._prefixlen
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
-        return ((2L ** self._prefixlen) - 1) << locallen
+        return ((2 ** self._prefixlen) - 1) << locallen
 
 
     def strNetmask(self):
         """Return netmask as an string. Mostly useful for IPv6.
 
-        >>> print IP('195.185.0.0/16').strNetmask()
+        >>> print(IP('195.185.0.0/16').strNetmask())
         255.255.0.0
-        >>> print IP('2001:0658:022a:cafe::0/64').strNetmask()
+        >>> print(IP('2001:0658:022a:cafe::0/64').strNetmask())
         /64
         """
 
         # TODO: unify with prefixlenToNetmask?
         if self._ipversion == 4:
             locallen = 32 - self._prefixlen
-            return intToIp(((2L ** self._prefixlen) - 1) << locallen, 4)
+            return intToIp(((2 ** self._prefixlen) - 1) << locallen, 4)
         elif self._ipversion == 6:
             locallen = 128 - self._prefixlen
             return "/%d" % self._prefixlen
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
     def len(self):
         """Return the length of an subnet.
 
-        >>> print IP('195.185.1.0/28').len()
+        >>> print(IP('195.185.1.0/28').len())
         16
-        >>> print IP('195.185.1.0/24').len()
+        >>> print(IP('195.185.1.0/24').len())
         256
         """
 
@@ -585,9 +585,9 @@ class IPint:
         elif self._ipversion == 6:
             locallen = 128 - self._prefixlen
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
-        return 2L ** locallen 
+        return 2 ** locallen
 
 
     def __len__(self):
@@ -598,16 +598,16 @@ class IPint:
 
         # Python < 2.2 has this silly restriction which breaks IPv6
         # how about Python >= 2.2 ... ouch - it presists!
-    
+
         return int(self.len())
 
 
     def __getitem__(self, key):
         """Called to implement evaluation of self[key].
-        
+
         >>> ip=IP('127.0.0.0/30')
         >>> for x in ip:
-        ...  print hex(x.int())
+        ...  print(hex(x.int()))
         ...
         0x7F000000L
         0x7F000001L
@@ -619,16 +619,16 @@ class IPint:
         '0x7F000003L'
         """
 
-        if type(key) != types.IntType and type(key) != types.LongType:
+        if type(key) != int and type(key) != int:
             raise TypeError
         if abs(key) >= self.len():
             raise IndexError
         if key < 0:
             key = self.len() - abs(key)
 
-        return self.ip + long(key)
+        return self.ip + int(key)
 
-    
+
 
     def __contains__(self, item):
         """Called to implement membership test operators.
@@ -636,9 +636,9 @@ class IPint:
         Should return true if item is in self, false otherwise. Item
         can be other IP-objects, strings or ints.
 
-        >>> print IP('195.185.1.1').strHex()
+        >>> print(IP('195.185.1.1').strHex())
         0xC3B90101
-        >>> 0xC3B90101L in IP('195.185.1.0/24')
+        >>> 0xC3B90101 in IP('195.185.1.0/24')
         1
         >>> '127.0.0.1' in IP('127.0.0.0/24')
         1
@@ -646,7 +646,7 @@ class IPint:
         0
         """
 
-        if type(item) == types.StringType:
+        if type(item) == bytes:
             item = IP(item)
         # how can this work for subclasses?
         if isinstance(item, IP) or isinstance(item, IPint):
@@ -658,16 +658,16 @@ class IPint:
                 else:
                     return 0
 
-        if type(item) == types.IntType:
-            item = long(item)            
-        if type(item) == types.LongType:
+        if type(item) == int:
+            item = int(item)
+        if type(item) == int:
             if item >= self.ip and item < self.ip + self.len():
                 return 1
             else:
                 return 0
-        raise TypeError, 'Only integers, IP-objects and strings can be tested.'
+        raise TypeError('Only integers, IP-objects and strings can be tested.')
 
-    
+
     def __str__(self):
         """Dispatch to the prefered String Representation.
 
@@ -683,11 +683,11 @@ class IPint:
         to an identical Object (without the wnatprefixlen stuff - see
         module docstring.
 
-        >>> print repr(IP('10.0.0.0/24'))
+        >>> print(repr(IP('10.0.0.0/24')))
         IP('10.0.0.0/24')
         """
 
-        return("IPint('%s')" % (self.strCompressed(1))) 
+        return("IPint('%s')" % (self.strCompressed(1)))
 
 
     def __cmp__(self, other):
@@ -717,34 +717,34 @@ class IPint:
 
         >>> l = [IP('10.0.0.0/24'), IP('10.0.0.0/16'),IP('10.0.0.0/25'), IP('12.0.0.0/24'), IP('2.0.0.0/24'), IP('127.0.0.1')]
         >>> l.sort()
-        >>> print l
+        >>> print(l)
         [IP('10.0.0.0/24'), IP('10.0.0.0/16'), IP('10.0.0.0/25'), IP('2.0.0.0/24'), IP('12.0.0.0/24'), IP('127.0.0.1')]
         >>> l = [IP('10.0.0.0/24'), IP('12.0.0.0/24'), IP('2.0.0.0/24'), IP('127.0.0.1')]
-        >>> print l
+        >>> print(l)
         [IP('10.0.0.0/24'), IP('12.0.0.0/24'), IP('2.0.0.0/24'), IP('127.0.0.1')]
         >>> l.sort()
-        >>> print l
+        >>> print(l)
         [IP('2.0.0.0/24'), IP('10.0.0.0/24'), IP('12.0.0.0/24'), IP('127.0.0.1')]
 
         """
 
         # Im not really sure if this is "the right thing to do"
         if self._prefixlen < other.prefixlen():
-            return (other.prefixlen() - self._prefixlen) 
+            return (other.prefixlen() - self._prefixlen)
         elif self._prefixlen > other.prefixlen():
             return self._prefixlen - other.prefixlen() * -1
         else:
             if self.ip < other.ip:
-                return -1 
+                return -1
             elif self.ip > other.ip:
                 return 1
             else:
                 return 0
-        
-     
+
+
     def __hash__(self):
         """Called for the key object for dictionary operations, and by
-        the built-in function hash()  Should return a 32-bit integer
+        the built-in function hash()ï¿½ Should return a 32-bit integer
         usable as a hash value for dictionary operations. The only
         required property is that objects which compare equal have the
         same hash value
@@ -813,7 +813,7 @@ class IP(IPint):
         ['128.in-addr.arpa.']
         >>> IP('128.0.0.0/7').reverseNames()
         ['128.in-addr.arpa.', '129.in-addr.arpa.']
-        
+
         """
 
         if self._ipversion == 4:
@@ -822,10 +822,10 @@ class IP(IPint):
             if self.len() < 2**8:
                 for x in self:
                     ret.append(x.reverseName())
-            elif self.len() < 2**16L:
+            elif self.len() < 2** 16:
                 for i in range(0, self.len(), 2**8):
                     ret.append(self[i].reverseName()[2:])
-            elif self.len() < 2**24L:
+            elif self.len() < 2** 24:
                 for i in range(0, self.len(), 2**16):
                     ret.append(self[i].reverseName()[4:])
             else:
@@ -837,16 +837,16 @@ class IP(IPint):
             if s[-1] == 'l':
                 s = s[:-1]
             if self._prefixlen % 4 != 0:
-                raise NotImplementedError, "can't create IPv6 reverse names at sub nibble level"
+                raise NotImplementedError("can't create IPv6 reverse names at sub nibble level")
             s = list(s)
             s.reverse()
             s = '.'.join(s)
             first_nibble_index = int(32 - (self._prefixlen / 4)) * 2
             return ["%s.ip6.int." % s[first_nibble_index:]]
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
-        
-        
+            raise ValueError("only IPv4 and IPv6 supported")
+
+
 
     def reverseName(self):
         """Return the value for reverse lookup/PTR records as RfC 2317 look alike.
@@ -855,9 +855,9 @@ class IP(IPint):
         for /23. Do not use it. Better set up a Zone for every
         address. See reverseName for a way to arcive that.
 
-        >>> print IP('195.185.1.1').reverseName()
+        >>> print(IP('195.185.1.1').reverseName())
         1.1.185.195.in-addr.arpa.
-        >>> print IP('195.185.1.0/28').reverseName()
+        >>> print(IP('195.185.1.0/28').reverseName())
         0-15.1.185.195.in-addr.arpa.
         """
 
@@ -865,7 +865,7 @@ class IP(IPint):
             s = self.strFullsize(0)
             s = s.split('.')
             s.reverse()
-            first_byte_index = int(4 - (self._prefixlen / 8)) 
+            first_byte_index = int(4 - (self._prefixlen / 8))
             if self._prefixlen % 8 != 0:
                 nibblepart = "%s-%s" % (s[3-(self._prefixlen / 8)], intToIp(self.ip + self.len() - 1, 4).split('.')[-1])
                 if nibblepart[-1] == 'l':
@@ -894,22 +894,22 @@ class IP(IPint):
             first_nibble_index = int(32 - (self._prefixlen / 4)) * 2
             return "%s%s.ip6.int." % (nibblepart, s[first_nibble_index:])
         else:
-            raise ValueError, "only IPv4 and IPv6 supported"
+            raise ValueError("only IPv4 and IPv6 supported")
 
     def __getitem__(self, key):
         """Called to implement evaluation of self[key].
-        
+
         >>> ip=IP('127.0.0.0/30')
         >>> for x in ip:
-        ...  print str(x)
+        ...  print(str(x))
         ...
         127.0.0.0
         127.0.0.1
         127.0.0.2
         127.0.0.3
-        >>> print str(ip[2])
+        >>> print(str(ip[2]))
         127.0.0.2
-        >>> print str(ip[-1])
+        >>> print(str(ip[-1]))
         127.0.0.3
         """
         return IP(IPint.__getitem__(self, key))
@@ -921,21 +921,21 @@ class IP(IPint):
         IP('10.0.0.0/8')
         """
 
-        return("IP('%s')" % (self.strCompressed(1))) 
+        return "IP('%s')" % (self.strCompressed(1))
 
     def __add__(self, other):
         """Emulate numeric objects through network aggregation"""
         if self.prefixlen() != other.prefixlen():
-            raise ValueError, "Only networks with the same prefixlen can be added."
+            raise ValueError("Only networks with the same prefixlen can be added.")
         if self.prefixlen < 1:
-            raise ValueError, "Networks with a prefixlen longer than /1 can't be added."
+            raise ValueError("Networks with a prefixlen longer than /1 can't be added.")
         if self.version() != other.version():
-            raise ValueError, "Only networks with teh same IP version can be added."
+            raise ValueError("Only networks with teh same IP version can be added.")
         if self > other:
             other.__add__(self)
         else:
             ret = IP(self.int())
-            ret._prefixlen = self.prefixlen() - 1 
+            ret._prefixlen = self.prefixlen() - 1
             return ret
 
 def _countFollowingZeros(l):
@@ -952,25 +952,25 @@ _BitTable = {'0': '0000', '1': '0001', '2': '0010', '3': '0011',
             '4': '0100', '5': '0101', '6': '0110', '7': '0111',
             '8': '1000', '9': '1001', 'a': '1010', 'b': '1011',
             'c': '1100', 'd': '1101', 'e': '1110', 'f': '1111'}
-        
+
 def _intToBin(val):
     """Return the binary representation of an integer as string."""
 
     if val < 0:
-        raise ValueError, "Only positive Values allowed"
+        raise ValueError("Only positive Values allowed")
     s = hex(val).lower()
     ret = ''
     if s[-1] == 'l':
         s = s[:-1]
     for x in s[2:]:
         if __debug__:
-            if not _BitTable.has_key(x):
-                raise AssertionError, "hex() returned strange result"
+            if x not in _BitTable:
+                raise AssertionError("hex() returned strange result")
         ret += _BitTable[x]
     # remove leading zeros
     while ret[0] == '0' and len(ret) > 1:
         ret = ret[1:]
-    return ret 
+    return ret
 
 
 def parseAddress(ipstr):
@@ -992,18 +992,18 @@ def parseAddress(ipstr):
 
     # TODO: refactor me!
     if ipstr.startswith('0x'):
-        ret = long(ipstr[2:], 16)
-        if ret > 0xffffffffffffffffffffffffffffffffL:
-            raise ValueError, "%r: IP Address can't be bigger than 2^128" % (ipstr)
-        if ret < 0x100000000L:
+        ret = int(ipstr[2:], 16)
+        if ret > 0xffffffffffffffffffffffffffffffff:
+            raise ValueError("%r: IP Address can't be bigger than 2^128" % (ipstr))
+        if ret < 0x100000000:
             return (ret, 4)
         else:
             return (ret, 6)
-            
+
     if ipstr.find(':') != -1:
         # assume IPv6
         if ipstr.find(':::') != -1:
-            raise ValueError, "%r: IPv6 Address can't contain ':::'" % (ipstr)
+            raise ValueError("%r: IPv6 Address can't contain ':::'" % (ipstr))
         hextets = ipstr.split(':')
         if ipstr.find('.') != -1:
             # this might be a mixed address like '0:0:0:0:0:0:13.1.68.3'
@@ -1013,56 +1013,56 @@ def parseAddress(ipstr):
             hextets.append(hex(v4 >> 16)[2:-1])
             hextets.append(hex(v4 & 0xffff)[2:-1])
         if len(hextets) > 8:
-            raise ValueError, "%r: IPv6 Address with more than 8 hexletts" % (ipstr)
+            raise ValueError("%r: IPv6 Address with more than 8 hexletts" % (ipstr))
         if len(hextets) < 8:
             if '' not in hextets:
-                raise ValueError, "%r IPv6 Address with less than 8 hexletts and without '::'" % (ipstr)
+                raise ValueError("%r IPv6 Address with less than 8 hexletts and without '::'" % (ipstr))
             # catch :: at the beginning or end
             if hextets.index('') < len(hextets) - 1 and hextets[hextets.index('')+1] == '':
                 hextets.remove('')
             # catch '::'
             if hextets.index('') < len(hextets) - 1 and hextets[hextets.index('')+1] == '':
                 hextets.remove('')
-            
+
             for i in range(9-len(hextets)):
                 hextets.insert(hextets.index(''), '0')
             hextets.remove('')
             if '' in hextets:
-                raise ValueError, "%r IPv6 Address may contain '::' only once" % (ipstr)
+                raise ValueError("%r IPv6 Address may contain '::' only once" % (ipstr))
         if '' in hextets:
-            raise ValueError, "%r IPv6 Address may contain '::' only if it has less than 8 hextets" % (ipstr)
+            raise ValueError("%r IPv6 Address may contain '::' only if it has less than 8 hextets" % (ipstr))
         num = ''
         for x in hextets:
             if len(x) < 4:
                 x = ((4 - len(x)) * '0') + x
-            if int(x, 16) < 0 or int(x, 16) > 0xffff: 
-                raise ValueError, "%r: single hextet must be 0 <= hextet <= 0xffff which isn't true for %s" % (ipstr, x)
+            if int(x, 16) < 0 or int(x, 16) > 0xffff:
+                raise ValueError("%r: single hextet must be 0 <= hextet <= 0xffff which isn't true for %s" % (ipstr, x))
             num += x
-        return (long(num, 16), 6)
+        return (int(num, 16), 6)
 
     elif len(ipstr) == 32:
         # assume IPv6 in pure hexadecimal notation
-        return (long(ipstr, 16), 6)
-    
+        return (int(ipstr, 16), 6)
+
     elif  ipstr.find('.') != -1 or (len(ipstr) < 4 and int(ipstr) < 256):
         # assume IPv4  ('127' gets interpreted as '127.0.0.0')
         bytes = ipstr.split('.')
         if len(bytes) > 4:
-            raise ValueError, "IPv4 Address with more than 4 bytes"
+            raise ValueError("IPv4 Address with more than 4 bytes")
         bytes += ['0'] * (4 - len(bytes))
-        bytes = [long(x) for x in bytes]
+        bytes = [int(x) for x in bytes]
         for x in bytes:
             if x > 255 or x < 0:
-                raise ValueError, "%r: single byte must be 0 <= byte < 256" % (ipstr)
+                raise ValueError("%r: single byte must be 0 <= byte < 256" % (ipstr))
         return ((bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3], 4)
 
     else:
         # we try to interprete it as a decimal digit -
         # this ony works for numbers > 255 ... others
         # will be interpreted as IPv4 first byte
-        ret = long(ipstr)
-        if ret > 0xffffffffffffffffffffffffffffffffL:
-            raise ValueError, "IP Address cant be bigger than 2^128"
+        ret = int(ipstr)
+        if ret > 0xffffffffffffffffffffffffffffffff:
+            raise ValueError("IP Address cant be bigger than 2^128")
         if ret <= 0xffffffff:
             return (ret, 4)
         else:
@@ -1073,22 +1073,22 @@ def intToIp(ip, version):
     """Transform an integer string into an IP address."""
 
     # just to be sure and hoping for Python 2.22
-    ip = long(ip)
+    ip = int(ip)
 
     if ip < 0:
-        raise ValueError, "IPs can't be negative: %d" % (ip)
-    
+        raise ValueError("IPs can't be negative: %d" % (ip))
+
     ret = ''
-    if version == 4: 
-        if ip > 0xffffffffL:
-            raise ValueError, "IPv4 Addresses can't be larger than 0xffffffff: %s" % (hex(ip))
+    if version == 4:
+        if ip > 0xffffffff:
+            raise ValueError("IPv4 Addresses can't be larger than 0xffffffff: %s" % (hex(ip)))
         for l in range(4):
-            ret = str(ip & 0xffL) + '.' + ret
+            ret = str(ip & 0xff) + '.' + ret
             ip = ip >> 8;
         ret = ret[:-1]
     elif version == 6:
-        if ip > 0xffffffffffffffffffffffffffffffffL:
-            raise ValueError, "IPv6 Addresses can't be larger than 0xffffffffffffffffffffffffffffffff: %s" % (hex(ip))
+        if ip > 0xffffffffffffffffffffffffffffffff:
+            raise ValueError("IPv6 Addresses can't be larger than 0xffffffffffffffffffffffffffffffff: %s" % (hex(ip)))
         l = '0' * 32 + hex(ip)[2:-1]
         for x in range(1,33):
             ret = l[-x] + ret
@@ -1096,8 +1096,8 @@ def intToIp(ip, version):
                 ret = ':' + ret
         ret = ret[1:]
     else:
-        raise ValueError, "only IPv4 and IPv6 supported"
-            
+        raise ValueError("only IPv4 and IPv6 supported")
+
     return ret;
 
 def _count1Bits(num):
@@ -1112,31 +1112,31 @@ def _count0Bits(num):
     """Find the highest bit set to 0 in an integer."""
 
     # this could be so easy if _count1Bits(~long(num)) would work as excepted
-    num = long(num)
+    num = int(num)
     if num < 0:
-        raise ValueError, "Only positive Numbers please: %s" % (num)
+        raise ValueError("Only positive Numbers please: %s" % (num))
     ret = 0
     while num > 0:
         if num & 1 == 1:
             break
         num = num >> 1
         ret += 1
-    return ret 
+    return ret
 
-    
+
 def _checkPrefix(ip, prefixlen, version):
     """Check the validity of a prefix
-    
+
     Checks if the variant part of a prefix only has 0s, and the length is
     correct.
 
-    >>> _checkPrefix(0x7f000000L, 24, 4)
+    >>> _checkPrefix(0x7f000000, 24, 4)
     1
-    >>> _checkPrefix(0x7f000001L, 24, 4)
+    >>> _checkPrefix(0x7f000001, 24, 4)
     0
-    >>> repr(_checkPrefix(0x7f000001L, -1, 4))
+    >>> repr(_checkPrefix(0x7f000001, -1, 4))
     'None'
-    >>> repr(_checkPrefix(0x7f000001L, 33, 4))
+    >>> repr(_checkPrefix(0x7f000001, 33, 4))
     'None'
     """
 
@@ -1146,12 +1146,12 @@ def _checkPrefix(ip, prefixlen, version):
     elif version == 6:
         bits = 128
     else:
-        raise ValueError, "only IPv4 and IPv6 supported"
+        raise ValueError("only IPv4 and IPv6 supported")
 
     if prefixlen < 0 or prefixlen > bits:
         return None
 
-    if ip == 0: 
+    if ip == 0:
         zbits = bits + 1
     else:
         zbits = _count0Bits(ip)
@@ -1164,11 +1164,11 @@ def _checkPrefix(ip, prefixlen, version):
 def _checkNetmask(netmask, masklen):
     """Checks if a netmask is expressable as e prefixlen."""
 
-    num = long(netmask)
+    num = int(netmask)
     bits = masklen
-    
+
     if num==0: #farshad: if netmask is 0 then loop never finish
-        raise ValueError, "Netmask 0 is not allowed"
+        raise ValueError("Netmask 0 is not allowed")
 
     # remove zero bits at the end
     while (num & 1) == 0:
@@ -1179,7 +1179,7 @@ def _checkNetmask(netmask, masklen):
     # now check if the rest consists only of ones
     while bits > 0:
         if (num & 1) == 0:
-            raise ValueError, "Netmask %s can't be expressed as an prefix." % (hex(netmask))
+            raise ValueError("Netmask %s can't be expressed as an prefix." % (hex(netmask)))
         num = num >> 1
         bits -= 1
 
@@ -1190,7 +1190,7 @@ def _checkNetaddrWorksWithPrefixlen(net, prefixlen, version):
         return 1
     else:
         return 0
-    
+
 
 def _netmaskToPrefixlen(netmask):
     """Convert an Integer reprsenting a Netmask to an prefixlen.
@@ -1213,14 +1213,14 @@ def _prefixlenToNetmask(prefixlen, version):
     if prefixlen == 0:
         return 0
     elif prefixlen < 0:
-        raise ValueError, "Prefixlen must be > 0"
+        raise ValueError("Prefixlen must be > 0")
     if version == 4:
-        return ((2L<<prefixlen-1)-1) << (32 - prefixlen)
+        return ((2 << prefixlen - 1) - 1) << (32 - prefixlen)
     elif version == 6:
-        return ((2L<<prefixlen-1)-1) << (128 - prefixlen)
+        return ((2 << prefixlen - 1) - 1) << (128 - prefixlen)
     else:
-        raise ValueError, "only IPv4 and IPv6 supported"
-         
+        raise ValueError("only IPv4 and IPv6 supported")
+
 
 def _test():
     import doctest, IPy
@@ -1229,8 +1229,8 @@ def _test():
 if __name__ == "__main__":
     _test()
 
-    t = [0xf0, 0xf00, 0xff00, 0xffff00, 0xffffff00L]
+    t = [0xf0, 0xf00, 0xff00, 0xffff00, 0xffffff00]
     o = []
     for x in t:
         pass
-    x = 0L
+    x = 0

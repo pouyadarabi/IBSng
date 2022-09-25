@@ -114,7 +114,7 @@ class IPPoolContainer:
     def _reload(self,ip_list):
         self.lock.acquire()
         try:
-            self.free=filter(lambda ip:ip not in self.used,ip_list)
+            self.free=[ip for ip in ip_list if ip not in self.used]
             self.all_ips = ip_list
         finally:
             self.lock.release()
@@ -182,6 +182,6 @@ class IPPool:
             reload ippool obj, and sync that to db
         """
         new_obj = ippool_main.getLoader().getIPpoolObjByID(self.getIPpoolID())
-        apply(self.__assignBasicVars,new_obj.getBasicVars())
+        self.__assignBasicVars(*new_obj.getBasicVars())
         self.getContainer()._reload(new_obj.getContainer().getAllIPs())
 

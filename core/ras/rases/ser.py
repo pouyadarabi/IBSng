@@ -35,10 +35,10 @@ class SerRas(Ras, VoIPRas):
 ###################################
     def __addUniqueIdToRasMsg(self,ras_msg):
         ras_msg["unique_id"] = "call_id"
-	if ras_msg.getRequestPacket().has_key("Acct-Session-Id"):
+	if "Acct-Session-Id" in ras_msg.getRequestPacket():
 	    ras_msg.setInAttrs({"Acct-Session-Id":"call_id"})
 	    
-	elif ras_msg.getRequestPacket().has_key("Cisco-AVPair"):
+	elif "Cisco-AVPair" in ras_msg.getRequestPacket():
 	    for avpair in ras_msg.getRequestPacket()["Cisco-AVPair"]:
 		if avpair.startswith("call-id"):
 		    ras_msg["call_id"] = avpair[8:]

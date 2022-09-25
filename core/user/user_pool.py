@@ -83,7 +83,7 @@ class UserPool:
         stat_main.getStatKeeper().inc("user_pool_misses")
 
     def __fixUserID(self,user_id):
-        return long(user_id)
+        return int(user_id)
         
     def __isInPoolByID(self,user_id):
         """
@@ -92,7 +92,7 @@ class UserPool:
         """
         self.lock.acquire()
         try:
-            if self.__pool_by_id.has_key(user_id):
+            if user_id in self.__pool_by_id:
                 self.__incHits()
                 return self.__pool_by_id[user_id]
 
@@ -175,7 +175,7 @@ class UserPool:
             load user with ids in memory and return a list of LoadedUser instances
         """     
         loaded_users=user_main.getUserLoader().getLoadedUserByUserIDs(user_ids)
-        map(self.__saveInPool,loaded_users)
+        list(map(self.__saveInPool,loaded_users))
         return loaded_users
 
 ################################
@@ -205,7 +205,7 @@ class UserPool:
         """
         loaded_users = []
 
-        all_user_ids=map(self.__fixUserID,user_ids)
+        all_user_ids=list(map(self.__fixUserID,user_ids))
         all_user_ids.sort() #prevent dead lock by loading users in order
         
         i = 0
@@ -223,7 +223,7 @@ class UserPool:
                             toLog("UserPool(getUsersById): bulk loading %s number of users"%len(to_load_ids),LOG_DEBUG)
                             
                         loaded_users += self.__loadUsersByID(to_load_ids)
-                        map(self.loading_users.loadingEnd, to_load_ids)
+                        list(map(self.loading_users.loadingEnd, to_load_ids))
                         to_load_ids = []
                         
                 else:
@@ -234,7 +234,7 @@ class UserPool:
                 if user_id not in to_load_ids:
                     to_load_ids.append(user_id)
 
-                map(self.loading_users.loadingEnd, to_load_ids)
+                list(map(self.loading_users.loadingEnd, to_load_ids))
                 raise
                         
             i += 1
@@ -246,11 +246,11 @@ class UserPool:
 
             loaded_users += self.__loadUsersByID(to_load_ids)
         finally:
-            map(self.loading_users.loadingEnd, to_load_ids)
+            list(map(self.loading_users.loadingEnd, to_load_ids))
         
         if keep_order:
             return self.__fixLoadedUsersOrder(
-                                                map(self.__fixUserID,user_ids), 
+                                                list(map(self.__fixUserID,user_ids)), 
                                                 loaded_users
                                              )
         else:
@@ -346,7 +346,7 @@ class UserPool:
             run reload users if filter_func return true
             filter_func should accept an loaded_user instance and return a bool
         """
-        for user_id in self.__pool_by_id.keys():
+        for user_id in list(self.__pool_by_id.keys()):
             self.loading_users.loadingStart(user_id)
             try:
                 try:
@@ -354,7 +354,7 @@ class UserPool:
                 except KeyError:
                     continue
                 
-                if apply(filter_func,[loaded_user]):
+                if filter_func(*[loaded_user]):
                     self.userChanged(user_id)
             finally:
                 self.loading_users.loadingEnd(user_id)

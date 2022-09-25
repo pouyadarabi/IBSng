@@ -4,12 +4,12 @@ from core.ibs_exceptions import *
 
 class MailActions:
     def getMailboxUsage(self, username):
-        usage=-1L
+        usage=-1
         try:
             fd=launcher_main.getLauncher().popen("%smail/mail_usage"%defs.IBS_ADDONS,[username])
             usage=fd.readline()
             fd.close()
-            return long(usage)
+            return int(usage)
         except:
             toLog("Can't query user %s mailbox usage: %s"%(username, usage),LOG_DEBUG)
             return -1

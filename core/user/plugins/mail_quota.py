@@ -13,13 +13,13 @@ def calcMailboxUsage(_id,_type,raw_attrs,parsed_attrs,date_type):
     if _type!="user":
         return
 
-    if raw_attrs.has_key("mail_quota") and raw_attrs.has_key("email_address"):
+    if "mail_quota" in raw_attrs and "email_address" in raw_attrs:
         parsed_attrs["mail_usage"]=user_main.getMailActions().getMailboxUsage(raw_attrs["email_address"])
         
 class MailQuotaAttrUpdater(AttrUpdater):
     def checkInput(self,src,action,dargs):
         if src=="user":
-            map(dargs["admin_obj"].canChangeNormalAttrs,dargs["users"].itervalues())
+            list(map(dargs["admin_obj"].canChangeNormalAttrs,iter(dargs["users"].values())))
         else:
             dargs["admin_obj"].canChangeNormalAttrs(None)
         

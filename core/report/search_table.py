@@ -14,7 +14,7 @@ class SearchTable:
         return self._root_group.addGroup(group)
     
     def addGroups(self,groups):
-        return map(self.addGroup,groups)
+        return list(map(self.addGroup,groups))
 
     def getRootGroup(self):
         return self._root_group
@@ -27,11 +27,11 @@ class SearchTable:
         if value_parser_method==MultiStr:
             value=MultiStr(value)
         else:
-            if type(value)==types.StringType:
+            if type(value)==bytes:
                 value=(value,)
                 
             if callable(value_parser_method):
-                value=map(lambda val:apply(value_parser_method,[val]),value)
+                value=[value_parser_method(*[val]) for val in value]
         
         return value
 
@@ -53,7 +53,7 @@ class SearchTable:
             values should be iterable object
         """
         group=SearchGroup("or")
-        map(lambda value:group.addGroup(self.createColGroup(db_name,value,op,cast_to)),values)
+        list(map(lambda value:group.addGroup(self.createColGroup(db_name,value,op,cast_to)),values))
         self.addGroup(group)
 
     ############################
@@ -107,7 +107,7 @@ class SearchTable:
             op="="
         else:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_OPERATOR")%op)
-        return (op,map(method,values))
+        return (op,list(map(method,values)))
         
     ###########################
     def dateSearch(self,search_helper,cond_key,cond_unit_key,cond_op_key,db_col_name,value_parser_method=None):
@@ -193,9 +193,9 @@ class SearchAttrsTable(SearchTable):
 
         if cast_to!="":
             attr_value="cast(%s as %s)"%(attr_value,cast_to)
-            map(lambda value:sub_group.addGroup("%s %s cast(%s as %s)"%(attr_value,op,dbText(value),cast_to)),attr_values)
+            list(map(lambda value:sub_group.addGroup("%s %s cast(%s as %s)"%(attr_value,op,dbText(value),cast_to)),attr_values))
         else:
-            map(lambda value:sub_group.addGroup("%s %s %s"%(attr_value,op,dbText(value))),attr_values)
+            list(map(lambda value:sub_group.addGroup("%s %s %s"%(attr_value,op,dbText(value))),attr_values))
 
         group.addGroup(sub_group)
 

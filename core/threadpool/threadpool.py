@@ -26,7 +26,7 @@ class IBSThread(threading.Thread):
                 return
 
             try:
-                apply(method,args_list)
+                method(*args_list)
             except:
                 logException(LOG_ERROR,"Exception on thread %s while running %s"%(self,self.job))
 
@@ -185,7 +185,7 @@ class ThreadPool:
                     self.__delFromInUse(thread)
                     thread.join()
     
-            for thread in xrange(len(self.__pool)):
+            for thread in range(len(self.__pool)):
                 self.__runThread(None,"exit",[])
         
             time.sleep(1)

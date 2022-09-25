@@ -20,7 +20,7 @@ def fixConditionsDic(conds):
     """ 
     for key in conds:
         val=conds[key]
-        if type(val)==types.DictType:
+        if type(val)==dict:
             conds[key]=fixXMLRPCList(val)
     return conds
 

@@ -34,7 +34,7 @@ class InternetCharge(ChargeWithRules):
             # find new rule
             try:
                 effective_rule = self.getEffectiveRule(user_obj,_index+1)
-            except LoginException,e:
+            except LoginException as e:
                 result.addInstanceToKill(_index+1,e.getErrorText())
                 continue
             

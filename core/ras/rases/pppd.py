@@ -66,7 +66,7 @@ class PPPDRas(GeneralUpdateRas):
                     toLog("PPPd getInOuts: Can't parse line %s"%line, LOG_ERROR)
                     continue
 
-                inout_list[sp[0]]={"in_bytes":long(sp[1]), "out_bytes":long(sp[2])}
+                inout_list[sp[0]]={"in_bytes":int(sp[1]), "out_bytes":int(sp[2])}
         except:
             logException(LOG_ERROR)
 
@@ -80,10 +80,10 @@ class PPPDRas(GeneralUpdateRas):
 ####################################
     def isOnline(self, user_msg):
         if self.getAttribute("pppd_use_update_accounting"):
-            return self.onlines.has_key(user_msg["port"]) and self.onlines[user_msg["port"]]["last_update"] >= \
+            return user_msg["port"] in self.onlines and self.onlines[user_msg["port"]]["last_update"] >= \
                     time.time() - self.getAttribute("pppd_update_accounting_interval")*60
         else:
-            return self.inouts.has_key(user_msg["port"])
+            return user_msg["port"] in self.inouts
 ####################################
     def getInOutBytes(self, user_msg):
         try:
@@ -124,7 +124,7 @@ class PPPDRas(GeneralUpdateRas):
                                     "Calling-Station-Id":"station_ip"
                                     })
 
-        if self.onlines.has_key(ras_msg["port"]):
+        if ras_msg["port"] in self.onlines:
                 self.onlines[ras_msg["port"]]["in_bytes"], self.onlines[ras_msg["port"]]["out_bytes"]=0, 0
 
         if ras_msg.hasAttr("station_ip") and self.getAttribute("pppd_discover_mac_address"):
@@ -193,7 +193,7 @@ class PPPDRas(GeneralUpdateRas):
     def __addInOnlines(self, ras_msg):
 
         pkt = ras_msg.getRequestPacket()
-        if pkt.has_key("Acct-Output-Octets"):
+        if "Acct-Output-Octets" in pkt:
             start_in_bytes = pkt["Acct-Input-Octets"][0]
             start_out_bytes = pkt["Acct-Output-Octets"][0]
         else:

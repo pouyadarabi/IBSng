@@ -30,7 +30,7 @@ class SearchHelper:
     
     def hasCondFor(self,*keys):
         for key in keys:
-            if not self.conds.has_key(key):
+            if key not in self.conds:
                 return False
         return True
 
@@ -49,7 +49,7 @@ class SearchHelper:
             If none of tables has a query, it will return "if_empty_query"
         """
         queries=self.getTableQueries()
-        queries=apply(self.filterNoneQueries,queries.values())
+        queries=self.filterNoneQueries(*list(queries.values()))
         if len(queries)==0:
             query=if_empty_query
         else:
@@ -64,7 +64,7 @@ class SearchHelper:
         return table_query
 
     def filterNoneQueries(self,*args):
-        return filter(lambda x:x!=None,args)
+        return [x for x in args if x!=None]
 
     def intersectQueries(self,queries):
         return " intersect ".join(queries)

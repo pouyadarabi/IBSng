@@ -19,7 +19,7 @@ License: Python Software Foundation License
 Noah Spurrier
 Richard Holden
 Marco Molteni
-Kimberley Burchett 
+Kimberley Burchett
 Robert Stone
 Mike Snitzer
 Marti Raudsepp
@@ -48,7 +48,7 @@ try:
     import fcntl
     import errno
     import traceback
-except ImportError, e:
+except ImportError as e:
     raise ImportError (str(e) + """
 A critical module was not found. Probably this operating system does not support it.
 Pexpect is intended for UNIX-like operating systems.""")
@@ -118,7 +118,7 @@ class spawn:
             p = pexpect.spawn ('/usr/bin/ssh', ['user@example.com'])
             p = pexpect.spawn ('ls', ['-latr', '/tmp'])
         After this the child application will be created and
-        will be ready to talk to. For normal use, see expect() and 
+        will be ready to talk to. For normal use, see expect() and
         send() and sendline().
 
         If the command parameter is an integer AND a valid file descriptor
@@ -151,25 +151,25 @@ class spawn:
         self.__child_fd_owner = None
         self.timeout = timeout
         self.delimiter = EOF
-        self.log_file = None    
+        self.log_file = None
         self.softspace = 0 # File-like object.
         self.name = '' # File-like object.
 
-        # This is to support buffering -- the ability to read more than one 
+        # This is to support buffering -- the ability to read more than one
         # byte from a TTY at a time. See setmaxread() method.
         self.buffer = ''
         self.maxread = 1 # Max bytes to read at one time
         ### IMPLEMENT THIS FEATURE!!!
         # anything before maxsearchsize point is preserved, but not searched.
         #self.maxsearchsize = 1000
-        
+
         # If command is an int type then it must represent an open file descriptor.
         if type (command) == type(0):
             try: # Command is an int, so now check if it is a file descriptor.
                 os.fstat(command)
             except OSError:
                 raise ExceptionPexpect ('Command is an int type, yet is not a valid file descriptor.')
-            self.pid = -1 
+            self.pid = -1
             self.child_fd = command
             self.__child_fd_owner = 0 # Sets who is reponsible for the child_fd
             self.args = None
@@ -249,7 +249,7 @@ class spawn:
 
         try:
             self.pid, self.child_fd = pty.fork()
-        except OSError, e:
+        except OSError as e:
             raise ExceptionPexpect('Pexpect: pty.fork() failed: ' + str(e))
 
         if self.pid == 0: # Child
@@ -301,7 +301,7 @@ class spawn:
                     pid, status = os.waitpid (self.pid, 0)
                     if os.WIFEXITED (status):
                         self.exitstatus = os.WEXITSTATUS(status)
-                except OSError, e: ### suggested by Robert Stone
+                except OSError as e: ### suggested by Robert Stone
                     if e[0] == errno.ECHILD:
                         pass
                     else:
@@ -331,7 +331,7 @@ class spawn:
 
     def setlog (self, fileobject):
         """This sets logging output to go to the given fileobject.
-        Set fileobject to None to stop logging. 
+        Set fileobject to None to stop logging.
         Example:
             child = pexpect.spawn('some_command')
             fout = file('mylog.txt','w')
@@ -358,13 +358,13 @@ class spawn:
         If a log file was set using setlog() then all data will
         also be written to the log file.
 
-        Notice that if this method is called with timeout=None 
+        Notice that if this method is called with timeout=None
         then it actually may block.
 
         This is a non-blocking wrapper around os.read().
-        It uses select.select() to implement a timeout. 
+        It uses select.select() to implement a timeout.
         """
-        
+
         if self.child_fd == -1:
             raise ValueError ('I/O operation on closed file in read_nonblocking().')
 
@@ -390,27 +390,27 @@ class spawn:
         if self.child_fd in r:
             try:
                 s = os.read(self.child_fd, size)
-            except OSError, e:
+            except OSError as e:
                 self.flag_eof = 1
                 raise EOF ('End Of File (EOF) in read_nonblocking(). Exception style platform.')
             if s == '':
                 self.flag_eof = 1
                 raise EOF ('End Of File (EOF) in read_nonblocking(). Empty string style platform.')
-            
+
             if self.log_file != None:
                 self.log_file.write (s)
                 self.log_file.flush()
-                
+
             return s
 
         raise ExceptionPexpect ('Reached an unexpected state in read_nonblocking().')
 
     def read (self, size = -1):   # File-like object.
-        """This reads at most size bytes from the file 
-        (less if the read hits EOF before obtaining size bytes). 
-        If the size argument is negative or omitted, 
-        read all data until EOF is reached. 
-        The bytes are returned as a string object. 
+        """This reads at most size bytes from the file
+        (less if the read hits EOF before obtaining size bytes).
+        If the size argument is negative or omitted,
+        read all data until EOF is reached.
+        The bytes are returned as a string object.
         An empty string is returned when EOF is encountered immediately.
         """
         if size == 0:
@@ -424,16 +424,16 @@ class spawn:
         # I would catch any bugs early and ensure consistant behavior.
         # It's a little less efficient, but there is less for me to
         # worry about if I have to later modify read() or expect().
-        cre = re.compile('.{%d}' % size, re.DOTALL) 
+        cre = re.compile('.{%d}' % size, re.DOTALL)
         index = self.expect ([cre, self.delimiter]) # delimiter default is EOF
         if index == 0:
             return self.after ### self.before should be ''. Should I assert this?
         return self.before
-        
+
     def readline (self, size = -1):    # File-like object.
         """This reads and returns one entire line. A trailing newline is kept in
-        the string, but may be absent when a file ends with an incomplete line. 
-        Note: This readline() looks for a \\r\\n pair even on UNIX because this is 
+        the string, but may be absent when a file ends with an incomplete line.
+        Note: This readline() looks for a \\r\\n pair even on UNIX because this is
         what the pseudo tty device returns. So contrary to what you may be used to
         you will receive a newline as \\r\\n.
         An empty string is returned when EOF is hit immediately.
@@ -462,9 +462,9 @@ class spawn:
         return result
 
     def readlines (self, sizehint = -1):    # File-like object.
-        """This reads until EOF using readline() and returns a list containing 
+        """This reads until EOF using readline() and returns a list containing
         the lines thus read. The optional sizehint argument is ignored.
-        """        
+        """
         lines = []
         while 1:
             line = self.readline()
@@ -480,7 +480,7 @@ class spawn:
 
     def writelines (self, sequence):   # File-like object.
         """This calls write() for each element in the sequence.
-        The sequence can be any iterable object producing strings, 
+        The sequence can be any iterable object producing strings,
         typically a list of strings. This does not add line separators
         There is no return value.
         """
@@ -507,8 +507,8 @@ class spawn:
         buffer to be sent to the waiting child program without
         waiting for end-of-line. If it is the first character of the
         line, the read() in the user program returns 0, which
-        signifies end-of-file. This means to work as expected 
-        a sendeof() has to be called at the begining of a line. 
+        signifies end-of-file. This means to work as expected
+        a sendeof() has to be called at the begining of a line.
         This method does not send a newline. It is the responsibility
         of the caller to ensure the eof is sent at the beginning of a line.
         """
@@ -545,7 +545,7 @@ class spawn:
 
         # If this class was created from an existing file descriptor then
         # I just check to see if the file descriptor is still valid.
-        if self.pid == -1 and not self.__child_fd_owner: 
+        if self.pid == -1 and not self.__child_fd_owner:
             try:
                 os.fstat(self.child_fd)
                 return 1
@@ -597,7 +597,7 @@ class spawn:
 
     def compile_pattern_list(self, patterns):
         """This compiles a pattern-string or a list of pattern-strings.
-        Patterns must be a StringType, EOF, TIMEOUT, SRE_Pattern, or 
+        Patterns must be a StringType, EOF, TIMEOUT, SRE_Pattern, or
         a list of those.
 
         This is used by expect() when calling expect_list().
@@ -631,7 +631,7 @@ class spawn:
                 raise TypeError ('Argument must be one of StringType, EOF, TIMEOUT, SRE_Pattern, or a list of those type. %s' % str(type(p)))
 
         return compiled_pattern_list
- 
+
     def expect(self, pattern, timeout = -1):
         """This seeks through the stream until a pattern is matched.
         The pattern is overloaded and may take several types including a list.
@@ -724,14 +724,14 @@ class spawn:
 #            #ED# incoming = ''
 #            incoming = self.buffer
 #            while 1: # Keep reading until exception or return.
-#                #ED# c = self.read_nonblocking (1, timeout) 
+#                #ED# c = self.read_nonblocking (1, timeout)
 #                #ED# incoming = incoming + c
 #
 #                # Sequence through the list of patterns and look for a match.
 #                index = -1
 #                for str_target in pattern_list:
 #                    index = index + 1
-#                    if str_target is EOF or str_target is TIMEOUT: 
+#                    if str_target is EOF or str_target is TIMEOUT:
 #                        continue # The Exception patterns are handled differently.
 #                    match_index = incoming.find (str_target)
 #                    if match_index >= 0:
@@ -740,9 +740,9 @@ class spawn:
 #                        self.buffer = incoming [match_index + len(str_target):]
 #                        self.match = None
 #                        return index
-#                c = self.read_nonblocking (self.maxread, timeout) 
+#                c = self.read_nonblocking (self.maxread, timeout)
 #                incoming = incoming + c
-#                
+#
 #        except EOF:
 #            self.before = incoming
 #            self.after = EOF
@@ -765,10 +765,10 @@ class spawn:
 #            self.match = None
 #            self.buffer = ''
 #            raise
-            
+
     def expect_list(self, pattern_list, timeout = -1):
         """
-        This takes a list of compiled regular expressions and returns 
+        This takes a list of compiled regular expressions and returns
         the index into the pattern_list that matched the child's output.
         This is called by expect(). It is similar to the expect() method
         except that expect_list() is not overloaded and it does not have to
@@ -785,7 +785,7 @@ class spawn:
             end_time = None
         if timeout != None:
             end_time = time.time() + timeout
- 
+
         try:
             incoming = self.buffer
             while 1: # Keep reading until exception or return.
@@ -793,7 +793,7 @@ class spawn:
                 index = -1
                 for cre in self.pattern_list:
                     index = index + 1
-                    if cre is EOF or cre is TIMEOUT: 
+                    if cre is EOF or cre is TIMEOUT:
                         continue # The patterns for PexpectExceptions are handled differently.
                     match = cre.search(incoming)
                     if match is not None:
@@ -810,7 +810,7 @@ class spawn:
                         raise TIMEOUT ('Timeout exceeded in expect_list().')
                 c = self.read_nonblocking (self.maxread, timeout)
                 incoming = incoming + c
-        except EOF, e:
+        except EOF as e:
             self.buffer = ''
             self.before = incoming
             self.after = EOF
@@ -822,7 +822,7 @@ class spawn:
                 self.match = None
                 self.match_index = None
                 raise EOF (str(e) + '\n' + str(self))
-        except TIMEOUT, e:
+        except TIMEOUT as e:
             self.before = incoming
             self.after = TIMEOUT
             if TIMEOUT in pattern_list:
@@ -867,7 +867,7 @@ class spawn:
         # Newer versions of Linux have totally different values for TIOCSWINSZ.
         # Note that this fix is a hack.
         TIOCSWINSZ = termios.TIOCSWINSZ
-        if TIOCSWINSZ == 2148037735L: # L is not required in Python >= 2.2.
+        if TIOCSWINSZ == 2148037735: # L is not required in Python >= 2.2.
             TIOCSWINSZ = -2146929561 # Same bits, but with sign.
 
         # Note, assume ws_xpixel and ws_ypixel are zero.
@@ -940,7 +940,7 @@ def _which (filename):
 
     # Oddly enough this was the one line that made Pexpect
     # incompatible with Python 1.5.2.
-    #pathlist = p.split (os.pathsep) 
+    #pathlist = p.split (os.pathsep)
     pathlist = string.split (p, os.pathsep)
 
     for path in pathlist:
@@ -1027,7 +1027,7 @@ def _split_command_line(command_line):
 # Nonblocking on Win32?
 # Reasearch this as a way to maybe make pipe work for Win32.
 # http://groups.google.com/groups?q=setraw+tty&hl=en&selm=uvgpvisvk.fsf%40roundpoint.com&rnum=7
-# 
+#
 #    if istty:
 #        if os.name=='posix':
 #            import tty
@@ -1074,10 +1074,10 @@ def _split_command_line(command_line):
 ##        self.buffer = ''
 ##
 ##    def read(self, n, timeout = None):
-##        """This does a read restricted by a timeout and 
-##        it includes any cached data from previous calls. 
+##        """This does a read restricted by a timeout and
+##        it includes any cached data from previous calls.
 ##            This is a non-blocking wrapper around os.read.
-##        it uses select.select to supply a timeout. 
+##        it uses select.select to supply a timeout.
 ##        Note that if this is called with timeout=None (the default)
 ##        then this actually MAY block.
 ##        """

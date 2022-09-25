@@ -21,7 +21,7 @@ class Msg:
         self.attrs[key]=value    
 
     def hasAttr(self,attr_name):
-        return self.attrs.has_key(attr_name)
+        return attr_name in self.attrs
         
     def getAttrs(self):
         return self.attrs
@@ -131,7 +131,7 @@ class RasMsg(Msg):
         try:
             value = self.getRequestAttr(request_key)[0]
             
-            if self.conversion_map.has_key(attr_name):
+            if attr_name in self.conversion_map:
                 value = self.conversion_map[attr_name](value)
             
             self[attr_name] = value
@@ -148,7 +148,7 @@ class RasMsg(Msg):
             
             return True if request_key exists in request or False if it doesn't exists
         """
-        if self.request_pkt.has_key(request_key):
+        if request_key in self.request_pkt:
             self.setRequestToAttr(request_key, attr_name)
             return True
         else:

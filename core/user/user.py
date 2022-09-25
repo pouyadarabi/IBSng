@@ -6,6 +6,7 @@ from core.user import normal_user,voip_user,user_main
 from core.ras.msgs import UserMsg
 from core import main
 import operator
+from functools import reduce
 
 
 class User:
@@ -111,10 +112,10 @@ class User:
             if instance is None, check all instances
         """
         if instance:
-            return self.getInstanceInfo(instance).has_key("start_accounting")
+            return "start_accounting" in self.getInstanceInfo(instance)
         else:
-            for instance in xrange(1,self.instances+1):
-                if self.getInstanceInfo(instance).has_key("start_accounting"):
+            for instance in range(1,self.instances+1):
+                if "start_accounting" in self.getInstanceInfo(instance):
                     return True
             return False
 
@@ -156,7 +157,7 @@ class User:
 ##################################################
     def setKillReason(self,instance,reason):
         instance_info=self.getInstanceInfo(instance)
-        if instance_info["attrs"].has_key("kill_reason"):
+        if "kill_reason" in instance_info["attrs"]:
             instance_info["attrs"]["kill_reason"]+=", %s"%reason
         else:
             instance_info["attrs"]["kill_reason"]=reason
@@ -165,7 +166,7 @@ class User:
     def __filterRasAttrs(self,attrs):
         cattrs=attrs.copy()
         for attr_name in self.remove_ras_attrs:
-            if cattrs.has_key(attr_name):
+            if attr_name in cattrs:
                 del(cattrs[attr_name])
         return cattrs
 ##################################################
@@ -186,7 +187,7 @@ class User:
         try:
             self.__checkNoLoginFlag()
             user_main.getUserPluginManager().callHooks("USER_LOGIN",self,[ras_msg])
-        except Exception,e:
+        except Exception as e:
             if isinstance(e,IBSError):
                 self.setKillReason(self.instances,e.getErrorText())
             else:
@@ -231,7 +232,7 @@ class User:
         return True in ret
 
     def canStayOnline(self):
-        results=filter(lambda x:x!=None,user_main.getUserPluginManager().callHooks("USER_CAN_STAY_ONLINE",self))
+        results=[x for x in user_main.getUserPluginManager().callHooks("USER_CAN_STAY_ONLINE",self) if x!=None]
         return reduce(operator.add,results)
 
     def commit(self,used_credit):
@@ -239,7 +240,7 @@ class User:
             saves all changed user info from memory into DB
             commit is called before logout of each instance
         """
-        query=reduce(operator.add,filter(lambda x:x!=None,user_main.getUserPluginManager().callHooks("USER_COMMIT",self)))
+        query=reduce(operator.add,[x for x in user_main.getUserPluginManager().callHooks("USER_COMMIT",self) if x!=None])
         query+=self.__commitCreditQuery(used_credit)
         return query
         

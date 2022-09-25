@@ -53,7 +53,7 @@ class IPpoolUserPlugin(user_plugin.UserPlugin):
             return
     
         if ras_msg.hasAttr("re_onlined") and \
-           not ras_msg.getReplyPacket().has_key("Framed-IP-Address"):
+           "Framed-IP-Address" not in ras_msg.getReplyPacket():
 
             #Re Onlined user
 
@@ -68,7 +68,7 @@ class IPpoolUserPlugin(user_plugin.UserPlugin):
 
         elif self.user_obj.isNormalUser() and \
            (not ras_msg.hasAttr("ip_assignment") or ras_msg["ip_assignment"]==True) and \
-           not ras_msg.getReplyPacket().has_key("Framed-IP-Address"):
+           "Framed-IP-Address" not in ras_msg.getReplyPacket():
            
             #Normal Login User
             
@@ -85,7 +85,7 @@ class IPpoolUserPlugin(user_plugin.UserPlugin):
 
 
     def logout(self,instance,ras_msg):
-        if self.user_obj.getInstanceInfo(instance).has_key("ippool_id"):
+        if "ippool_id" in self.user_obj.getInstanceInfo(instance):
             try:
                 ippool_main.getLoader().getIPpoolByID(self.user_obj.getInstanceInfo(instance)["ippool_id"]).freeIP(self.user_obj.getInstanceInfo(instance)["attrs"]["ippool_assigned_ip"])
             except GeneralException:

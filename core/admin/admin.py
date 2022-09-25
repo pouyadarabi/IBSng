@@ -45,29 +45,29 @@ class Admin:
                 "deposit":self.deposit,
                 "creator_id":self.creator_id,
                 "creator":admin_main.getLoader().getAdminByID(self.creator_id).getUsername(),
-                "locks":map(lambda lock_obj:lock_obj.getLockInfo(),self.locks),
+                "locks":[lock_obj.getLockInfo() for lock_obj in self.locks],
                 "last_request_ip":self.activity_status["last_request_ip"],
                 "last_activity":self.__getAdminLastActivity(date_type),
                 "online_status":self.__getOnlineStatus()
                 }
-    
+
     def __getOnlineStatus(self):
-	"""
-	    return True if admin had an activity in last 15 minutes
-	"""
+        """
+        return True if admin had an activity in last 15 minutes
+        """
         if time.time() - self.activity_status["last_activity"] > 900: # more than 15 min
             return False
-	    
+
         return True
-    
+
     def __getAdminLastActivity(self,date_type):
-	"""
+        """
 	    return admin last activity in epoch time
 	    0 if admin hadn't any request from start of IBSng
-	"""
+	    """
         if self.activity_status["last_activity"]:
             return AbsDateFromEpoch(self.activity_status["last_activity"]).getDate(date_type)
-        
+
         return 0
 
     def setLocks(self,locks):
@@ -78,7 +78,7 @@ class Admin:
 
     def getLocks(self):
         return self.locks
-        
+
     def setPerms(self,perms):
         """
             calls when loading an admin to set its perms
@@ -95,7 +95,7 @@ class Admin:
             "args", permissions raise a PermissionException on access denied conditions
         """
         try:
-            return apply(self.perms[perm_name].check,args)
+            return self.perms[perm_name].check(*args)
         except KeyError:
             raise PermissionException(errorText("PERMISSION","DONT_HAVE_PERMISSION"))
         except IndexError:
@@ -104,33 +104,33 @@ class Admin:
 
     def hasPerm(self,perm_name):
         """
-            check if this admin --JUST HAS-- permission "perm_name" regardless of enviroment and 
+            check if this admin --JUST HAS-- permission "perm_name" regardless of enviroment and
             permission values. To check a permission use checkPerm instead.
         """
-        return self.perms.has_key(perm_name)
+        return perm_name in self.perms
 
     def canDo(self,perm_name,*args):
         """
             check if this admin can do "perm_name"
-            "can do" is a positive statement, so "perm_name" can't be a negative (restrictive) 
+            "can do" is a positive statement, so "perm_name" can't be a negative (restrictive)
             permission such as LIMIT_LOGIN_ADDR.
             raise a PermissionException if admin can't do it
         """
         if self.isGod():
-            return 
-        apply(self.checkPerm,[perm_name]+list(args))
-        
+            return
+        self.checkPerm(*[perm_name]+list(args))
+
 
     def isGod(self):
         return self.hasPerm("GOD")
-        
+
     ##########################
-    def consumeDeposit(self,credit): 
+    def consumeDeposit(self,credit):
         """
             consume admin deposit in loaded instance
         """
         return self.changeDeposit(credit*-1)
-    
+
     def changeDeposit(self,deposit_change):
         """
             change deposit in amount of deposit_change
@@ -146,7 +146,7 @@ class Admin:
 
     def checkPass(self,password):
         """
-            check if "password" is correct for this admin 
+            check if "password" is correct for this admin
             password(Password instance): password to check
         """
         if not self.__checkPass(password):
@@ -154,7 +154,7 @@ class Admin:
 
     def __checkPass(self,password):
         """
-            check if "password" is correct for this admin 
+            check if "password" is correct for this admin
             password(Password instance): password to check
             return 1 if it's correct and 0 if it's not
         """
@@ -169,20 +169,20 @@ class Admin:
             self.checkPerm("LIMIT LOGIN ADDR",remote_addr)
 
 
-    def canLogin(self,remote_addr): 
+    def canLogin(self,remote_addr):
         """
             check if this admin can login to server from remote address "remoteaddr"
         """
         self.isAuthorizedFromAddr(remote_addr)
         self.__checkIfLocked()
-        
+
     def isLocked(self):
         """
             return False if admin is not locked
             return True if this admin is locked
         """
         return len(self.locks)!=0
-        
+
     def __checkIfLocked(self):
         """
             check if this admin is locked, raise a LoginException if it's locked
@@ -191,23 +191,21 @@ class Admin:
         if self.isLocked():
             raise LoginException(errorText("ADMIN_LOGIN","ADMIN_LOCKED"))
 
-    #############################
-    def checkServerAuth(self, auth_pass, remote_addr):
-        self.__updateActivity(remote_addr, long(time.time()))
-	self.checkAuth(auth_pass, remote_addr)
-
-    def __updateActivity(self, last_ip, last_update):
-        self.activity_status["last_request_ip"], self.activity_status["last_activity"] = last_ip, last_update
-
-    ##############################
-
     def checkAuth(self,auth_pass,remote_addr):
         """
             authenticate admin, raise an exception if access is denied
         """
         self.checkPass(auth_pass)
         self.canLogin(remote_addr)
+    #############################
+    def checkServerAuth(self, auth_pass, remote_addr):
+        self.__updateActivity(remote_addr, int(time.time()))
+        self.checkAuth(auth_pass, remote_addr)
 
+    def __updateActivity(self, last_ip, last_update):
+        self.activity_status["last_request_ip"], self.activity_status["last_activity"] = last_ip, last_update
+
+    ##############################
     def canUseCharge(self,charge_name):
         """
             return True if admin can use charge with name "charge_name"
@@ -230,7 +228,7 @@ class Admin:
         """
         if self.isGod() or self.hasPerm("ACCESS ALL GROUPS"):
             return True
-        
+
         if group_main.getLoader().getGroupByName(group_name).getOwnerID() == self.getAdminID():
             return True
 
@@ -247,7 +245,7 @@ class Admin:
             raise an PermissionException if admin can not access and get information of  user loaded in "loaded_user"
             or return if admin has access to the user. Checking is done with admin permission GET USER INFORMATION
         """
-        
+
         self.canDo("GET USER INFORMATION",loaded_user)
 
     def canChangeUser(self,loaded_user):

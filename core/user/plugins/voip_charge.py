@@ -31,7 +31,7 @@ class VoIPChargeAttrUpdater(AttrUpdater):
         if src=="group":
             dargs["admin_obj"].canChangeVoIPAttrs(None)
         else:
-            map(dargs["admin_obj"].canChangeVoIPAttrs,dargs["users"].itervalues())
+            list(map(dargs["admin_obj"].canChangeVoIPAttrs,iter(dargs["users"].values())))
             
         if hasattr(self,"charge_name"): #update
             dargs["admin_obj"].canUseCharge(self.charge_name)

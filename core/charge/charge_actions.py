@@ -286,20 +286,20 @@ class ChargeActions:
         """
         try:
             start_time=Time(start_time)
-        except GeneralException,e:
+        except GeneralException as e:
             raise GeneralException(errorText("CHARGES","INVALID_RULE_START_TIME")%e)
 
         try:
             end_time=Time(end_time)
-        except GeneralException,e:
+        except GeneralException as e:
             raise GeneralException(errorText("CHARGES","INVALID_RULE_END_TIME")%e)
 
         if start_time >= end_time:
             raise GeneralException(errorText("CHARGES","RULE_END_LESS_THAN_START"))
     
         try:
-            dows=map(DayOfWeekString,day_of_weeks)
-        except GeneralException,e:
+            dows=list(map(DayOfWeekString,day_of_weeks))
+        except GeneralException as e:
             raise GeneralException(errorText("CHARGES","INVALID_DAY_OF_WEEK")%e)
 
         return (start_time,end_time,dows)
@@ -508,7 +508,7 @@ class ChargeActions:
         group_ids=group_main.getActionManager().getGroupIDsWithAttr(attr_name,charge_obj.getChargeID())
         if len(group_ids)>0:
             raise GeneralException(errorText("CHARGES","CHARGE_USED_IN_GROUP")%(charge_obj.getChargeName(),
-                                                            ",".join(map(lambda _id: group_main.getLoader().getGroupByID(_id).getGroupName(),group_ids))))
+                                                            ",".join([group_main.getLoader().getGroupByID(_id).getGroupName() for _id in group_ids])))
         
 
     def __delChargeCheckInput(self,charge_name):
@@ -653,7 +653,7 @@ class ChargeActions:
 
         def checkLeafInChargeObj(charge_obj):
             if charge_obj.isInternetCharge():
-                for rule_obj in charge_obj.getRules().itervalues():
+                for rule_obj in list(charge_obj.getRules().values()):
                     if rule_obj.bw_tx_leaf_id==leaf_id or rule_obj.bw_rx_leaf_id==leaf_id:
                         charge_names.append(charge_obj.getChargeName())
                         break

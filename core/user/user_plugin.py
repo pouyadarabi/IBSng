@@ -31,7 +31,7 @@ class UserPlugin(BaseUserPlugin):
     def commit(self):
         """
             tell plugin to commit itself to db
-            this should be done by returning a query 
+            this should be done by returning a query
         """
         return ""
 
@@ -40,7 +40,7 @@ class UserPlugin(BaseUserPlugin):
             called when an instance of user logs out
         """
         pass
-        
+
     def canStayOnline(self):
         """
             called during user_obj.canStayOnline
@@ -55,9 +55,9 @@ class UserPlugin(BaseUserPlugin):
         pass
 
     def update(self,ras_msg):
-	"""
-	
-	"""
+        """
+
+        """
         pass
 
 class AttrCheckUserPlugin(BaseUserPlugin):
@@ -72,20 +72,20 @@ class AttrCheckUserPlugin(BaseUserPlugin):
         BaseUserPlugin.__init__(self,user_obj)
         self.has_attr_name=attr_name
         self._setHasAttr(attr_name)
-        
+
     def __getattr__(self,name):
         if  name in ("update","login","logout","commit","canStayOnline"):
             if self.hasAttr():
                 return getattr(self,"s_%s"%name)
             else:
                 return getattr(self,"has_not_attr_%s"%name)
-            
+
     def _setHasAttr(self,attr_name):
         self.has_attr=self.user_obj.getLoadedUser().hasAttr(attr_name)
 
     def hasAttr(self):
         return self.has_attr
-    
+
 ##############################
     def s_login(self,ras_msg):
         pass
@@ -95,7 +95,7 @@ class AttrCheckUserPlugin(BaseUserPlugin):
 
     def s_logout(self,instance,ras_msg):
         pass
-    
+
     def s_canStayOnline(self):
         pass
 
@@ -111,7 +111,7 @@ class AttrCheckUserPlugin(BaseUserPlugin):
 
     def has_not_attr_logout(self,instance,ras_msg):
         pass
-    
+
     def has_not_attr_canStayOnline(self):
         pass
 
@@ -121,12 +121,12 @@ class AttrCheckUserPlugin(BaseUserPlugin):
 ###############################
     def _reload(self):
         self._setHasAttr(self.has_attr_name)
-    
+
 
 class UserPluginManager:
     def __init__(self):
         self.__plugin_classes=([],[],[],[],[],[],[],[],[],[]) #priority:[(plugin_class,plugin_name),(plugin_class,plugin_name),...]
-        
+
     def register(self,plugin_name,plugin_class,priority=5):
         """
             register new plugin to be called on user hooks
@@ -134,7 +134,7 @@ class UserPluginManager:
             plugin_class(Class): class of plugin. An instance would be created for each user object
             priority(integer): an integer between 0-9. Shows in what order methods should be called
                                smaller number favored more. For regular operations better set 5
-            
+
         """
         if priority<0 or priority>9:
             priority=5
@@ -147,19 +147,19 @@ class UserPluginManager:
         """
         if hook=="USER_INIT":
             return self.__initPluginsForUser(user_obj)
-        
+
         elif hook=="USER_LOGIN":
             return self.__callPluginsMethod(user_obj,args,"login")
 
         elif hook=="USER_LOGOUT":
-            return self.__callPluginsMethod(user_obj,args,"logout")         
+            return self.__callPluginsMethod(user_obj,args,"logout")
 
         elif hook=="USER_COMMIT":
-            return self.__callPluginsMethod(user_obj,args,"commit")         
+            return self.__callPluginsMethod(user_obj,args,"commit")
 
         elif hook=="USER_CAN_STAY_ONLINE":
              return self.__callPluginsMethod(user_obj,args,"canStayOnline")
-        
+
         elif hook=="USER_RELOAD":
             return self.__callPluginsMethod(user_obj,args,"_reload")
 
@@ -174,7 +174,7 @@ class UserPluginManager:
             for user plugins we'll create an object of plugin and put it
             in user_obj with the name of plugin
         """
-        for (plugin_class,plugin_name) in apply(itertools.chain,self.__plugin_classes):
+        for (plugin_class,plugin_name) in itertools.chain(*self.__plugin_classes):
             try:
                 setattr(user_obj,plugin_name,plugin_class(user_obj))
             except:
@@ -184,11 +184,11 @@ class UserPluginManager:
         """
             call plugin method "method_name" with "args" list as argument for object "user_obj"
         """
-        ret_vals = []   
+        ret_vals = []
         for plugin_tuple in itertools.chain(*self.__plugin_classes):
             plugin_obj = getattr(user_obj, plugin_tuple[1])
             ret_vals.append( getattr(plugin_obj,method_name)(*args) )
-        
+
         return ret_vals
 
     def __callPluginsMethod(self, user_obj, args, method_name, debug=False):
@@ -196,15 +196,14 @@ class UserPluginManager:
             call plugin method "method_name" with "args" list as argument for object "user_obj"
         """
         ret_vals = []
-        
+
         for (plugin_class, plugin_name) in itertools.chain(*self.__plugin_classes):
             method = getattr(getattr(user_obj,plugin_name), method_name)
             ret_val = method(*args)
             if debug:
                 toLog("User: %s, Plugin Name: %s Plugin Method: %s, Args: %s: RetVal: %s"%
                        (user_obj, plugin_name, method_name, args, ret_val), LOG_DEBUG)
-            
+
             ret_vals.append(ret_val)
-                
+
         return ret_vals
-        

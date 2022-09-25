@@ -28,7 +28,7 @@ class IASHandler(handler.Handler):
         creator_obj.canDo("HANDLE IAS EVENTS")
         request.checkArgs("event_ids")
 
-        event_ids=map(lambda event_id:to_int(event_id,"event_id"),request.fixList("event_ids"))
+        event_ids=[to_int(event_id,"event_id") for event_id in request.fixList("event_ids")]
         return ias_main.getActionsManager().deleteEvents(event_ids)
         
 
@@ -56,7 +56,7 @@ class IASHandler(handler.Handler):
                       "credit":user_info["basic_info"]["credit"]}
 
             for attr_name in ("normal_username", "voip_username"):
-                if user_info["attrs"].has_key(attr_name):
+                if attr_name in user_info["attrs"]:
                     user_dic[attr_name] = user_info["attrs"][attr_name]
 
             filtered_user_infos.append(user_dic)

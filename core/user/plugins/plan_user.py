@@ -30,8 +30,8 @@ class PersistentLanUserAttrUpdater(AttrUpdater):
             ras_ip(str): ip of user, user intends to use
         """
         self.registerQuery("user","change",self.changeQuery,[])
-        self.mac=map(string.upper,MultiStr(mac))
-        self.ip=map(lambda _ip:iplib.formatIPAddress(_ip),MultiStr(ip)) #fix ip format
+        self.mac=list(map(string.upper,MultiStr(mac)))
+        self.ip=[iplib.formatIPAddress(_ip) for _ip in MultiStr(ip)] #fix ip format
         self.ras_ip=MultiStr(ras_ip)
         
 
@@ -40,12 +40,12 @@ class PersistentLanUserAttrUpdater(AttrUpdater):
 
 #######################################
     def checkInput(self,src,action,dargs):
-        map(dargs["admin_obj"].canChangeNormalAttrs,dargs["users"].itervalues())
+        list(map(dargs["admin_obj"].canChangeNormalAttrs,iter(dargs["users"].values())))
     
     def __checkMacIPExistence(self,macs,users):
         
         cur_mac_ips=[]
-        for loaded_user in users.itervalues():
+        for loaded_user in users.values():
             if loaded_user.getUserAttrs().hasAttr("persistent_lan_mac"):
                 ip=loaded_user.getUserAttrs()["persistent_lan_ip"]
                 cur_mac_ips.append((loaded_user.getUserAttrs()["persistent_lan_mac"].upper(),ip))

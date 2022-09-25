@@ -21,14 +21,14 @@ class TariffLoader:
             raise GeneralException(errorText("VOIP_TARIFF","TARIFF_NAME_DOESNT_EXISTS")%tariff_name)
 
     def tariffNameExists(self,tariff_name):
-        return self.__tariffs_name.has_key(tariff_name)
+        return tariff_name in self.__tariffs_name
 
     def getAllTariffNames(self):
-        return self.__tariffs_name.keys()
+        return list(self.__tariffs_name.keys())
     ###############################
     def loadAllTariffs(self):
         tariff_ids=self.__getAllTariffIDsDB()
-        map(self.loadTariffByID,tariff_ids)
+        list(map(self.loadTariffByID,tariff_ids))
 
     def __getAllTariffIDsDB(self):
         ids_db=db_main.getHandle().get("voip_charge_rule_tariff","",0,-1,"",["tariff_id"])
@@ -55,14 +55,14 @@ class TariffLoader:
     ###############################
     def __createPrefixObjs(self,tariff_id):
         prefixes=self.__getPrefixesDB(tariff_id)
-        return map(lambda dic:Prefix(dic["prefix_id"],
+        return [Prefix(dic["prefix_id"],
                                      dic["prefix_code"],
                                      dic["prefix_name"],
                                      dic["cpm"],
                                      dic["free_seconds"],
                                      dic["min_duration"],
                                      dic["round_to"],
-                                     dic["min_chargable_duration"]),prefixes)
+                                     dic["min_chargable_duration"]) for dic in prefixes]
 
     def __getPrefixesDB(self,tariff_id):
         return db_main.getHandle().get("tariff_prefix_list","tariff_id=%s"%tariff_id)

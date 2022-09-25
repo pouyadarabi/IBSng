@@ -6,7 +6,7 @@ class RasOnlinesFilter(OnlinesFilter):
         filter online users by ras ip
     """
     def appliesOnCond(self, conds):
-        if conds.has_key("ras_ips"):
+        if "ras_ips" in conds:
             
             conds["ras_ids"] = []
             for ras_ip in conds["ras_ips"]:

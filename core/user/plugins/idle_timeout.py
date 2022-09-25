@@ -15,7 +15,7 @@ class IdleTimeoutUserPlugin(user_plugin.AttrCheckUserPlugin):
 
     def __initValues(self):
         if self.hasAttr():
-            self.idle_timeout=long(self.user_obj.getUserAttrs()["idle_timeout"])
+            self.idle_timeout=int(self.user_obj.getUserAttrs()["idle_timeout"])
  
     def s_login(self,ras_msg):
         reply_pkt=ras_msg.getReplyPacket()
@@ -33,7 +33,7 @@ class IdleTimeoutAttrUpdater(AttrUpdater):
 
     def changeInit(self,idle_timeout):
         try:
-            self.idle_timeout = long( idle_timeout )
+            self.idle_timeout = int( idle_timeout )
         except ValueError:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_IDLE_TIMEOUT"))
 

@@ -26,7 +26,7 @@ class OnlinesLoop:
             and update last_runs of all clients
         """
         now = int(time.time()) + 1
-        min_next_run = sys.maxint
+        min_next_run = sys.maxsize
         loop_clients = [] #clients that will be runned in this loop
         
         for client in self.__clients:
@@ -73,8 +73,8 @@ class OnlinesLoop:
             actually run the loop on online users
         """
         onlines = user_main.getOnline().getOnlineUsers()
-        for user_obj in onlines.itervalues():
-            for instance in xrange(1,user_obj.instances+1):
+        for user_obj in list(onlines.values()):
+            for instance in range(1,user_obj.instances+1):
                 self.__runMethod(loop_clients, "processInstance", user_obj, instance)
         
         self.__runMethod(loop_clients, "loopEnd")

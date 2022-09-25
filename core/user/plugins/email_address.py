@@ -21,7 +21,7 @@ def emailAddressExists(email_address):
     if len(email_address)==0:
         return []
     exists = []
-    conds = map(lambda email:"attr_name='email_address' and attr_value=%s"%dbText(email),email_address)
+    conds = ["attr_name='email_address' and attr_value=%s"%dbText(email) for email in email_address]
     i = 0
     while i<len(conds):
         where_clause=" or ".join(conds[i:i+defs.POSTGRES_MAGIC_NUMBER])
@@ -34,7 +34,7 @@ def emailAddressExists(email_address):
 class EmailAddressAttrUpdater(AttrUpdater):
     def deleteCheckInput(self, src, action, dargs): #call on delete only
         dargs["admin_obj"].canDo("CHANGE MAILBOX")
-        map(dargs["admin_obj"].canChangeNormalAttrs,dargs["users"].itervalues())
+        list(map(dargs["admin_obj"].canChangeNormalAttrs,iter(dargs["users"].values())))
 
     def changeCheckInput(self,src,action,dargs):
         dargs["admin_obj"].canDo("CHANGE MAILBOX")
@@ -46,14 +46,14 @@ class EmailAddressAttrUpdater(AttrUpdater):
                 raise GeneralException(errorText("USER_ACTIONS","EMAIL_ADDRESS_COUNT_NOT_MATCH")%len(users),len(self.email_address))
             
             cur_emails=[]
-            for loaded_user in users.itervalues():
+            for loaded_user in users.values():
 
                 if loaded_user.hasAttr("email_address"):
                     cur_emails.append(loaded_user.getUserAttrs()["email_address"])
 
             to_check_emails=[]
             i = 0
-            for loaded_user in dargs["users"].itervalues():
+            for loaded_user in dargs["users"].values():
                 dargs["admin_obj"].canChangeNormalAttrs(loaded_user)
                     
                 (local_part, domain) = checkEmailAddress(self.email_address[i])
@@ -75,7 +75,7 @@ class EmailAddressAttrUpdater(AttrUpdater):
 
 
     def changeInit(self,email_address):
-        self.email_address=map(None,MultiStr(email_address))
+        self.email_address=list(MultiStr(email_address))
         self.registerQuery("user","change",self.changeQuery,[])
 
     def deleteInit(self):
@@ -86,7 +86,7 @@ class EmailAddressAttrUpdater(AttrUpdater):
         self.changeCheckInput(src, action, args)
 
         self.users=args["users"]
-        self.user_ids = self.users.keys()
+        self.user_ids = list(self.users.keys())
         self.user_ids.sort()
 
         self.old_values=[]
@@ -129,7 +129,7 @@ class EmailAddressAttrUpdater(AttrUpdater):
 
     def deleteQuery(self,ibs_query,src,action,**args):
         self.users=args["users"]
-        self.user_ids=self.users.keys()
+        self.user_ids=list(self.users.keys())
         self.old_values=[]
 
         for user_id in self.user_ids:

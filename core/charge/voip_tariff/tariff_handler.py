@@ -87,8 +87,7 @@ class TariffHandler(handler.Handler):
         """
         request.needAuthType(request.ADMIN)
         request.getAuthNameObj().canDo("SEE VOIP TARIFF")
-        tariffs=map(lambda tariff_name:tariff_main.getLoader().getTariffByName(tariff_name).getInfo(),
-                   tariff_main.getLoader().getAllTariffNames())
+        tariffs=[tariff_main.getLoader().getTariffByName(tariff_name).getInfo() for tariff_name in tariff_main.getLoader().getAllTariffNames()]
         sorted=SortedList(tariffs)
         sorted.sortByValueDicKey("tariff_name",False)
         return sorted.getList()

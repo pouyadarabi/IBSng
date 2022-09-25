@@ -86,7 +86,7 @@ class FastDialAttrUpdater(AttrUpdater):
         """
             fast_dial should be list of 10 strings representing numbers
         """
-        if type(fast_dial)==types.DictType:
+        if type(fast_dial)==dict:
             fast_dial=fixXMLRPCList(fast_dial)
             
         self.__checkFastDialString(fast_dial)

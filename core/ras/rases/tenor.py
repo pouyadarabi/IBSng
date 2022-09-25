@@ -52,7 +52,7 @@ class QuintumTenorRas(Ras, VoIPRas):
         ras_msg["voip_password"] = username[username_len:]
 
     def __isPreAuth(self, request_pkt):
-        return request_pkt.has_key("Calling-Station-Id") and \
+        return "Calling-Station-Id" in request_pkt and \
                request_pkt["Calling-Station-Id"][0] == request_pkt["User-Name"][0]
 
 ####################################
@@ -70,7 +70,7 @@ class QuintumTenorRas(Ras, VoIPRas):
         """
             add h323_conf_id to list of current online conf ids of voip_username
         """
-        if self.onlines.has_key(voip_username):
+        if voip_username in self.onlines:
             if h323_conf_id not in self.onlines[voip_username]:
                 self.onlines[voip_username].append(h323_conf_id)
         else:
@@ -97,7 +97,7 @@ class QuintumTenorRas(Ras, VoIPRas):
         ras_msg.setInAttrsIfExists({"Calling-Station-Id":"caller_id"})
 
         req = ras_msg.getRequestPacket()
-        if req.has_key("Called-Station-Id"): #authorization
+        if "Called-Station-Id" in req: #authorization
             self.__addUsernamePasswordToRasMsg(ras_msg) 
             ras_msg.setInAttrs({"Called-Station-Id":"called_number"})
             ras_msg["h323_authorization"] = True
@@ -158,7 +158,7 @@ class QuintumTenorRas(Ras, VoIPRas):
             ######################
             elif call_type == "Telephony" and call_origin == "answer":
 
-                if not self.onlines.has_key(voip_username): #no authorization has been done
+                if voip_username not in self.onlines: #no authorization has been done
                     return    
                 
                 if h323_conf_id in self.onlines[voip_username]: #eh? no voip stop yet?

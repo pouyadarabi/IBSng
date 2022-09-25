@@ -39,7 +39,7 @@ class LimitStationIPPlugin(user_plugin.AttrCheckUserPlugin):
 class LimitStationIPAttrUpdater(AttrUpdater):
 
     def changeInit(self,ips):
-        ip_list=map(lambda ip:ip.strip(),MultiStr(ips))
+        ip_list=[ip.strip() for ip in MultiStr(ips)]
 
         for ip in ip_list:
             if not iplib.checkIPAddr(ip):

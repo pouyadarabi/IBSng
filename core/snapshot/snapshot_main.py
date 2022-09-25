@@ -3,6 +3,7 @@ from core.event import periodic_events
 from core.server import handlers_manager
 from core import defs
 
+
 def init():
     global onlines_loop
     from core.snapshot.onlines_loop import OnlinesLoop
@@ -27,7 +28,7 @@ def init():
     getOnlinesLoop().registerClient(OnlinesSnapShotOnlinesLoopClient())
 
     getOnlinesLoop().doLoop() #do loop for first time
-    
+
 def getRealTimeManager():
     return realtime_manager
 

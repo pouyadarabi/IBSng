@@ -36,7 +36,7 @@ class Tariff:
             raise GeneralException(errorText("VOIP_TARIFF","TARIFF_DOESNT_HAVE_PREFIX_CODE")%(self.getTariffName(),code))
             
     def hasPrefixCode(self,code):
-        return self.prefixes_code.has_key(code)
+        return code in self.prefixes_code
     
     ###################################
     def getPrefixByID(self,_id):
@@ -46,7 +46,7 @@ class Tariff:
             raise GeneralException(errorText("VOIP_TARIFF","TARIFF_DOESNT_HAVE_PREFIX_ID")%(self.getTariffName(),_id))
     
     def hasPrefixID(self,_id):
-        return self.prefixes_id.has_key(_id)
+        return _id in self.prefixes_id
 
     ####################################
     def getInfo(self,include_prefixes=False,name_regex=""):
@@ -73,11 +73,11 @@ class Tariff:
         if name_regex:
             pattern=re.compile(name_regex)
             prefixes=[]
-            for prefix_obj in self.prefixes_id.itervalues():
+            for prefix_obj in list(self.prefixes_id.values()):
                 if pattern.match(prefix_obj.getPrefixName()):
                     prefixes.append(prefix_obj.getInfo())
         else:
-            prefixes=map(lambda prefix:prefix.getInfo(),self.prefixes_id.itervalues())
+            prefixes=[prefix.getInfo() for prefix in iter(list(self.prefixes_id.values()))]
 
         sorted=SortedList(prefixes)
         sorted.sortByValueDicKey("prefix_name",False)
@@ -91,7 +91,7 @@ class Tariff:
         """
         longest_len=0
         longest_code=""
-        for code in self.prefixes_code.iterkeys():
+        for code in list(self.prefixes_code.keys()):
             if called_number.startswith(code) and len(code)>longest_len:
                 longest_len=len(code)
                 longest_code=code

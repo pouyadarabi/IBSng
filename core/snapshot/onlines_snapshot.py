@@ -61,7 +61,7 @@ class OnlinesSnapShotOnlinesLoopClient(onlines_loop.OnlinesLoopClient):
         return _dic
 
     def __filterZeroValues(self, _dic):
-        for ras_id in _dic.keys():
+        for ras_id in list(_dic.keys()):
             if _dic[ras_id] == 0:
                 del(_dic[ras_id])
         return _dic

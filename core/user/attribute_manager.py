@@ -29,17 +29,17 @@ class AttributeManager:
             self.all_handlers.append(handler_obj)
             
         for attr in change_attr_list:
-            if self.change_attr_handlers.has_key(attr):
+            if attr in self.change_attr_handlers:
                 raise IBSException(errorText("USER","DUPLICATE_ATTR_REGISTRATION")%attr)
             self.change_attr_handlers[attr]=handler_obj
 
         for attr in delete_attr_list:
-            if self.delete_attr_handlers.has_key(attr):
+            if attr in self.delete_attr_handlers:
                 raise IBSException(errorText("USER","DUPLICATE_ATTR_REGISTRATION")%attr)
             self.delete_attr_handlers[attr]=handler_obj
 
         for attr in parse_attr_list:
-            if self.parse_attr_handlers.has_key(attr):
+            if attr in self.parse_attr_handlers:
                 raise IBSException(errorText("USER","DUPLICATE_ATTR_REGISTRATION")%attr)
             self.parse_attr_handlers[attr]=handler_obj
 
@@ -105,7 +105,7 @@ class AttributeManager:
 
     def __callPostParseMethods(self,_id,_type,raw_attrs,parsed_attrs,date_type):
         for method in self.post_parse_methods:
-            apply(method,[_id,_type,raw_attrs,parsed_attrs,date_type])
+            method(*[_id,_type,raw_attrs,parsed_attrs,date_type])
 #############################################
     def runAttrSearchers(self,conditions,admin_obj):
         """
@@ -113,7 +113,7 @@ class AttributeManager:
         """
         search_helper=SearchUserHelper(conditions,admin_obj,"admin")
         attr_searchers=self.__getAllAttrSearchers(search_helper)
-        map(lambda x:apply(getattr(x,"run")),attr_searchers)
+        list(map(lambda x:apply(getattr(x,"run")),attr_searchers))
         return search_helper
 
     def __getAllAttrSearchers(self, search_helper):

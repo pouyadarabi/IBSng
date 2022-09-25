@@ -8,6 +8,7 @@
 
 from core.lib import ranges
 import itertools
+from functools import reduce
 
 class MultiStr:
     def __init__(self,string,left_pad=True):
@@ -49,7 +50,7 @@ class MultiStr:
             def __iter__(mself):
                 return mself
         
-            def next(mself):
+            def __next__(mself):
                 if mself.cur_index>=len(mself.multi_str_obj):
                     raise StopIteration()
     
@@ -78,7 +79,7 @@ class MultiStr:
             create a list of ranges from multistring members,
             ranges_list would be a list of RangeString instances
         """
-        return map(self.__createRangeString,sp_strs)
+        return list(map(self.__createRangeString,sp_strs))
 
     def __createRangeString(self,_str):
         """

@@ -101,7 +101,7 @@ class Leaf:
                 "total_ceil_kbits":self.getTotalCeil(),
                 "default_rate_kbits":self.getDefaultRate(),
                 "default_ceil_kbits":self.getDefaultCeil(),
-                "services":map(lambda service:service.getInfo(),self.getServices())}
+                "services":[service.getInfo() for service in self.getServices()]}
 
 #########################################################################################
         
@@ -155,7 +155,7 @@ class LeafService:
             check if this service has overlap with "other" service
             other can be another LeafService Instance or a tuple containing (protocol,filter)
         """
-        if type(other) in [types.TupleType,types.ListType]:
+        if type(other) in [tuple,list]:
             return other[0]==self.getProtocol() and self.__filterHasOverLap(other[1],self.getFilter())
         else:
             return other.getProtocol()==self.getProtocol() and self.__filterHasOverLap(other.getFilter(),self.getFilter())

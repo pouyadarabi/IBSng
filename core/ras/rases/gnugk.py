@@ -32,12 +32,12 @@ class GnuGKRas(UpdateUsersRas,VoIPRas):
     
     def updateUserList(self):
         min_last_update=time.time()-int(self.getAttribute("gnugk_acct_update_interval"))*60
-        for h323_conf_id in self.onlines.keys():
+        for h323_conf_id in list(self.onlines.keys()):
             if self.onlines[h323_conf_id]<min_last_update:
                 del(self.onlines[h323_conf_id])
 ####################################
     def isOnline(self,user_msg):
-        return self.onlines.has_key(user_msg["h323_conf_id"])
+        return user_msg["h323_conf_id"] in self.onlines
 
     def __updateOnlines(self,ras_msg):
         self.onlines[self.getH323AttrValue("H323-conf-id",ras_msg.getRequestPacket())]=time.time()
@@ -45,7 +45,7 @@ class GnuGKRas(UpdateUsersRas,VoIPRas):
 
 ####################################
     def _handleRadAuthPacket(self,request,reply):
-        if request.has_key("H323-conf-id"): #ARQ, Authorization Request
+        if "H323-conf-id" in request: #ARQ, Authorization Request
             if request["Service-Type"][0] == "Call-Check": #always accept Call-Checks
                 return True
 
@@ -121,7 +121,7 @@ class GnuGKRas(UpdateUsersRas,VoIPRas):
                                 
             self.setH323TimeInAttrs(ras_msg,{"H323-disconnect-time":"disconnect_time"})
             
-            if ras_msg.getRequestPacket().has_key("H323-connect-time"):
+            if "H323-connect-time" in ras_msg.getRequestPacket():
                 self.setH323TimeInAttrs(ras_msg,{"H323-connect-time":"connect_time"})
             else:
                 ras_msg["connect_time"]=ras_msg["disconnect_time"]

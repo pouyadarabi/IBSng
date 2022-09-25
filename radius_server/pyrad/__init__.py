@@ -2,7 +2,7 @@
 
 pyrad is an implementation of a RADIUS client as described in RFC2865.
 It takes care of all the details like building RADIUS packets, sending
-them and decoding responses. 
+them and decoding responses.
 
 Here is an example of doing a authentication request::
 
@@ -10,15 +10,15 @@ Here is an example of doing a authentication request::
   from pyrad.client import Client
   from pyrad.dictionary import Dictionary
 
-  srv=Client(server="radius.my.domain", secret="s3cr3t",
-        dict=Dictionary("dicts/dictionary", "dictionary.acc"))
+  srv = Client(server="radius.my.domain", secret="s3cr3t",
+    dict = Dictionary("dicts/dictionary", "dictionary.acc"))
 
-  req=srv.CreatePacket(code=pyrad.packet.AccessRequest,
-                User_Name="wichert", NAS_Identifier="localhost")
-  req["User-Password"]=req.PwCrypt("password")
+  req = srv.CreatePacket(code=pyrad.packet.AccessRequest,
+        User_Name = "wichert", NAS_Identifier="localhost")
+  req["User-Password"] = req.PwCrypt("password")
 
-  reply=srv.SendPacket(req)
-  if reply.code==pyrad.packet.AccessAccept:
+  reply = srv.SendPacket(req)
+  if reply.code = =pyrad.packet.AccessAccept:
       print "access accepted"
   else:
       print "access denied"
@@ -36,11 +36,11 @@ This package contains four modules:
   - tools: utility functions
 """
 
-__docformat__   = "epytext en"
+__docformat__ = 'epytext en'
 
-__author__      = "Wichert Akkerman <wichert@deephackmode.org>"
-__url__         = "http://www.wiggy.net/code/pyrad.xhtml"
-__copyright__   = "Copyright 2002,2003 Wichert Akkerman"
+__author__ = 'Christian Giese <developer@gicnet.de>'
+__url__ = 'http://pyrad.readthedocs.io/en/latest/?badge=latest'
+__copyright__ = 'Copyright 2002-2020 Wichert Akkerman and Christian Giese. All rights reserved.'
+__version__ = '2.4'
 
-__all__ = [ "client", "dictionary", "packet", "server", "tools" ]
-
+__all__ = ['client', 'dictionary', 'packet', 'server', 'tools', 'dictfile']

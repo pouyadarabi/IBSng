@@ -16,13 +16,13 @@ def getPasswords(_count,_type,_len):
     else:
         chars="abcdefghijkmnpqrstuvwxyz23456789" #don't include 1&l , 0&o they are hard to distinguish
     
-    return map(lambda x:Password(generateRandomPassword(chars,_len)),range(_count))
+    return [Password(generateRandomPassword(chars,_len)) for x in range(_count)]
     
 def generateRandomPassword(chars,_len):
     """
         generate a random password from characters in "chars" and length of "_len"
     """
-    return "".join(map(lambda x:chars[random.randint(0,len(chars)-1)],range(_len)))
+    return "".join([chars[random.randint(0,len(chars)-1)] for x in range(_len)])
     
 
 class Password:
@@ -31,7 +31,7 @@ class Password:
         self.password=password
 
     def __eq__(self,password_obj):
-        if type(password_obj)==types.StringType:
+        if type(password_obj)==bytes:
             password_obj=Password(password_obj)
 
         if self.isMd5Hash():

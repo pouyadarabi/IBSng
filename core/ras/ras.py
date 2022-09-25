@@ -52,7 +52,7 @@ class Ras:
         """
         for attr_dic in (self.default_attributes,self.type_default_attributes): 
             for attr_name in attr_dic:
-                if isInt(attr_dic[attr_name]) and attrs.has_key(attr_name):
+                if isInt(attr_dic[attr_name]) and attr_name in attrs:
                     attrs[attr_name]=int(attrs[attr_name])
         return attrs
 
@@ -72,7 +72,7 @@ class Ras:
         return self.ports
         
     def hasPort(self,port_name):
-        return self.ports.has_key(port_name)
+        return port_name in self.ports
         
     def hasIPpool(self,ippool_id):
         return ippool_id in self.ippools
@@ -94,7 +94,7 @@ class Ras:
             return True if this ras, has it's own attribute "attr_name" and else False
             we won't search type_defaults or ras_defaults for attributes
         """
-        return self.attributes.has_key(attr_name)
+        return attr_name in self.attributes
 
     def getAllAttributes(self):
         """
@@ -110,11 +110,11 @@ class Ras:
         return sorted_dic.getList()
                 
     def getAttribute(self,attr_name):
-        if self.attributes.has_key(attr_name):
+        if attr_name in self.attributes:
             return self.attributes[attr_name]
-        elif self.type_default_attributes.has_key(attr_name):
+        elif attr_name in self.type_default_attributes:
             return self.type_default_attributes[attr_name]
-        elif self.default_attributes.has_key(attr_name):
+        elif attr_name in self.default_attributes:
             return self.default_attributes[attr_name]
         else:
             return None
@@ -176,7 +176,7 @@ class Ras:
             ras_msg is created by "request" , "reply"
         """
         ras_msg=RasMsg(request,reply,self)
-        apply(method,[ras_msg])
+        method(*[ras_msg])
         if ras_msg.getAction():
             return (ras_msg,ras_msg.send())
 
@@ -185,7 +185,7 @@ class Ras:
             apply ip pool to ras_msg or use previously assigned ip of user
         """
         reply=ras_msg.getReplyPacket()
-        if len(self.ippools)==0 or ras_msg==None or reply.has_key("Framed-IP-Address"):
+        if len(self.ippools)==0 or ras_msg==None or "Framed-IP-Address" in reply:
             return
         
         for ippool_id in self.ippools:
@@ -236,7 +236,7 @@ class Ras:
         if hasattr(self,"last_rate_update"):
             duration = time.time() - self.last_rate_update
             for _id in new_dic:
-                if old_dic.has_key(_id):
+                if _id in old_dic:
                     new_dic[_id]["in_rate"] = max(0, (new_dic[_id]["in_bytes"] - old_dic[_id]["in_bytes"]) / duration )
                     new_dic[_id]["out_rate"] = max(0, (new_dic[_id]["out_bytes"] - old_dic[_id]["out_bytes"]) / duration )
                 else:
@@ -422,7 +422,7 @@ class GeneralUpdateRas(Ras):
         "generalUpdate" is the only method that will be called periodicly
     """
     def __init__(self,ras_ip,ras_id,ras_description,ras_type,radius_secret,comment,ports,ippools,attributes):
-        if not self.type_attrs.has_key("general_update_interval"):
+        if "general_update_interval" not in self.type_attrs:
             self.type_attrs["general_update_interval"] = 10
         
         Ras.__init__(self,ras_ip,ras_id,ras_description,ras_type,radius_secret,comment,ports,ippools,attributes)

@@ -59,17 +59,17 @@ class UserHandler(handler.Handler):
             if requirter is user, no argument will be parsed and auth_name is used
         """
         if request.hasAuthType(request.ADMIN):
-            if request.has_key("user_id"):
+            if "user_id" in request:
                 loaded_users=user_main.getActionManager().getLoadedUsersByUserID(MultiStr(request["user_id"]))
-            elif request.has_key("normal_username"):
+            elif "normal_username" in request:
                 loaded_users=user_main.getActionManager().getLoadedUsersByNormalUsername(MultiStr(request["normal_username"]))
-            elif request.has_key("voip_username"):
+            elif "voip_username" in request:
                 loaded_users=user_main.getActionManager().getLoadedUsersByVoIPUsername(MultiStr(request["voip_username"]))
             else:
                 raise request.raiseIncompleteRequest("user_id")
 
             admin_obj=request.getAuthNameObj()
-            map(admin_obj.canAccessUser,loaded_users)
+            list(map(admin_obj.canAccessUser,loaded_users))
             
         elif request.hasAuthType(request.NORMAL_USER) or request.hasAuthType(request.VOIP_USER):
             loaded_users=[request.getAuthNameObj()]
@@ -79,7 +79,7 @@ class UserHandler(handler.Handler):
         user_infos=user_main.getActionManager().getUserInfosFromLoadedUsers(loaded_users,request.getDateType())
 
         if request.hasAuthType(request.NORMAL_USER) or request.hasAuthType(request.VOIP_USER):
-            user_info=self.__filterAttrsForUser(user_infos.values()[0])
+            user_info=self.__filterAttrsForUser(list(user_infos.values())[0])
             return self.__addGroupAttrsForUser(user_info, request.getDateType())
 
         return user_infos
@@ -93,7 +93,7 @@ class UserHandler(handler.Handler):
 #       del(user_info["raw_attrs"])
 
         for attr_name in ["normal_password","voip_password","owner"]:
-            if user_info["attrs"].has_key(attr_name):
+            if attr_name in user_info["attrs"]:
                 del(user_info["attrs"][attr_name])
 
         return user_info
@@ -125,7 +125,7 @@ class UserHandler(handler.Handler):
         request.checkArgs("user_id","attrs","to_del_attrs")
         loaded_users=user_main.getActionManager().getLoadedUsersByUserID(MultiStr(request["user_id"]))
         admin_obj=request.getAuthNameObj()
-        map(admin_obj.canChangeUser,loaded_users)
+        list(map(admin_obj.canChangeUser,loaded_users))
 
         to_del_attrs=requestDicToList(request["to_del_attrs"])
         return user_main.getActionManager().updateUserAttrs(loaded_users,
@@ -143,7 +143,7 @@ class UserHandler(handler.Handler):
         requester=request.getAuthNameObj()
         user_id_multi=MultiStr(request["user_id"])
         loaded_users=user_main.getActionManager().getLoadedUsersByUserID(user_id_multi)
-        map(self.__canChangeCredit,loaded_users,itertools.repeat(requester,len(loaded_users)))
+        list(map(self.__canChangeCredit,loaded_users,itertools.repeat(requester,len(loaded_users))))
         return user_main.getActionManager().changeCredit(user_id_multi,
                                                          to_float(request["credit"],"credit"),
                                                          requester.getUsername(),
@@ -188,7 +188,7 @@ class UserHandler(handler.Handler):
         requester=request.getAuthNameObj()
         user_id_multi=MultiStr(request["user_id"])
         loaded_users=user_main.getActionManager().getLoadedUsersByUserID(user_id_multi)
-        map(self.__canDeleteUser,loaded_users,itertools.repeat(requester,len(loaded_users)))
+        list(map(self.__canDeleteUser,loaded_users,itertools.repeat(requester,len(loaded_users))))
         return user_main.getActionManager().delUser(user_id_multi,
                                                     request["delete_comment"],
                                                     request["del_connection_logs"],
@@ -206,14 +206,14 @@ class UserHandler(handler.Handler):
         requester=request.getAuthNameObj()
         loaded_users=user_main.getActionManager().getLoadedUsersByUserID(MultiStr(request["user_id"]), True)
         if request["kill"]:
-            map(lambda loaded_user:self.__canKillUser(loaded_user,requester),loaded_users)
+            list(map(lambda loaded_user:self.__canKillUser(loaded_user,requester),loaded_users))
         else:
-            map(lambda loaded_user:self.__canClearUser(loaded_user,requester),loaded_users)
+            list(map(lambda loaded_user:self.__canClearUser(loaded_user,requester),loaded_users))
 
         ras_ips=MultiStr(request["ras_ip"])
         unique_id_vals=MultiStr(request["unique_id_val"])
 
-        for i in xrange(len(loaded_users)):
+        for i in range(len(loaded_users)):
             user_main.getActionManager().killUser(loaded_users[i].getUserID(),
                                                   ras_ips[i],
                                                   unique_id_vals[i],

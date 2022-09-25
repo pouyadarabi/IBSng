@@ -8,7 +8,7 @@ class DBHandleQuery:
                                       want to ensure same db connection and session is used for multiple
                                       queries. If you use this flag , you should release the dbhandle
                                       manually by calling self.releaseHandle()
-        
+
         """
         if dedicate_handle:
             self.allocateHandle()
@@ -25,7 +25,7 @@ class DBHandleQuery:
         if not self.hasDedicatedHandle():
             self.allocateHandle()
         try:
-            return apply(getattr(self.__handle,self.method_name),args)
+            return getattr(self.__handle,self.method_name)(*args)
         finally:
             if not self.hasDedicatedHandle():
                 self.releaseHandle()
@@ -42,8 +42,8 @@ class DBHandleQuery:
     def releaseHandle(self):
         dbpool.getPool().release(self.__handle)
         self.__handle=None
-        
-    
+
+
 def init():
     dbpool.initPool()
     from core.event import daily_events
@@ -57,4 +57,3 @@ def getHandle(dedicated=False):
 
 def vacuumDB():
     getHandle().query("vacuum analyze")
-    

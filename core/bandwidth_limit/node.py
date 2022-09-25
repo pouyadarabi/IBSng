@@ -107,7 +107,7 @@ class Node:
 
     def createSubTree(self):
         self.addToTC()
-        map(lambda node:bw_main.getLoader().getNodeByID(node).createSubTree(),self.getChildren())
+        list([bw_main.getLoader().getNodeByID(node).createSubTree() for node in self.getChildren()])
 
 ###################################
     def getInfo(self):

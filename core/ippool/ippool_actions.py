@@ -126,13 +126,13 @@ class IPpoolActions:
 
     def __addIPtoPoolCheckInput(self,ippool_name,ips):
         ippool_obj=ippool_main.getLoader().getIPpoolByName(ippool_name)
-        map(self.__checkIPAddr,ips)
+        list(map(self.__checkIPAddr,ips))
 
         def checkIPAvailabilityInPool(ip):
             if ippool_obj.hasIP(ip):
                 raise GeneralException(errorText("IPPOOL","IP_ALREADY_IN_POOL")%ip)
 
-        map(checkIPAvailabilityInPool,ips)
+        list(map(checkIPAvailabilityInPool,ips))
 
         
     def __checkIPAddr(self,ip):

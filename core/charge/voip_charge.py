@@ -59,12 +59,12 @@ class VoipCharge(ChargeWithRules):
                 toLog("Loop Start: %s first_iter: %s remaining_time: %s before_start_accounting=%s"%(start,first_iter,remaining_time, before_start_accounting),LOG_DEBUG)
 
 
-            for instance in playing.keys():
+            for instance in list(playing.keys()):
 
 
                 try:
                     effective_rule = self._getEffectiveRuleForTime(user_obj,instance,start)
-                except LoginException,e:
+                except LoginException as e:
                     no_effective_rule += 1
                     
                     if first_iter:
@@ -162,7 +162,7 @@ class VoipCharge(ChargeWithRules):
             return 0
 
         instance_info=user_obj.getInstanceInfo(instance)
-        if instance_info.has_key("lazy_charge") and not instance_info["lazy_charge"]:
+        if "lazy_charge" in instance_info and not instance_info["lazy_charge"]:
             return self.calcInstanceCreditUsageFromStart(user_obj,instance,round_result)
         else:
             return ChargeWithRules.calcInstanceCreditUsage(self,user_obj,instance,round_result)

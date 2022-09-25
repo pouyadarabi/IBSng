@@ -31,7 +31,7 @@ class NormalChargeAttrUpdater(AttrUpdater):
         if src=="group":
             dargs["admin_obj"].canChangeNormalAttrs(None)
         else:
-            map(dargs["admin_obj"].canChangeNormalAttrs,dargs["users"].itervalues())
+            list(map(dargs["admin_obj"].canChangeNormalAttrs,iter(dargs["users"].values())))
             
         if hasattr(self,"charge_name"):
             dargs["admin_obj"].canUseCharge(self.charge_name)

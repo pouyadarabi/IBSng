@@ -45,7 +45,7 @@ class PeriodicEvent:
             the default is call self.run method with arguments, but it may have diffrent
             implemention. Children may override this method too
         """
-        apply(self.run,args)
+        self.run(*args)
 
     def run(self,*args):
         """
@@ -105,7 +105,7 @@ class PeriodicEventsManager:
             logException(LOG_ERROR,"periodicEvents.runEvent Invalid index %s"%_index)
         else:
             try:
-                apply(ev.run,args)
+                ev.run(*args)
             except:
                 logException(LOG_ERROR,"periodicEvents.runEvent exception for method: %s args: %s"%
                                                                                 (ev.name,ev.args))
@@ -121,7 +121,7 @@ class PeriodicEventsManager:
             if ev.run_at_startup==1:
                 thread_main.runThread(ev.run,ev.args,"event")
             elif ev.run_at_startup==2:
-                apply(ev.run,ev.args)
+                ev.run(*ev.args)
             
             self.__setNextEvent(_index)
 

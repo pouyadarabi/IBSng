@@ -1,313 +1,345 @@
 # server.py
 #
-# Copyright 2003 Wichert Akkerman <wichert@deephackmode.org>
+# Copyright 2003-2004,2007,2016 Wichert Akkerman <wichert@wiggy.net>
 
-"""Generic RADIUS server and proxy
-"""
+import select
+import socket
+from . import host
+from . import packet
+import logging
 
-import select, socket
-import host, packet
-import sys, time
 
-from core.ibs_exceptions import *
-from core.lib.general import *
-from core import main
+logger = logging.getLogger('pyrad')
+
 
 class RemoteHost:
-        """Remote RADIUS capable host we can talk to.
+    """Remote RADIUS capable host we can talk to."""
+
+    def __init__(self, address, secret, name, authport=1812, acctport=1813, coaport=3799):
+        """Constructor.
+
+        :param   address: IP address
+        :type    address: string
+        :param    secret: RADIUS secret
+        :type     secret: string
+        :param      name: short name (used for logging only)
+        :type       name: string
+        :param  authport: port used for authentication packets
+        :type   authport: integer
+        :param  acctport: port used for accounting packets
+        :type   acctport: integer
+        :param   coaport: port used for CoA packets
+        :type    coaport: integer
         """
-
-        def __init__(self, address, secret, name, authport=1812, acctport=1813):
-                """Constructor.
-
-                @param   address: IP address
-                @type    address: string
-                @param    secret: RADIUS secret
-                @type     secret: string
-                @param      name: short name (used for logging only)
-                @type       name: string
-                @param  authport: port used for authentication packets
-                @type   authport: integer
-                @param  acctport: port used for accounting packets
-                @type   acctport: integer
-                """
-                self.address=address
-                self.secret=secret
-                self.authport=authport
-                self.acctport=acctport
-                self.name=name
+        self.address = address
+        self.secret = secret
+        self.authport = authport
+        self.acctport = acctport
+        self.coaport = coaport
+        self.name = name
 
 
-class PacketError(Exception):
-        """Exception class for bogus packets
-        
-        PacketError exceptions are only used inside the Server class to 
-        abort processing of a packet.
-        """
+class ServerPacketError(Exception):
+    """Exception class for bogus packets.
+    ServerPacketError exceptions are only used inside the Server class to
+    abort processing of a packet.
+    """
+
 
 class Server(host.Host):
-        """Basic RADIUS server.
+    """Basic RADIUS server.
+    This class implements the basics of a RADIUS server. It takes care
+    of the details of receiving and decoding requests; processing of
+    the requests should be done by overloading the appropriate methods
+    in derived classes.
 
-        This class implements the basics of a RADIUS server. It takes care
-        of the details of receiving and decoding requests; processing of
-        the requests should be done by overloading the appropriate methods
-        in derived classes.
+    :ivar  hosts: hosts who are allowed to talk to us
+    :type  hosts: dictionary of Host class instances
+    :ivar  _poll: poll object for network sockets
+    :type  _poll: select.poll class instance
+    :ivar _fdmap: map of filedescriptors to network sockets
+    :type _fdmap: dictionary
+    :cvar MaxPacketSize: maximum size of a RADIUS packet
+    :type MaxPacketSize: integer
+    """
+    MaxPacketSize = 8192
 
-        @ivar  hosts: hosts who are allowed to talk to us
-        @type  hosts: dictionary of Host class instances
-        @ivar  _poll: poll object for network sockets
-        @type  _poll: select.poll class instance
-        @ivar _fdmap: map of filedescriptors to network sockets
-        @type _fdmap: dictionary
-        @cvar MaxPacketSize: maximum size of a RADIUS packet
-        @type MaxPacketSize: integer
+    def __init__(self, addresses=[], authport=1812, acctport=1813, coaport=3799,
+                 hosts=None, dict=None, auth_enabled=True, acct_enabled=True, coa_enabled=False):
+        """Constructor.
+
+        :param     addresses: IP addresses to listen on
+        :type      addresses: sequence of strings
+        :param      authport: port to listen on for authentication packets
+        :type       authport: integer
+        :param      acctport: port to listen on for accounting packets
+        :type       acctport: integer
+        :param       coaport: port to listen on for CoA packets
+        :type        coaport: integer
+        :param         hosts: hosts who we can talk to
+        :type          hosts: dictionary mapping IP to RemoteHost class instances
+        :param          dict: RADIUS dictionary to use
+        :type           dict: Dictionary class instance
+        :param  auth_enabled: enable auth server (default True)
+        :type   auth_enabled: bool
+        :param  acct_enabled: enable accounting server (default True)
+        :type   acct_enabled: bool
+        :param   coa_enabled: enable coa server (default False)
+        :type    coa_enabled: bool
         """
+        host.Host.__init__(self, authport, acctport, coaport, dict)
+        if hosts is None:
+            self.hosts = {}
+        else:
+            self.hosts = hosts
 
-        MaxPacketSize   = 8192
+        self.auth_enabled = auth_enabled
+        self.authfds = []
+        self.acct_enabled = acct_enabled
+        self.acctfds = []
+        self.coa_enabled = coa_enabled
+        self.coafds = []
 
-        def __init__(self, addresses=[], authport=1812, acctport=1813, hosts={}, dict=None):
-                """Constructor.
+        for addr in addresses:
+            self.BindToAddress(addr)
 
-                @param addresses: IP addresses to listen on
-                @type  addresses: sequence of strings
-                @param  authport: port to listen on for authentication packets
-                @type   authport: integer
-                @param  acctport: port to listen on for accounting packets
-                @type   acctport: integer
-                @param     hosts: hosts who we can talk to
-                @type      hosts: dictionary mapping IP to RemoteHost class instances
-                @param      dict: RADIUS dictionary to use
-                @type       dict: Dictionary class instance
-                """
-                host.Host.__init__(self, authport, acctport, dict)
-                self.hosts=hosts
+    def _GetAddrInfo(self, addr):
+        """Use getaddrinfo to lookup all addresses for each address.
 
-                self.authfds=[]
-                self.acctfds=[]
+        Returns a list of tuples or an empty list:
+          [(family, address)]
 
-                for addr in addresses:
-                        self.BindToAddress(addr)
-        
+        :param addr: IP address to lookup
+        :type  addr: string
+        """
+        results = set()
+        try:
+            tmp = socket.getaddrinfo(addr, 'www')
+        except socket.gaierror:
+            return []
 
-        def BindToAddress(self, addr):
-                """Add an address to listen to.
+        for el in tmp:
+            results.add((el[0], el[4][0]))
 
-                An empty string indicated you want to listen on all addresses.
+        return results
 
-                @param addr: IP address to listen on
-                @type  addr: string
-                """
-                authfd=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                authfd.bind((addr, self.authport))
 
-                acctfd=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                acctfd.bind((addr, self.acctport))
+    def BindToAddress(self, addr):
+        """Add an address to listen on a specific interface.
+        String "0.0.0.0" indicates you want to listen on all interfaces.
 
+        :param addr: IP address to listen on
+        :type  addr: string
+        """
+        addrFamily = self._GetAddrInfo(addr)
+        for (family, address) in addrFamily:
+            if self.auth_enabled:
+                authfd = socket.socket(family, socket.SOCK_DGRAM)
+                authfd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                authfd.bind((address, self.authport))
                 self.authfds.append(authfd)
+
+            if self.acct_enabled:
+                acctfd = socket.socket(family, socket.SOCK_DGRAM)
+                acctfd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                acctfd.bind((address, self.acctport))
                 self.acctfds.append(acctfd)
-        
 
-        def _HandleAuthPacket(self, fd, pkt):
-                """Process a packet received on the authentication port
-
-                If this packet should be dropped instead of processed a
-                PacketError exception should be raised. The main loop will
-                drop the packet and log the reason.
-
-                @param  fd: socket to read packet from
-                @type   fd: socket class instance
-                @param pkt: packet to process
-                @type  pkt: Packet class instance
-                """
-                if not self.hosts.has_key(pkt.source[0]):
-                        raise PacketError, "Received packet from unknown host %s" % pkt.source[0]
-
-                pkt.secret=self.hosts[pkt.source[0]].secret
-
-                if pkt.code!=packet.AccessRequest:
-                        raise PacketError, "Received non-authentication packet on authentication port"
+            if self.coa_enabled:
+                coafd = socket.socket(family, socket.SOCK_DGRAM)
+                coafd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                coafd.bind((address, self.coaport))
+                self.coafds.append(coafd)
 
 
-        def _HandleAcctPacket(self, fd, pkt):
-                """Process a packet received on the accounting port
+    def HandleAuthPacket(self, pkt):
+        """Authentication packet handler.
+        This is an empty function that is called when a valid
+        authentication packet has been received. It can be overriden in
+        derived classes to add custom behaviour.
 
-                If this packet should be dropped instead of processed a
-                PacketError exception should be raised. The main loop will
-                drop the packet and log the reason.
-
-                @param  fd: socket to read packet from
-                @type   fd: socket class instance
-                @param pkt: packet to process
-                @type  pkt: Packet class instance
-                """
-                if not self.hosts.has_key(pkt.source[0]):
-                        raise PacketError, "Received packet from unknown host %s" % pkt.source[0]
-
-                pkt.secret=self.hosts[pkt.source[0]].secret
-
-                if not pkt.code in [ packet.AccountingRequest,
-                                packet.AccountingResponse ]:
-                        raise PacketError, "Received non-accounting packet on accounting port"
-
-                if not pkt.VerifyAcctRequest():
-                    raise PacketError, "AccountingRequest Authenticator is invalid from host %s"%pkt.source[0]
-
-        
-
-        def _GrabPacket(self, pktgen, fd):
-                """Read a packet from a network connection.
-
-                This method assumes there is data waiting for to be read.
-
-                @param fd: socket to read packet from
-                @type  fd: socket class instance
-                @return: RADIUS packet
-                @rtype:  Packet class instance
-                """
-                (data,source)=fd.recvfrom(self.MaxPacketSize)
-                pkt=pktgen(data)
-                pkt.source=source
-                pkt.fd=fd
-
-                return pkt
-
-
-        def _PrepareSockets(self):
-                """Prepare all sockets to receive packets.
-                """
-                for fd in self.authfds + self.acctfds:
-                        self._fdmap[fd.fileno()]=fd
-                        self._poll.register(fd.fileno(), select.POLLIN|select.POLLPRI|select.POLLERR)
-
-                self._realauthfds=map(lambda x: x.fileno(), self.authfds)
-                self._realacctfds=map(lambda x: x.fileno(), self.acctfds)
-        
-
-        def CreateReplyPacket(self, pkt):
-                reply=pkt.CreateReply()
-                reply.source=pkt.source
-
-                return reply
-
-
-        def _ProcessInput(self, fd):
-                """Process available data.
-
-                If this packet should be dropped instead of processed a
-                PacketError exception should be raised. The main loop will
-                drop the packet and log the reason.
-
-                This function calls either HandleAuthPacket() or
-                HandleAcctPacket() depending on which socket is being
-                processed.
-
-                @param  fd: socket to read packet from
-                @type   fd: socket class instance
-                """
-                
-                if fd.fileno() in self._realauthfds:
-                        pkt = self._GrabPacket(lambda data, s=self: s.CreateAuthPacket(packet=data), fd)
-                else:
-                        pkt = self._GrabPacket(lambda data, s=self: s.CreateAcctPacket(packet=data), fd)
-
-                self._handleRequest(fd, pkt)
-
-        def Run(self):
-                """Main loop.
-
-                This method is the main loop for a RADIUS server. It waits
-                for packets to arrive via the network and calls other methods
-                to process them.
-                """
-                self._poll=select.poll()
-                self._fdmap={}
-                self._PrepareSockets()
-
-                while not main.isShuttingDown():
-                    try:
-                        for (fd, event) in self._poll.poll():
-                                if main.isShuttingDown():
-                                    return
-                                    
-                                fdo=self._fdmap[fd]
-                                if event==select.POLLIN:
-                                        try:
-                                                fdo=self._fdmap[fd]
-                                                self._ProcessInput(fdo)
-                                        except PacketError, err:
-                                                logException(LOG_ERROR,"Radius Server: Dropping packet: %s" % str(err))
-                                        except packet.PacketError, err:
-                                                logException(LOG_ERROR,"Radius Server: Received a broken packet: %s" % str(err))
-                                        except:
-                                            logException(LOG_ERROR)
-                                else:
-                                        toLog("Radius Server Unexpected event!",LOG_ERROR)
-                    except select.error,e:
-                        if e[0]==4: #interrupted system call
-                            continue
-                        else:
-                            raise
-
-class Proxy(Server):
-        """Base class for RADIUS proxies.
-
-        This class extends tha RADIUS server class with the capability to
-        handle communication with other RADIUS servers as well.
-
-        @ivar _proxyfd: network socket used to communicate with other servers
-        @type _proxyfd: socket class instance
-
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
         """
 
-        def _PrepareSockets(self):
-                Server._PrepareSockets(self)
+    def HandleAcctPacket(self, pkt):
+        """Accounting packet handler.
+        This is an empty function that is called when a valid
+        accounting packet has been received. It can be overriden in
+        derived classes to add custom behaviour.
 
-                self._proxyfd=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                self._fdmap[proxyfd.fileno()]=proxyfd
-                self._poll.register(self._proxyfd.fileno(), (select.POLLIN|select.POLLPRI|select.POLLERR))
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+
+    def HandleCoaPacket(self, pkt):
+        """CoA packet handler.
+        This is an empty function that is called when a valid
+        accounting packet has been received. It can be overriden in
+        derived classes to add custom behaviour.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+
+    def HandleDisconnectPacket(self, pkt):
+        """CoA packet handler.
+        This is an empty function that is called when a valid
+        accounting packet has been received. It can be overriden in
+        derived classes to add custom behaviour.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+
+    def _AddSecret(self, pkt):
+        """Add secret to packets received and raise ServerPacketError
+        for unknown hosts.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+        if pkt.source[0] in self.hosts:
+            pkt.secret = self.hosts[pkt.source[0]].secret
+        elif '0.0.0.0' in self.hosts:
+            pkt.secret = self.hosts['0.0.0.0'].secret
+        else:
+            raise ServerPacketError('Received packet from unknown host')
+
+    def _HandleAuthPacket(self, pkt):
+        """Process a packet received on the authentication port.
+        If this packet should be dropped instead of processed a
+        ServerPacketError exception should be raised. The main loop will
+        drop the packet and log the reason.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+        self._AddSecret(pkt)
+        if pkt.code != packet.AccessRequest:
+            raise ServerPacketError(
+                'Received non-authentication packet on authentication port')
+        self.HandleAuthPacket(pkt)
+
+    def _HandleAcctPacket(self, pkt):
+        """Process a packet received on the accounting port.
+        If this packet should be dropped instead of processed a
+        ServerPacketError exception should be raised. The main loop will
+        drop the packet and log the reason.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+        self._AddSecret(pkt)
+        if pkt.code not in [packet.AccountingRequest,
+                            packet.AccountingResponse]:
+            raise ServerPacketError(
+                    'Received non-accounting packet on accounting port')
+        self.HandleAcctPacket(pkt)
+
+    def _HandleCoaPacket(self, pkt):
+        """Process a packet received on the coa port.
+        If this packet should be dropped instead of processed a
+        ServerPacketError exception should be raised. The main loop will
+        drop the packet and log the reason.
+
+        :param pkt: packet to process
+        :type  pkt: Packet class instance
+        """
+        self._AddSecret(pkt)
+        pkt.secret = self.hosts[pkt.source[0]].secret
+        if pkt.code == packet.CoARequest:
+            self.HandleCoaPacket(pkt)
+        elif pkt.code == packet.DisconnectRequest:
+            self.HandleDisconnectPacket(pkt)
+        else:
+            raise ServerPacketError('Received non-coa packet on coa port')
 
 
-        def _HandleProxyPacket(self, fd, pkt):
-                """Process a packet received on the reply socket.
+    def _GrabPacket(self, pktgen, fd):
+        """Read a packet from a network connection.
+        This method assumes there is data waiting for to be read.
 
-                If this packet should be dropped instead of processed a
-                PacketError exception should be raised. The main loop will
-                drop the packet and log the reason.
+        :param fd: socket to read packet from
+        :type  fd: socket class instance
+        :return: RADIUS packet
+        :rtype:  Packet class instance
+        """
+        (data, source) = fd.recvfrom(self.MaxPacketSize)
+        pkt = pktgen(data)
+        pkt.source = source
+        pkt.fd = fd
+        return pkt
 
-                @param  fd: socket to read packet from
-                @type   fd: socket class instance
-                @param pkt: packet to process
-                @type  pkt: Packet class instance
-                """
-                if not self.hosts.has_key(pkt.source[0]):
-                        raise PacketError, "Received packet from unknown host"
+    def _PrepareSockets(self):
+        """Prepare all sockets to receive packets.
+        """
+        for fd in self.authfds + self.acctfds + self.coafds:
+            self._fdmap[fd.fileno()] = fd
+            self._poll.register(fd.fileno(), select.POLLIN | select.POLLPRI | select.POLLERR)
+        if self.auth_enabled:
+            self._realauthfds = list(map(lambda x: x.fileno(), self.authfds))
+        if self.acct_enabled:
+            self._realacctfds = list(map(lambda x: x.fileno(), self.acctfds))
+        if self.coa_enabled:
+            self._realcoafds = list(map(lambda x: x.fileno(), self.coafds))
 
-                pkt.secret=self.hosts[pkt.source[0]].secret
+    def CreateReplyPacket(self, pkt, **attributes):
+        """Create a reply packet.
+        Create a new packet which can be returned as a reply to a received
+        packet.
 
-                if not pkt.code in [ client.AccessAccept, client.AccessReject, client.AccountingResponse ]:
-                        raise PacketError, "Received non-response on proxy socket"
+        :param pkt:   original packet
+        :type pkt:    Packet instance
+        """
+        reply = pkt.CreateReply(**attributes)
+        reply.source = pkt.source
+        return reply
 
+    def _ProcessInput(self, fd):
+        """Process available data.
+        If this packet should be dropped instead of processed a
+        PacketError exception should be raised. The main loop will
+        drop the packet and log the reason.
 
+        This function calls either HandleAuthPacket() or
+        HandleAcctPacket() depending on which socket is being
+        processed.
 
-        def _ProcessInput(self, fd, pkt):
-                """Process available data.
+        :param  fd: socket to read packet from
+        :type   fd: socket class instance
+        """
+        if self.auth_enabled and fd.fileno() in self._realauthfds:
+            pkt = self._GrabPacket(lambda data, s=self: s.CreateAuthPacket(packet=data), fd)
+            self._HandleAuthPacket(pkt)
+        elif self.acct_enabled and fd.fileno() in self._realacctfds:
+            pkt = self._GrabPacket(lambda data, s=self: s.CreateAcctPacket(packet=data), fd)
+            self._HandleAcctPacket(pkt)
+        elif self.coa_enabled:
+            pkt = self._GrabPacket(lambda data, s=self: s.CreateCoAPacket(packet=data), fd)
+            self._HandleCoaPacket(pkt)
+        else:
+            raise ServerPacketError('Received packet for unknown handler')
 
-                If this packet should be dropped instead of processed a
-                PacketError exception should be raised. The main loop will
-                drop the packet and log the reason.
+    def Run(self):
+        """Main loop.
+        This method is the main loop for a RADIUS server. It waits
+        for packets to arrive via the network and calls other methods
+        to process them.
+        """
+        self._poll = select.poll()
+        self._fdmap = {}
+        self._PrepareSockets()
 
-                This function calls either HandleAuthPacket(),
-                HandleAcctPacket() or _HandleProxyPacket() depending on which
-                socket is being processed.
-
-                @param  fd: socket to read packet from
-                @type   fd: socket class instance
-                @param pkt: packet to process
-                @type  pkt: Packet class instance
-                """
-                if fd.fileno()==self._proxyfd.fileno():
-                        self._HandleProxyPacket(fd, pkt)
+        while True:
+            for (fd, event) in self._poll.poll():
+                if event == select.POLLIN:
+                    try:
+                        fdo = self._fdmap[fd]
+                        self._ProcessInput(fdo)
+                    except ServerPacketError as err:
+                        logger.info('Dropping packet: ' + str(err))
+                    except packet.PacketError as err:
+                        logger.info('Received a broken packet: ' + str(err))
                 else:
-                        Server._ProcessInput(self, fd, fd)
-
-
+                    logger.error('Unexpected event in server main loop')

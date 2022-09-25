@@ -42,7 +42,7 @@ def normalUsernameExists(normal_username):
     if len(normal_username)==0:
         return []
     exists = []
-    conds = map(lambda username:"normal_username=%s"%dbText(username),normal_username)
+    conds = ["normal_username=%s"%dbText(username) for username in normal_username]
     i = 0
     while i<len(conds):
         where_clause=" or ".join(conds[i:i+defs.POSTGRES_MAGIC_NUMBER])
@@ -77,23 +77,23 @@ class NormalUserAttrUpdater(AttrUpdater):
         self.registerQuery("user","delete",self.deleteQuery,[])
 
     def __parseNormalAttrs(self):
-        self.usernames=map(None,MultiStr(self.normal_username))
+        self.usernames=list(MultiStr(self.normal_username))
         if self.generate_password==0:
             pass_multi=MultiStr(self.normal_password)
-            self.passwords=map(lambda x:Password(pass_multi[x]),range(len(self.usernames)))
+            self.passwords=[Password(pass_multi[x]) for x in range(len(self.usernames))]
         else:
             self.passwords=getPasswords(len(self.usernames),self.generate_password,self.password_len)
         
     ###############################################
     def checkInput(self,src,action,dargs):
-        map(dargs["admin_obj"].canChangeNormalAttrs,dargs["users"].itervalues())
+        list(map(dargs["admin_obj"].canChangeNormalAttrs,iter(dargs["users"].values())))
     
     def __changeCheckInput(self,users,admin_obj):
         self.__checkUsernames(users)
         self.__checkPasswords()
 
     def __checkPasswords(self):
-        map(lambda password:password.checkPasswordChars(),self.passwords)
+        list(map(lambda password:password.checkPasswordChars(),self.passwords))
         if self.password_len < 0 or self.password_len > 30:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_PASSWORD_LENGTH")%self.password_len)
 
@@ -103,7 +103,7 @@ class NormalUserAttrUpdater(AttrUpdater):
             raise GeneralException(errorText("USER_ACTIONS","NORMAL_USER_COUNT_NOT_MATCH")%(len(users),len(self.usernames)))
         
         cur_normal_usernames = []
-        for loaded_user in users.itervalues():
+        for loaded_user in users.values():
             if loaded_user.getUserAttrs().hasAttr("normal_username"):
                 cur_normal_usernames.append(loaded_user.getUserAttrs()["normal_username"])
         
@@ -126,7 +126,7 @@ class NormalUserAttrUpdater(AttrUpdater):
     def changeQuery(self,ibs_query,src,action,**args):
         admin_obj=args["admin_obj"]
         users=args["users"]
-        user_ids = users.keys()
+        user_ids = list(users.keys())
         user_ids.sort()
         
         self.__parseNormalAttrs()
@@ -277,14 +277,14 @@ class NormalUserHandler(handler.Handler):
         request.checkArgs("normal_username","current_username")
         request.getAuthNameObj().canChangeNormalAttrs(None)
         usernames=self.__filterCurrentUsernames(request)
-        bad_usernames=filter(lambda username: not _checkNormalUsernameChars(username),usernames)
+        bad_usernames=[username for username in usernames if not _checkNormalUsernameChars(username)]
         exist_usernames=normalUsernameExists(usernames)
         return self.__createCheckAddReturnDic(bad_usernames,exist_usernames)
 
     def __filterCurrentUsernames(self,request):
         username=MultiStr(request["normal_username"])
         current_username=MultiStr(request["current_username"])
-        return filter(lambda username: username not in current_username,username)
+        return [username for username in username if username not in current_username]
 
     def __createCheckAddReturnDic(self,bad_usernames,exist_usernames):
         ret={}

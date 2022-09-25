@@ -9,7 +9,7 @@ class AttrUpdaterContainer:
         self.attr_updaters={}
 
     def __iter__(self):
-        return self.attr_updaters.itervalues()
+        return iter(self.attr_updaters.values())
 
     def addNew(self,attr_updater_obj):
         """
@@ -18,7 +18,7 @@ class AttrUpdaterContainer:
         self.attr_updaters[attr_updater_obj.getName()]=attr_updater_obj
 
     def hasName(self,attr_updater_name):
-        return self.attr_updaters.has_key(attr_updater_name)
+        return attr_updater_name in self.attr_updaters
     
     def mustHave(self,*attr_updater_names):
         for name in attr_updater_names:
@@ -47,7 +47,7 @@ class AttrUpdaterContainer:
         ret=[]
         for attr_updater_name in self.attr_updaters:
             attr_updater_obj=self.attr_updaters[attr_updater_name]
-            ret.append(apply(getattr(attr_updater_obj,method_name),args,dargs))
+            ret.append(getattr(attr_updater_obj,method_name)(*args, **dargs))
         return ret
                 
 class AttrUpdater:
@@ -114,7 +114,7 @@ class AttrUpdater:
             users list and admin_obj would be there always
         """
         self.checkInput(src,action,args)
-        if self.query_funcs.has_key(src+"_"+action):
+        if src+"_"+action in self.query_funcs:
             return self.__callQueryFunc(ibs_query,src,action,args)
         else:
             return ""
@@ -122,7 +122,7 @@ class AttrUpdater:
 
     def __callQueryFunc(self,ibs_query,src,action,args):
         args["attr_updater_attrs"]=self.query_attrs[src+"_"+action]
-        return apply(self.query_funcs[src+"_"+action],[ibs_query,src,action],args)
+        return self.query_funcs[src+"_"+action](*[ibs_query,src,action], **args)
 
     def registerQuery(self,src,action,query_function,attrs): 
         """

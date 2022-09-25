@@ -121,7 +121,7 @@ def sortListWithHash(list,order_by,order_by_hash,default,desc):
         default is used if "order_by" argument is not in "order_by_hash" hash
         desc is a boolean "0" or "1"
     """
-    if order_by_hash.has_key(order_by):
+    if order_by in order_by_hash:
         return sortList(list,order_by_hash[order_by],"",desc)
     else:
         return sortList(list,order_by_hash[default],"",desc)
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     
     def createDic():
         _dic={}
-        for i in xrange(10000):
+        for i in range(10000):
             _dic[random.random()*10000] = {1:random.random()*10000}
     
         return _dic
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     def createList():
         _list = []
 
-        for i in xrange(10000):
+        for i in range(10000):
             _list.append({1:random.random()*10000})
 
         return _list
@@ -161,4 +161,4 @@ if __name__ == "__main__":
 #    t=timeit.Timer("sortDic()","from __main__ import sortDic")
 #    print t.timeit(number=10)
     t=timeit.Timer("sortList()","from __main__ import sortList")
-    print t.timeit(number=10)
+    print((t.timeit(number=10)))

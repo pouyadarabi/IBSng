@@ -6,7 +6,7 @@ class CanStayOnlineResult:
     DEBUG=False
     
     def __init__(self):
-        self.remaining_time = sys.maxint
+        self.remaining_time = sys.maxsize
         self.kill_dic = {}#{instance:"kill_reason"}
 
     def getRemainingTime(self):
@@ -16,7 +16,7 @@ class CanStayOnlineResult:
         remaining_time = self.getRemainingTime()
 
         if self.DEBUG:
-            print "Return Next Event: %s"%remaining_time
+            print("Return Next Event: %s"%remaining_time)
 
         if remaining_time != 0 and remaining_time < self.MIN_REMAINING_TIME:
             return self.MIN_REMAINING_TIME
@@ -59,7 +59,7 @@ class CanStayOnlineResult:
             NOTE: zero remaining_time means no next remaining_time
         """
         if self.DEBUG:
-            print "New Remaining time: %s"%new_remaining_time
+            print("New Remaining time: %s"%new_remaining_time)
             
         self.remaining_time=min(self.remaining_time, new_remaining_time)
     
@@ -69,7 +69,7 @@ class CanStayOnlineResult:
             kill_reason(text): reason of killing user
             add a new instance to kill.
         """
-        if self.kill_dic.has_key(instance):
+        if instance in self.kill_dic:
             self.kill_dic[instance]="%s, %s"%(self.kill_dic[instance],kill_reason)
         else:
             self.kill_dic[instance]=kill_reason

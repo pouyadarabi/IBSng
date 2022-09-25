@@ -20,16 +20,16 @@ class VoIPUser(user_type.UserType):
 
     def getCallStartTime(self,instance):
         instance_info=self.user_obj.getInstanceInfo(instance)
-        if instance_info.has_key("call_start_time"):
+        if "call_start_time" in instance_info:
             return instance_info["call_start_time"]
-        elif instance_info.has_key("start_accounting"):
+        elif "start_accounting" in instance_info:
             return instance_info["start_accounting"]
         else:
             return instance_info["login_time"]
         
     def getCallEndTime(self,instance):
         instance_info=self.user_obj.getInstanceInfo(instance)
-        if instance_info.has_key("call_end_time"):
+        if "call_end_time" in instance_info:
             return instance_info["call_end_time"]
         else:
             return time.time()
@@ -46,7 +46,7 @@ class VoIPUser(user_type.UserType):
         if ras_msg.hasAttr("no_commit") and ras_msg["no_commit"]:
             no_commit=True
     
-        if no_commit or instance_info.has_key("min_duration") and self.getCallEndTime(instance) - self.getCallStartTime(instance) < instance_info["min_duration"]:
+        if no_commit or "min_duration" in instance_info and self.getCallEndTime(instance) - self.getCallStartTime(instance) < instance_info["min_duration"]:
             used_credit=0
             self.user_obj.setKillReason(instance,"Missed Call")
         else:
@@ -80,12 +80,12 @@ class VoIPUser(user_type.UserType):
         online_dic={"voip_username":self.user_obj.getUserAttrs()["voip_username"]}
         instance_info=self.user_obj.getInstanceInfo(instance)
 
-        if instance_info["attrs"].has_key("called_number"):
+        if "called_number" in instance_info["attrs"]:
             online_dic["called_number"]=instance_info["attrs"]["called_number"]
         else:
             online_dic["called_number"]="N/A"
 
-        if instance_info["attrs"].has_key("prefix_name"):
+        if "prefix_name" in instance_info["attrs"]:
             online_dic["prefix_name"]=instance_info["attrs"]["prefix_name"]
         else:
             online_dic["prefix_name"]="N/A"

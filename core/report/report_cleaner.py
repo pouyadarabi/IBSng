@@ -49,7 +49,7 @@ class ReportCleaner:
         """
         for table_name in self.__tables:
             state_obj = self.getStateObj(table_name)
-            state_val = long(state_obj.getCurVal())
+            state_val = int(state_obj.getCurVal())
             if state_val > 0:
                 self.cleanLogsFromSeconds(table_name, state_val)
 

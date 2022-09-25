@@ -1,6 +1,6 @@
 import traceback
 import time
-import defs
+from . import defs
 import sys
 import signal
 from core.ibs_logger import Logger
@@ -25,7 +25,7 @@ def init():
 
 ##################################
 
-def toLog(_str,log_file,debug_level=0,add_stack=0): 
+def toLog(_str,log_file,debug_level=0,add_stack=0):
     """
         log _str to a log file that explained by log_file
         if IBS debug_level is more than debug_level
@@ -33,7 +33,7 @@ def toLog(_str,log_file,debug_level=0,add_stack=0):
         log_file(integer): explained by LOG_DEBUG , LOG_ERROR , LOG_RADIUS, LOG_SERVER definitions (on top of this file)
         debug_level(integer): minimum debug level to log this event
     """
-    if debug_level>defs.DEBUG_LEVEL: 
+    if debug_level>defs.DEBUG_LEVEL:
         return
 
     if log_file & LOG_ERROR:
@@ -73,7 +73,7 @@ def setReOpenSignalHandler():
         setup signal handler for SIGUSR1 , that close/open all log files
     """
     signal.signal(signal.SIGUSR1,reOpenSignalHandler)
-    
+
 
 def reOpenSignalHandler(signum,frame):
     """
@@ -120,7 +120,7 @@ class PermissionException (Exception):
 
     def __str__(self):
         return self.str_error
-                
+
 class HandlerException (Exception):
     def __init__(self,err_str):
         toLog("HandlerException: %s"%err_str,LOG_ERROR)
@@ -132,7 +132,7 @@ class HandlerException (Exception):
 class XMLRPCFault (Exception):
     def __init__(self,str_error):
         self.str_error=str_error
-    
+
     def __str__(self):
         return self.str_error
 
@@ -155,7 +155,7 @@ class RSHException (Exception):
 class IBSError(Exception):
     def __init__(self,str_error):
         self.str_error=str_error
-    
+
         if(defs.DEBUG_LEVEL>=defs.DEBUG_ALL):
             last_stack = traceback.extract_stack()[-2]
             toLog("%s: in (%s,%s,%s) : %s"%
@@ -175,8 +175,8 @@ class IBSError(Exception):
             return self.str_error[self.str_error.index("|")+1:]
         except ValueError:
             return self.str_error
-        
-    
+
+
 class GeneralException (IBSError):
     pass
 

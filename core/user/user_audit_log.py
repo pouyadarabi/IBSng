@@ -29,5 +29,5 @@ class UserAuditLog:
             return query for deleting audit logs of users with ids in user_ids
             user_ids(iterable object of user_ids)
         """
-        condition=" or ".join(map(lambda user_id:"object_id=%s"%user_id,user_ids))
+        condition=" or ".join(["object_id=%s"%user_id for user_id in user_ids])
         return ibs_db.createDeleteQuery("user_audit_log","is_user = 't' and (%s)"%condition)

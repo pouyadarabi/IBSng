@@ -47,11 +47,11 @@ class HandlersManager:
             self.__checkAuthentication(request_obj)
             ret_val=self.__run(request_obj)
             return self.__returnResponse(ret_val)
-        except (GeneralException,LoginException,PermissionException),e:
+        except (GeneralException,LoginException,PermissionException) as e:
             self.__returnError(e.__str__())
-        except DBException,e:
+        except DBException as e:
             self.__returnError(e.__str__().split("\n")[0])
-        except Exception,e:
+        except Exception as e:
             logException(LOG_ERROR,"dispatch")
             self.__returnError(e.__str__())
         except:
@@ -105,7 +105,7 @@ class HandlersManager:
             run request handler
             it must return a response object
         """
-        return apply(getattr(request_obj.handler_obj,request_obj.method),[request_obj])
+        return getattr(request_obj.handler_obj,request_obj.method)(*[request_obj])
 
     def __returnError(self,error_text):
         """

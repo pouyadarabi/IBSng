@@ -16,7 +16,7 @@ class GroupLoader:
             return self.getGroupByName(key)
     
     def __iter__(self):
-        return self.groups_id.iterkeys()
+        return iter(list(self.groups_id.keys()))
 
     def getGroupByID(self,group_id):
         try:
@@ -31,18 +31,18 @@ class GroupLoader:
             raise GeneralException(errorText("GROUPS","GROUP_NAME_INVALID")%group_name)
         
     def checkGroupID(self,group_id):
-        if not self.groups_id.has_key(group_id):
+        if group_id not in self.groups_id:
             raise GeneralException(errorText("GROUPS","GROUP_ID_INVALID")%group_id)
 
     def checkGroupName(self,group_name):
-        if not self.groups_name.has_key(group_name):
+        if group_name not in self.groups_name:
             raise GeneralException(errorText("GROUPS","GROUP_NAME_INVALID")%group_name) 
         
     def getAllGroupNames(self):
-        return self.groups_name.keys()
+        return list(self.groups_name.keys())
     
     def groupNameExists(self,group_name):
-        return self.groups_name.has_key(group_name)
+        return group_name in self.groups_name
 
     def loadGroup(self,group_id):
         """
@@ -64,7 +64,7 @@ class GroupLoader:
 
     def loadAllGroups(self):
         group_ids=self.__getAllGroupIDs()
-        map(self.loadGroup,group_ids)
+        list(map(self.loadGroup,group_ids))
 
     def unloadGroup(self,group_id):
         """

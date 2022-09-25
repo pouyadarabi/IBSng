@@ -27,17 +27,17 @@ class RelExpDate(user_plugin.UserPlugin):
         self.__commit_first_login=False
 
         if self.__isFirstLogin():
-            self.__first_login=long(self.__login_time)
+            self.__first_login=int(self.__login_time)
             if not no_commit:
                 self.__commit_first_login=True
                 self.user_obj.getUserAttrs().setAttr("first_login",self.__first_login)
 
         else:
-            self.__first_login=long(self.user_obj.getUserAttrs()["first_login"])
+            self.__first_login=int(self.user_obj.getUserAttrs()["first_login"])
 
     def __initValues(self):
         if self.hasAttr():
-            self.__rel_exp_date_time=self.__calcRelExpDateTime(self.__first_login,long(self.user_obj.getUserAttrs()["rel_exp_date"]))
+            self.__rel_exp_date_time=self.__calcRelExpDateTime(self.__first_login,int(self.user_obj.getUserAttrs()["rel_exp_date"]))
 
     def __isFirstLogin(self):
         return not self.user_obj.getUserAttrs().hasAttr("first_login")
@@ -106,7 +106,7 @@ class RelExpAttrUpdater(AttrUpdater):
         return {"rel_exp_date":self.rel_date_obj.getDBDate()}
 
     def genQueryAuditLogPrepareOldValue(self,attr_name, old_value):
-        return " ".join( map(str,RelativeDate(long(old_value),"Seconds").getFormattedDate()) )
+        return " ".join( map(str,RelativeDate(int(old_value),"Seconds").getFormattedDate()) )
 
     def genQueryAuditLogPrepareNewValue(self,attr_name, new_value):
         return " ".join( map(str,self.rel_date_obj.getFormattedDate()) )
@@ -135,7 +135,7 @@ class FirstLoginAttrUpdater(AttrUpdater):
         self.useGenerateQuery(["first_login"])
 
     def genQueryAuditLogPrepareOldValue(self,attr_name, old_value):
-        return AbsDateFromEpoch(long(old_value)).getDate()
+        return AbsDateFromEpoch(int(old_value)).getDate()
     
 
 class RelExpValueAttrSearcher(AttrSearcher):
@@ -181,7 +181,7 @@ class RelExpAttrHolder(AttrHolder):
 
 class FirstLoginAttrHolder(AttrHolder):
     def __init__(self,first_login):
-        self.first_login=AbsDateFromEpoch(long(first_login))
+        self.first_login=AbsDateFromEpoch(int(first_login))
 
     def getParsedDic(self):
         return ({"first_login":self.first_login.getDate(self.date_type)})

@@ -41,7 +41,7 @@ class PersistentLanRas(GeneralUpdateRas):
         """
         self.waiting_lock.acquire()
         try:
-            for user_id in self.waitings.keys():
+            for user_id in list(self.waitings.keys()):
                 self.__tryUser(user_id)
         finally:
             self.waiting_lock.release()
@@ -151,7 +151,7 @@ class PersistentLanRas(GeneralUpdateRas):
                 if len(sp)!=3:
                     toLog("Plan getOnlines: Can't parse line %s"%line,LOG_ERROR)
                     continue
-                inout[sp[0]]={"in_bytes":long(sp[1]),"out_bytes":long(sp[2])}
+                inout[sp[0]]={"in_bytes":int(sp[1]),"out_bytes":int(sp[2])}
         except:
             logException(LOG_ERROR)
         return inout
@@ -164,7 +164,7 @@ class PersistentLanRas(GeneralUpdateRas):
 
 ####################################
     def isOnline(self,user_msg):
-        return self.onlines.has_key(user_msg["mac_ip"])
+        return user_msg["mac_ip"] in self.onlines
 ####################################
     def getInOutBytes(self, user_msg):
         try:

@@ -165,7 +165,7 @@ class ConnectionSearchHelper(SearchHelper):
             connection_log_ids.append(str(_list["connection_log_id"]))
             if (i and i%defs.POSTGRES_MAGIC_NUMBER==0) or i==len(connections)-1:
                 details += db_handle.get("connection_log_details",
-                             "connection_log_id in (%s)"%",".join(map(lambda x:"%s::bigint"%x,connection_log_ids)),
+                             "connection_log_id in (%s)"%",".join(["%s::bigint"%x for x in connection_log_ids]),
                              0,-1,"connection_log_id,name desc")
                 connection_log_ids=[]
             i+=1
@@ -508,9 +508,9 @@ class BaseConnectionLogSearcher:
                     owner_ids=(self.search_helper.getRequesterObj().getAdminID(),)
                 else:
                     owner_name=self.search_helper.getCondValue("owner")
-                    if type(owner_name)==types.StringType:
+                    if type(owner_name)==bytes:
                         owner_name=(owner_name,)
-                    owner_ids=map(lambda owner_name:admin_main.getLoader().getAdminByName(owner_name).getAdminID(),owner_name)
+                    owner_ids=[admin_main.getLoader().getAdminByName(owner_name).getAdminID() for owner_name in owner_name]
             
                 sub_query=self.__userOwnersConditionQuery(owner_ids)
                 con_table.getRootGroup().addGroup(sub_query)
@@ -519,7 +519,7 @@ class BaseConnectionLogSearcher:
 
     def __userOwnersConditionQuery(self,owner_ids):
         cond_group=SearchGroup("or")
-        map(lambda owner_id:cond_group.addGroup("users.owner_id=%s"%owner_id),owner_ids)
+        list(map(lambda owner_id:cond_group.addGroup("users.owner_id=%s"%owner_id),owner_ids))
         return "connection_log.user_id in (select user_id from users where %s)"%cond_group.getConditionalClause()
 
         

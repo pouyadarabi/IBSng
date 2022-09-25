@@ -99,7 +99,7 @@ class DBPool:
         for handle in self.__pool:
             try:
                 handle.check() #ping and reset connection
-            except DBException,e:
+            except DBException as e:
                 logException(LOG_ERROR)
                 to_del.append(handle)
 

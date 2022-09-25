@@ -28,12 +28,12 @@ class AddUserSaveActions:
         """
         add_user_id=self.__getNewUserAddID()
         ibs_query+=self.__insertAddUserQuery(add_user_id,admin_id,self.getTypeID(_type),comment)
-        ibs_query+=map(self.__insertAddUserDetailsQuery,
+        ibs_query+=list(map(self.__insertAddUserDetailsQuery,
                        itertools.repeat(add_user_id,len(user_ids)),
                        user_ids,
                        usernames,
-                       map(lambda x:x.getPassword(),passwords)
-                       )
+                       [x.getPassword() for x in passwords]
+                       ))
         return ibs_query
 
     def __getNewUserAddID(self):
@@ -112,7 +112,7 @@ class AddUserSaveHandler(handler.Handler):
         request.needAuthType(request.ADMIN)
         request.checkArgs("add_user_save_ids")
         request.getAuthNameObj().canDo("SEE SAVED USERNAME PASSWORDS")
-        add_user_save_ids=map(lambda add_user_save_id:to_int(add_user_save_id,"add user save id"),request.fixList("add_user_save_ids"))
+        add_user_save_ids=[to_int(add_user_save_id,"add user save id") for add_user_save_id in request.fixList("add_user_save_ids")]
         user_main.getAddUserSaveActions().deleteAddUserSaves(add_user_save_ids,
                                                             request.getAuthNameObj())
         
@@ -210,7 +210,7 @@ class AddUserSaveSearchHelper(SearchHelper):
     ####################################
 
     def __getAddUserSaveIDCondition(self,add_user_saves):
-        add_user_save_id_conds=map(lambda x:"add_user_save_id=%s"%x["add_user_save_id"],add_user_saves)
+        add_user_save_id_conds=["add_user_save_id=%s"%x["add_user_save_id"] for x in add_user_saves]
         return " or ".join(add_user_save_id_conds)
     
     def __createReportResult(self,add_user_saves,details,counts, date_type):
@@ -242,7 +242,7 @@ class AddUserSaveSearchHelper(SearchHelper):
             except KeyError:
                 add_user_save["details"]=((),(),())
             
-            if counts.has_key(add_user_save["add_user_save_id"]):
+            if add_user_save["add_user_save_id"] in counts:
                 add_user_save["users_count"]=counts[add_user_save["add_user_save_id"]]
             
 

@@ -15,7 +15,7 @@ class SessionTimeoutUserPlugin(user_plugin.AttrCheckUserPlugin):
 
     def __initValues(self):
         if self.hasAttr():
-            self.session_timeout=long(self.user_obj.getUserAttrs()["session_timeout"])
+            self.session_timeout=int(self.user_obj.getUserAttrs()["session_timeout"])
  
     def s_login(self,ras_msg):
         reply_pkt=ras_msg.getReplyPacket()
@@ -32,7 +32,7 @@ class SessionTimeoutAttrUpdater(AttrUpdater):
 
     def changeInit(self,session_timeout):
         try:
-            self.session_timeout = long( session_timeout )
+            self.session_timeout = int( session_timeout )
         except ValueError:
             raise GeneralException(errorText("USER_ACTIONS","INVALID_SESSION_TIMEOUT"))
 

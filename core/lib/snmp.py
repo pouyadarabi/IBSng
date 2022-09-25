@@ -103,7 +103,7 @@ class Snmp:
         elif type == 's':
             return ('OCTETSTRING', val)
         elif type == 'U':
-            return ('COUNTER64', long(val))
+            return ('COUNTER64', int(val))
         else:
             raise GeneralException("Unknown snmp type %s"%type)
 
@@ -142,10 +142,10 @@ class Snmp:
                     self._raiseException('SNMP error ' + str(self.module.SNMPError(rsp['error_status'])))
             
             # Decode BER encoded Object IDs.
-            oids = map(lambda x: x[0], map(asn1.OBJECTID().decode, \
-                                   rsp['encoded_oids']))
+            oids = [x[0] for x in list(map(asn1.OBJECTID().decode, \
+                                   rsp['encoded_oids']))]
             # Decode BER encoded values associated with Object IDs.
-            vals = map(lambda x: x[0](), map(asn1.decode, rsp['encoded_vals']))
+            vals = [x[0]() for x in list(map(asn1.decode, rsp['encoded_vals']))]
 
             if not asn1.OBJECTID(oid).isaprefix(oids[0]):
                 completed=True
@@ -170,7 +170,7 @@ class Snmp:
         try:
             client=self.getClient()
             (answer, src) = client.send_and_receive(\
-                                                    apply(req.encode,[],kargs))
+                                                    req.encode(*[], **kargs))
         finally:
             self.releaseClient(client)
             self.lock.release()

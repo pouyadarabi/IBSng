@@ -20,8 +20,8 @@ class IBSQuery:
         if query == self: #are we adding ourselves to ourselves?
             raise GeneralException("Can't add an instance of IBSQuery to itself")
             
-        if type(query)==types.ListType or isinstance(query,IBSQuery):
-            map(self.addQuery,query)
+        if type(query)==list or isinstance(query,IBSQuery):
+            list(map(self.addQuery,query))
         else:
             self.addQuery(query)
         return self
@@ -47,5 +47,5 @@ class IBSQuery:
         return self.__queries
 
     def printQueries(self):
-        print "IBSQuery queries:%s"%str(self.__queries)
+        print(("IBSQuery queries:%s"%str(self.__queries)))
         

@@ -90,9 +90,9 @@ class CreditSearchHelper(SearchHelper):
         return dic
                 
     def __getUserIDs(self,db_handle,credit_changes):
-        credit_change_id_conds=map(lambda x:"credit_change_id=%s"%x["credit_change_id"],credit_changes)
+        credit_change_id_conds=["credit_change_id=%s"%x["credit_change_id"] for x in credit_changes]
         return db_handle.get("credit_change_userid",
-                             " or ".join(map(lambda x:"%s::bigint"%x,credit_change_id_conds)),
+                             " or ".join(["%s::bigint"%x for x in credit_change_id_conds]),
                              0,-1,"credit_change_id,user_id asc")
 
     def __getCreditChanges(self,db_handle,_from,to,order_by,desc):
@@ -123,7 +123,7 @@ class CreditSearchHelper(SearchHelper):
     
     def __createCreditChangeIDsQuery(self):
         queries=self.getTableQueries()
-        queries=apply(self.filterNoneQueries,queries.values())
+        queries=self.filterNoneQueries(*list(queries.values()))
         if len(queries)==0:
             query="select credit_change_id from credit_change"
         else:

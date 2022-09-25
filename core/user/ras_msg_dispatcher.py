@@ -17,7 +17,7 @@ class RasMsgDispatcher:
                          }
 
         action=ras_msg.getAction()
-        return apply(dispatch_methods[action],[ras_msg])
+        return dispatch_methods[action](*[ras_msg])
 
     def _internetAuthenticate(self,ras_msg):
         getLogConsole().logAuthRasMsg(ras_msg)
@@ -29,7 +29,7 @@ class RasMsgDispatcher:
 
             return True
 
-        except IBSError,e:
+        except IBSError as e:
             user_main.getDialerErrors().applyToRasMsg(ras_msg, e)
 
             getLogConsole().logAuthRasMsgFailure(ras_msg, e)
@@ -56,7 +56,7 @@ class RasMsgDispatcher:
             getLogConsole().logAuthRasMsgSuccess(ras_msg)
 
             return True
-        except IBSError, e:
+        except IBSError as e:
             getLogConsole().logAuthRasMsgFailure(ras_msg, e)
 
             return False
@@ -75,7 +75,7 @@ class RasMsgDispatcher:
             getLogConsole().logAuthRasMsgSuccess(ras_msg)
 
             return user_main.getVoIPErrors().applySuccess(ras_msg)
-        except IBSError, e:
+        except IBSError as e:
             getLogConsole().logAuthRasMsgFailure(ras_msg, e)
 
             return user_main.getVoIPErrors().applyFailure(ras_msg, e)
@@ -90,7 +90,7 @@ class RasMsgDispatcher:
 
             return user_main.getVoIPErrors().applySuccess(ras_msg)
 
-        except IBSError, e:
+        except IBSError as e:
             getLogConsole().logAuthRasMsgFailure(ras_msg, e)
 
             return user_main.getVoIPErrors().applyFailure(ras_msg, e)
@@ -106,6 +106,6 @@ class RasMsgDispatcher:
         try:
             user_main.getOnline().updateUser(ras_msg)
             user_main.getVoIPErrors().applySuccess(ras_msg)
-        except IBSError, e:
+        except IBSError as e:
             user_main.getVoIPErrors().applyFailure(ras_msg, e)
             

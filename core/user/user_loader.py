@@ -59,7 +59,7 @@ class UserLoader:
         if self.DEBUG:
             toLog("UserLoader: Loading %s massives and %s singles"%(len(massives),len(singles)),LOG_DEBUG)
     
-        loaded_users = map(self.__loadSingle,singles)
+        loaded_users = list(map(self.__loadSingle,singles))
         loaded_users += self.__loadMassives(massives)
         return loaded_users
         
@@ -83,7 +83,7 @@ class UserLoader:
             basic_users = self.getBasicUsers(cur_ids)
             user_attrs_dic=self.getUserAttrsByUserIDs(cur_ids)
             user_attrs=self.__createUsersAttrs(user_attrs_dic,basic_users)
-            loaded_users += map(self.__createLoadedUser,basic_users,user_attrs)
+            loaded_users += list(map(self.__createLoadedUser,basic_users,user_attrs))
         return loaded_users
 
     ######################################
@@ -114,7 +114,7 @@ class UserLoader:
             all_attrs[user_id] = {}
             
             for attrs_dic in [attrs, normal_attrs, voip_attrs, plan_attrs, callerid_attrs]:
-                if attrs_dic.has_key(user_id):
+                if user_id in attrs_dic:
                     all_attrs[user_id].update(attrs_dic[user_id])
                     
         return all_attrs
@@ -132,7 +132,7 @@ class UserLoader:
 
     def getBasicUsers(self,user_ids):
         basic_infos = self.__fetchMassiveBasicInfo(user_ids)
-        return map(self.__createBasicUser,basic_infos)
+        return list(map(self.__createBasicUser,basic_infos))
 
     #########################################
     def __createUserAttrs(self,user_attrs_dic,basic_user):
@@ -305,7 +305,7 @@ class UserLoader:
         users={}
         cid_db_attrs = db_main.getHandle().executePrepared("bulk_load_caller_id_users",user_ids)
         for _dic in cid_db_attrs:
-            if users.has_key(_dic["user_id"]):
+            if _dic["user_id"] in users:
                 users[_dic["user_id"]]["caller_id"].append(_dic["caller_id"])
             else:
                 users[_dic["user_id"]]={"caller_id":[_dic["caller_id"]]}

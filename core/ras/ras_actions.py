@@ -202,7 +202,7 @@ class RasActions:
         """
         def checkRasUsageInRules(charge_obj):
             rulez=charge_obj.getRules()
-            for rule_obj in rulez.values():
+            for rule_obj in list(rulez.values()):
                 if rule_obj.getRasID()==ras_obj.getRasID():
                     raise GeneralException(errorText("RAS","RAS_USED_IN_RULE")%rule_obj)
         charge_main.getLoader().runOnAllCharges(checkRasUsageInRules)
@@ -258,7 +258,7 @@ class RasActions:
             if ras_obj.hasPort(port_name):
                 raise GeneralException(errorText("RAS","RAS_ALREADY_HAS_PORT")%port_name)
 
-        map(checkPort,port_names)
+        list(map(checkPort,port_names))
         
         if _type not in ras.PORT_TYPES:
             raise GeneralException(errorText("RAS","INVALID_PORT_TYPE")%_type)
@@ -291,7 +291,7 @@ class RasActions:
             if not ras_obj.hasPort(port_name):
                 raise GeneralException(errorText("RAS","RAS_DONT_HAVE_PORT")%port_name)
             
-        map(checkPort,port_names)
+        list(map(checkPort,port_names))
     
     def __delPortsDB(self,ras_obj,port_names):
         query=""
@@ -318,7 +318,7 @@ class RasActions:
                 raise GeneralException(errorText("RAS","INVALID_PORT_NAME")%port_name)
 
 
-        map(checkPort,port_names)
+        list(map(checkPort,port_names))
         if _type not in ras.PORT_TYPES:
             raise GeneralException(errorText("RAS","INVALID_PORT_TYPE")%_type)
         
@@ -347,7 +347,7 @@ class RasActions:
             if ras_obj.getAttribute(attr_name)==None:
                 raise GeneralException(errorText("RAS","RAS_DONT_HAVE_ATTR")%attr_name)
 
-            if type(ras_obj.getAttribute(attr_name)) == types.IntType:
+            if type(ras_obj.getAttribute(attr_name)) == int:
                 attrs[attr_name]=to_int(attrs[attr_name],"%s Attribute Value"%attr_name)
 
     def __updateAttributeDB(self,ras_obj,attrs):

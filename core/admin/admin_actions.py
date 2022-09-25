@@ -263,7 +263,7 @@ class AdminActions:
                        self.__delAdminUpdateAdminCreatorsQuery)
         query = ibs_query.IBSQuery()
         for func in query_funcs:
-            query += apply(func,(admin_id,))
+            query += func(*(admin_id,))
         query += self.__deleteAdminIASQuery(deleter_admin, admin_obj)
         query.runQuery()
 

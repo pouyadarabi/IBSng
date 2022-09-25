@@ -39,14 +39,14 @@ class RSHClient:
         if err_str:
             raise RSHException("Host: %s Command %s: %s"%(host,command,err_str))
         out_str=self.__readAll(out)
-        map(lambda fd:fd.close(),(_in,out,err))
+        list([fd.close() for fd in (_in,out,err)])
         return out_str
 
     def __prepareCommandAsArgument(self, command):
         """
             make sure arguments passed to rsh wrapper is a list
         """
-        if type(command)==types.ListType:
+        if type(command)==list:
             return command
         else: #str
             return [command]

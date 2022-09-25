@@ -35,7 +35,7 @@ class Request:
         return self.params[key]
 
     def has_key(self,key):
-        return self.params.has_key(key)
+        return key in self.params
 
     def authenticate(self):
         """
@@ -79,7 +79,7 @@ class Request:
             args should be strings, arguments that the handler excepts to be exists
         """
         for arg in args:
-            if not self.params.has_key(arg):
+            if arg not in self.params:
                 self.raiseIncompleteRequest(arg)
 
     def raiseIncompleteRequest(self,missing_arg):
@@ -116,7 +116,7 @@ class Request:
         """
             return client remote ip address
         """
-        if self.client_address[0] in defs.TRUSTED_CLIENTS and self.params.has_key("auth_remoteaddr"):
+        if self.client_address[0] in defs.TRUSTED_CLIENTS and "auth_remoteaddr" in self.params:
             remote_addr=self.params["auth_remoteaddr"]
         else:
             remote_addr=self.client_address[0]
@@ -174,7 +174,7 @@ class Request:
             if no date_type passed, gregorian dates are used
             values can be "gregorian" and "jalali"
         """
-        if self.has_key("date_type") and self["date_type"] in ("gregorian","jalali","relative"):
+        if "date_type" in self and self["date_type"] in ("gregorian","jalali","relative"):
             return self["date_type"]
         else:
             return "gregorian"
@@ -184,7 +184,7 @@ class Request:
             some xmlrpc implementions return lists as dictionaries. 
             This method return value of key if it is a list, or convert it to list, if it's dictionary
         """
-        if type(self[key])==types.DictType:
-            return map(lambda x:self[key][`x`], xrange(len(self[key]))) #let's keep the order
+        if type(self[key])==dict:
+            return [self[key][repr(x)] for x in range(len(self[key]))] #let's keep the order
             
         return key

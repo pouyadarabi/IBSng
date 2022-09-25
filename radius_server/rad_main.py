@@ -18,16 +18,16 @@ def init():
     toLog("Initializing IBS Radius Server", LOG_DEBUG)
 
     stat_main.getStatKeeper().registerStat("auth_packets", "int")
-    stat_main.getStatKeeper().registerStat("acct_packets", "int")    
+    stat_main.getStatKeeper().registerStat("acct_packets", "int")
 
     stat_main.getStatKeeper().registerStat("auth_duplicate_packets", "int")
-    stat_main.getStatKeeper().registerStat("acct_duplicate_packets", "int")    
+    stat_main.getStatKeeper().registerStat("acct_duplicate_packets", "int")
 
     stat_main.getStatKeeper().registerStat("auth_avg_response_time", "seconds")
-    stat_main.getStatKeeper().registerStat("acct_avg_response_time", "seconds")    
+    stat_main.getStatKeeper().registerStat("acct_avg_response_time", "seconds")
 
     stat_main.getStatKeeper().registerStat("auth_max_response_time", "seconds")
-    stat_main.getStatKeeper().registerStat("acct_max_response_time", "seconds")    
+    stat_main.getStatKeeper().registerStat("acct_max_response_time", "seconds")
 
     global ibs_dic
     ibs_dic=dictionary.Dictionary("%s/radius_server/dictionary"%defs.IBS_ROOT,
@@ -54,10 +54,10 @@ def startRadiusServer():
 def shutdown():
     if not radius_server_started:
         return
-            
+
     sock = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     sock.connect((defs.RADIUS_SERVER_BIND_IP[0], defs.RADIUS_SERVER_ACCT_PORT))
-    sock.send("\n")
+    sock.send(" ")
     sock.close()
 
 def getDictionary():

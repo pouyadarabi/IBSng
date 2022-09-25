@@ -47,32 +47,32 @@ class RasLoader:
             check if ras with id "ras_id" is loaded
             raise a GeneralException on Error
         """
-        if not self.rases_id.has_key(ras_id):
+        if ras_id not in self.rases_id:
             raise GeneralException(errorText("RAS","INVALID_RAS_ID")%ras_ip)
 
     def rasIPExists(self,ras_ip):
         """
             return True if ras with ip "ras_ip" already exists and False if it doesn't exists
         """
-        return self.rases_ip.has_key(ras_ip)
+        return ras_ip in self.rases_ip
 
     def rasDescExists(self,ras_description):
         """
             return True if ras with description "ras_description" already exists and False if it doesn't exists
         """
-        return self.rases_description.has_key(ras_description)
+        return ras_description in self.rases_description
 
     def getAllRasIPs(self):
         """
             return a list of all ras_ips that is loaded into object
         """
-        return self.rases_ip.keys()
+        return list(self.rases_ip.keys())
 
     def getAllRasIDs(self):
         """
             return a list of all ras_ids that is loaded into object
         """
-        return self.rases_id.keys()
+        return list(self.rases_id.keys())
 
     def getRasDescToIPMap(self):
         """
@@ -89,11 +89,11 @@ class RasLoader:
             run "method" multiple times with each ras_obj as argument
             method should accept one argument (ras_obj)
         """
-        return map(method,self.rases_id.values())
+        return list(map(method,list(self.rases_id.values())))
 
     def loadAllRases(self):
         ras_ids=self.__getAllActiveRasIDs()
-        map(self.loadRas,ras_ids)
+        list(map(self.loadRas,ras_ids))
 
     def loadRas(self,ras_id):
         """

@@ -82,7 +82,7 @@ class PortMasterRas(UpdateUsersRas):
 
 ####################################
     def isOnline(self,user_msg):
-        return self.onlines.has_key(user_msg["port"])
+        return user_msg["port"] in self.onlines
 ####################################
     def getInOutBytes(self, user_msg):
         try:
@@ -110,7 +110,7 @@ class PortMasterRas(UpdateUsersRas):
                                     "Calling-Station-Id":"caller_id",
                                     })
 
-        if self.inouts.has_key(ras_msg["port"]):
+        if ras_msg["port"] in self.inouts:
             self.inouts[ras_msg["port"]]["in_bytes"],self.inouts[ras_msg["port"]]["out_bytes"]=0,0
 
         ras_msg.setAction("INTERNET_AUTHENTICATE")

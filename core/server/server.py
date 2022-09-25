@@ -2,7 +2,7 @@ from core.server import handlers_manager,xmlrpcserver
 from core.threadpool import thread_main
 from core.stats import stat_main
 from core import defs
-import xmlrpclib
+import xmlrpc.client
 
 def init():
     global server, server_started
@@ -26,7 +26,7 @@ def shutdown():
         return
         
     try:
-        server=xmlrpclib.ServerProxy("http://%s:%s"%(defs.IBS_SERVER_IP,defs.IBS_SERVER_PORT))
+        server=xmlrpc.client.ServerProxy("http://%s:%s"%(defs.IBS_SERVER_IP,defs.IBS_SERVER_PORT))
         getattr(server,"exit")()
     except:
         pass

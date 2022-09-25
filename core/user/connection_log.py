@@ -32,8 +32,8 @@ class ConnectionLogActions:
                                               )
     
     def __createConnectionDetailsArrays(self,details):
-        names = details.keys()
-        values = map(details.get,names) # we want them is same order
+        names = list(details.keys())
+        values = list(map(details.get,names)) # we want them is same order
         
         names_arr="ARRAY[%s]"%",".join(map(dbText,names))
         values_arr="ARRAY[%s]"%",".join(map(dbText,values))
@@ -48,7 +48,7 @@ class ConnectionLogActions:
         
         
     def deleteConnectionLogsForUsersQuery(self,user_ids):
-        condition=" or ".join(map(lambda user_id:"user_id=%s"%user_id,user_ids))
+        condition=" or ".join(["user_id=%s"%user_id for user_id in user_ids])
         details_query=ibs_db.createDeleteQuery("connection_log_details","connection_log_id in (select connection_log_id from connection_log where %s)"%condition)
         connection_query=ibs_db.createDeleteQuery("connection_log",condition)
         return details_query+connection_query

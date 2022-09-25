@@ -53,8 +53,8 @@ class ReportHandler(handler.Handler):
                                        (request["voip_sort_by"], request["voip_desc"]))
         
         if admin_perm_obj!=None and admin_perm_obj.isRestricted():
-            normal_onlines=filter(lambda online_dic:online_dic["owner_id"]==requester.getAdminID(),normal_onlines)
-            voip_onlines=filter(lambda online_dic:online_dic["owner_id"]==requester.getAdminID(),voip_onlines)
+            normal_onlines=[online_dic for online_dic in normal_onlines if online_dic["owner_id"]==requester.getAdminID()]
+            voip_onlines=[online_dic for online_dic in voip_onlines if online_dic["owner_id"]==requester.getAdminID()]
 
         return (normal_onlines, voip_onlines)
         
@@ -128,7 +128,7 @@ class ReportHandler(handler.Handler):
         role = "admin"
         
         searcher=connection.ConnectionSearcher(conds,requester,role)
-        return apply(getattr(searcher,method_name),[])
+        return getattr(searcher,method_name)(*[])
 
 
     def getGroupUsages(self,request):

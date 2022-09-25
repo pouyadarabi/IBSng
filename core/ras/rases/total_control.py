@@ -49,7 +49,7 @@ class TotalControlRas(GeneralUpdateRas):
 ####################################    
     def isOnline(self,user_msg):
         iface_idx = user_msg["interface_index"]
-        return self.onlines.has_key(iface_idx) and \
+        return iface_idx in self.onlines and \
                self.onlines[iface_idx]["last_update"]>=time.time()-int(self.getAttribute("tc_update_accounting_interval"))*60
 
 ###################################
@@ -60,10 +60,10 @@ class TotalControlRas(GeneralUpdateRas):
         snmp_in_bytes=self.snmp_client.walk(in_bytes_oid)
         snmp_out_bytes=self.snmp_client.walk(out_bytes_oid)
 
-        if snmp_in_bytes.has_key(in_bytes_oid):
+        if in_bytes_oid in snmp_in_bytes:
             del(snmp_in_bytes[in_bytes_oid])
 
-        if snmp_out_bytes.has_key(out_bytes_oid):
+        if out_bytes_oid in snmp_out_bytes:
             del(snmp_out_bytes[out_bytes_oid])
 
         inout_bytes={}
@@ -71,7 +71,7 @@ class TotalControlRas(GeneralUpdateRas):
             port=oid[oid.rfind(".")+1:]
             try:
                 inout_bytes[port]={"in_bytes":snmp_in_bytes[oid],"out_bytes":snmp_out_bytes["%s.%s"%(out_bytes_oid,port)]}
-            except KeyError,key:
+            except KeyError as key:
                 self.toLog("Unable to update port inout bytes, key %s missing"%key)
         return inout_bytes
 
@@ -161,7 +161,7 @@ class TotalControlRas(GeneralUpdateRas):
         ras_msg.setAction("INTERNET_STOP")
 
     def __internetAcctUpdate(self, ras_msg):
-        if ras_msg.getRequestPacket().has_key("USR-Interface-Index"):
+        if "USR-Interface-Index" in ras_msg.getRequestPacket():
            self.__addUniqueIDToRasMsg(ras_msg)
            self.__updateInInternetOnlines(ras_msg)
 
@@ -190,11 +190,11 @@ class TotalControlRas(GeneralUpdateRas):
         iface_idx = ras_msg["interface_index"]
         update_pkt = ras_msg.getRequestPacket()
 
-        if not update_pkt.has_key("User-Name"):
+        if "User-Name" not in update_pkt:
             return
 
         if iface_idx in self.onlines and update_pkt["User-Name"][0]==self.onlines[iface_idx]["username"]:
-            if update_pkt.has_key("Acct-Output-Octets"):
+            if "Acct-Output-Octets" in update_pkt:
                 out_bytes=update_pkt["Acct-Output-Octets"][0]
                 in_bytes=update_pkt["Acct-Input-Octets"][0]
                 duration=time.time() - self.onlines[iface_idx]["last_update"]

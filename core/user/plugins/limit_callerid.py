@@ -24,8 +24,8 @@ class LimitCallerIDPlugin(user_plugin.AttrCheckUserPlugin):
 
     def __initValues(self):
         if self.hasAttr():
-            self.caller_id_patterns = map(
-                                        re.compile,MultiStr(self.user_obj.getUserAttrs()["limit_caller_id"]))
+            self.caller_id_patterns = list(map(
+                                        re.compile,MultiStr(self.user_obj.getUserAttrs()["limit_caller_id"])))
             self.allow_no_caller_id = self.user_obj.getUserAttrs()["limit_caller_id_allow_not_defined"] == "1"
 
     def s_login(self,ras_msg):
@@ -46,7 +46,7 @@ class LimitCallerIDPlugin(user_plugin.AttrCheckUserPlugin):
 class LimitCallerIDAttrUpdater(AttrUpdater):
 
     def changeInit(self,caller_ids,allow_not_defined):
-        caller_id_list=map(lambda caller_id:caller_id.strip(),MultiStr(caller_ids))
+        caller_id_list=[caller_id.strip() for caller_id in MultiStr(caller_ids)]
 
         for caller_id in caller_id_list:
             try:

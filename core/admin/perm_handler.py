@@ -33,7 +33,7 @@ class PermHandler(handler.Handler):
         args=[request["perm_name"]]
         args.extend(request.fixList("params"))
         try:
-            apply(admin_main.getLoader().getAdminByName(request["admin_username"]).canDo,args)
+            admin_main.getLoader().getAdminByName(request["admin_username"]).canDo(*args)
             return True
         except PermissionException:
             return False
@@ -58,7 +58,7 @@ class PermHandler(handler.Handler):
         if request.auth_name!=request["admin_username"]:        
             request.getAuthNameObj().canDo("SEE ADMIN PERMISSIONS")
         perms=admin_main.getLoader().getAdminByName(request["admin_username"]).getPerms()
-        if not perms.has_key(request["perm_name"]):
+        if request["perm_name"] not in perms:
             return request.getErrorResponse(errorText("PERMISSION","DONT_HAVE_PERMISSION"))
         return perms[request["perm_name"]].getValue()
 
@@ -98,7 +98,7 @@ class PermHandler(handler.Handler):
         request.needAuthType(request.ADMIN)
         request.getAuthNameObj().canDo("CHANGE ADMIN PERMISSIONS")
         all_perms_dic=perm_loader.getLoader().getAllPerms()
-        if request.has_key("category"):
+        if "category" in request:
             category=request["category"]
         else:
             category="all"

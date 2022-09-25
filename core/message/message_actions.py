@@ -20,7 +20,7 @@ class MessageActions:
 
     def __postMessageToUserCheckInput(self,user_ids, message_text):
         if user_ids != None:
-            map(self.__checkUserID, user_ids)
+            list(map(self.__checkUserID, user_ids))
         
         self.__checkMessageText(message_text)
 
@@ -107,12 +107,12 @@ class MessageActions:
         self.__deleteUserMessagesDB(message_ids, user_id)       
 
     def __deleteUserMessagesCheckInput(self, message_ids, user_id):
-        map(self.__checkMessageID, message_ids)
+        list(map(self.__checkMessageID, message_ids))
         self.__checkSendToAllMessageIDs(message_ids)
         self.__checkUserID(user_id)
 
     def __checkSendToAllMessageIDs(self, message_ids):
-        cond = " or ".join(map(lambda message_id:"message_id=%s"%message_id,message_ids))
+        cond = " or ".join(["message_id=%s"%message_id for message_id in message_ids])
         _count = db_main.getHandle().getCount("user_messages", "(%s) and user_id is null"%cond)
         if _count:
             raise GeneralException(errorText("MESSAGES","CANT_DELETE_SEND_TO_ALL"))
@@ -126,7 +126,7 @@ class MessageActions:
         db_main.getHandle().transactionQuery(self.__deleteUserMessagesQuery(message_ids, user_id))
     
     def __deleteUserMessagesQuery(self, message_ids, user_id):
-        cond = "( %s ) and user_id = %s"%(" or ".join(map(lambda message_id:"message_id=%s"%message_id,message_ids)),
+        cond = "( %s ) and user_id = %s"%(" or ".join(["message_id=%s"%message_id for message_id in message_ids]),
                                           user_id)
         return ibs_db.createDeleteQuery("user_messages",cond)                             
 
@@ -137,7 +137,7 @@ class MessageActions:
         self.__deleteMessagesDB(db_table_name, message_ids)
 
     def __deleteMessagesCheckInput(self, message_ids, table):
-        map(self.__checkMessageID, message_ids)
+        list(map(self.__checkMessageID, message_ids))
         if table not in ["admin","user"]:
             raise GeneralException(errorText("MESSAGES","INVALID_MESSAGE_TABLE")%table)
 

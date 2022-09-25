@@ -3,7 +3,7 @@ from core.ibs_exceptions import *
 from core.db.db_result_wrapper import *
 from core import defs
 
-class ibs_db: #abstract parent class for all db implementions. Children must implement esp. query and connect 
+class ibs_db: #abstract parent class for all db implementions. Children must implement esp. query and connect
     def __init__(self,dbname,host,port,user,password):
         self.connHandle=None
         self.connect(dbname,host,port,user,password)
@@ -12,21 +12,21 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
     def __addPreparedQueries(self):
         for table_name in ["users","user_attrs","normal_users","voip_users","persistent_lan_users","caller_id_users"]:
             self.__loadUserPrepareQuery(table_name)
-        
+
         self.prepareQuery("load_normal_users_username",["text"],"select * from normal_users where normal_username = $1")
         self.prepareQuery("load_voip_users_username",["text"],"select * from voip_users where voip_username = $1")
         self.prepareQuery("load_caller_id_users_caller_id",["text"],"select * from caller_id_users where caller_id = $1")
-        
+
     def __loadUserPrepareQuery(self,table_name):
         self.prepareQuery("load_%s"%table_name,["bigint"],"select * from %s where user_id=int8($1)"%table_name)
         self.prepareQuery("bulk_load_%s"%table_name,
                           ["bigint"]*defs.POSTGRES_MAGIC_NUMBER,
                           "select * from %s where %s"%
                            (table_name, \
-                            " or ".join(map(lambda i:"user_id=int8($%s)"%i,xrange(1,defs.POSTGRES_MAGIC_NUMBER+1))) \
+                            " or ".join(["user_id=int8($%s)"%i for i in range(1,defs.POSTGRES_MAGIC_NUMBER+1)]) \
                            ))
 
-        
+
 
     def prepareQuery(self,plan_name, args , query):
         """
@@ -43,13 +43,13 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
 
     def connect(self,dbname,host,port,user,password):
         pass
-    
+
     def _runQuery(self,query):
         """
             run the query, without any exception handleing
             users normally should use query or transactionQuery or IBSQuery class, and should not
             use this method directly
-            
+
         """
         start=time.time()
         try:
@@ -70,7 +70,7 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
         """
         try:
             return self._runQuery(command)
-        except Exception,e:
+        except Exception as e:
             raise ibs_exceptions.DBException("%s query: %s" %(e,command))
 
 
@@ -86,7 +86,7 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
     def _logQuery(self, query, query_time):
         if defs.LOG_DATABASE_QUERIES:
             toLog("Time:%s Query:%s"%(query_time, query),LOG_QUERY)
-        
+
     def getConnection(self):
         if self.connHandle==None:
             raise dbException("None connection")
@@ -95,28 +95,28 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
     def reset(self):
         self.getConnection().reset()
         self.__addPreparedQueries()
-    
+
     def close(self):
         self.getConnection().close()
         self.pgConn=None
-    
+
     def get(self,table,condition="true",from_=0,to=-1,orderBy="",rows=[]):
         """
             orderBy (str or tuple): if it's an string, it will be placed after the order by clause
                                     if it's a tuple, it'll interpreted as (col_name,desc_flag) where desc_flag
                                         is a boolean telling if it should be ordered desc.
-        
+
         """
         query="select "
         if len(rows)==0:
             query+="*"
-        else:         
+        else:
             query+=",".join(rows)
 
-        query += " from " + table 
+        query += " from " + table
         if condition:
             query+= " where " + condition + " "
-        
+
         if orderBy:
             order_by_clause=self.__createOrderBy(orderBy)
 
@@ -130,10 +130,12 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
         return self.selectQuery(query)
 
     def __createOrderBy(self,order_by):
-        if type(order_by)==types.StringType:
+        if type(order_by)==bytes:
             return order_by
-        elif type(order_by)==types.TupleType:
-            if order_by[1]:     
+        elif type(order_by)==str:
+            return order_by
+        elif type(order_by)==tuple:
+            if order_by[1]:
                 desc="desc"
             else:
                 desc="asc"
@@ -152,20 +154,20 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
             return self.getTupleResult(result)
         else:
             return self.getDictWrapperResult(result)
-    
+
     def getDictResult(self, result):
         return result.dictresult()
-    
+
     def getTupleResult(self, result):
         return result.getresult()
 
     def getDicWrapperResult(self, result):
         return DBResultWapper(result)
 
-    def insert(self,table,dict_values):    
+    def insert(self,table,dict_values):
         query=createInsertQuery(table,dict_values)
         self.transactionQuery(query)
-        
+
     def update(self,table,dict_values,condition):
         query=createUpdateQuery(table,dict_values,condition)
         self.transactionQuery(query)
@@ -195,7 +197,7 @@ class ibs_db: #abstract parent class for all db implementions. Children must imp
         return self.get(table,condition,0,-1,"",["count(*) as count"])[0]["count"]
 
 
-    
+
 
 def createInsertQuery(table,dict_values):
     """
@@ -204,22 +206,22 @@ def createInsertQuery(table,dict_values):
     """
     if len(dict_values)==0:
         raise DBException("Empty values for insert")
-    
-    names="("+",".join(dict_values.keys())+")"
-    values="("+",".join(map(str,dict_values.values()))+")"
+
+    names="("+",".join(list(dict_values.keys()))+")"
+    values="("+",".join(map(str,list(dict_values.values())))+")"
     return "insert into %s %s VALUES %s ;"%(table,names,values)
 
 
 def createUpdateQuery(table,dict_values,condition):
     """
-        create query to update "dict_values" with condition "condition" on "table" 
+        create query to update "dict_values" with condition "condition" on "table"
         dict_value is in form {column_name=>value}
     """
     if len(dict_values)==0:
         raise DBException("Empty values for update")
-    set_list=map(lambda name:"%s = %s"%(name,dict_values[name]),dict_values)
+    set_list=["%s = %s"%(name,dict_values[name]) for name in dict_values]
     query="update %s set %s where %s ;" % (table,",".join(set_list),condition)
-    return query 
+    return query
 
 def createDeleteQuery(table,condition):
     return "delete from " + table + " where " + condition + ";"

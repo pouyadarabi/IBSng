@@ -8,15 +8,15 @@ class AdminLoader:
     def __init__(self):
         self.admins_id={}
         self.admins_name={}
-        
+
     def __getitem__(self,key):
         if isInt(key):
             return self.getAdminByID(key)
         else:
             return self.getAdminByName(key)
-    
+
     def __iter__(self):
-        return self.admins_id.iterkeys()
+        return iter(list(self.admins_id.keys()))
 
     def getAdminByID(self,admin_id):
         try:
@@ -29,35 +29,35 @@ class AdminLoader:
             return self.admins_name[admin_name]
         except KeyError:
             raise GeneralException(errorText("ADMIN","ADMIN_USERNAME_INVALID")%admin_name)
-    
-    
+
+
     def checkAdminID(self,admin_id):
         if not isInt(admin_id):
             raise GeneralException(errorText("ADMIN","ADMIN_ID_INVALID")%admin_id)
-        
-        if not self.admins_id.has_key(admin_id):
+
+        if admin_id not in self.admins_id:
             raise GeneralException(errorText("ADMIN","ADMIN_ID_INVALID")%admin_id)
-    
+
     def checkAdminName(self,admin_name):
-        if not self.admins_name.has_key(admin_name):
+        if admin_name not in self.admins_name:
             raise GeneralException(errorText("ADMIN","ADMIN_USERNAME_INVALID")%admin_name)
-    
-    
+
+
     def adminNameAvailable(self,admin_name):
         """
             check if "admin_name" is available for adding.
             return 1 if it's available(no other admin has this name)
             return 0 if it's not available(another admin has this name)
         """
-        return not self.admins_name.has_key(admin_name)
+        return admin_name not in self.admins_name
 
 
     def getAllUsernames(self):
         """
             return a list of all admin usernames
         """
-        return self.admins_name.keys()
-        
+        return list(self.admins_name.keys())
+
     def loadAdmin(self,admin_id):
         """
             load admin with id "admin_id" and put it in internally used dic
@@ -65,7 +65,7 @@ class AdminLoader:
         admin_obj=self.__loadAdminObj(admin_id)
         self.admins_id[admin_id]=admin_obj
         self.admins_name[admin_obj.username]=admin_obj
-        
+
     def loadAdminByName(self,username):
         """
             load admin with username "username" by calling self.loadAdmin
@@ -73,17 +73,18 @@ class AdminLoader:
         """
         admin_id=self.getAdminByName(username).getAdminID()
         self.loadAdmin(admin_id)
-        
+
     def loadAllAdmins(self):
         """
             load all of admins available in "admin" table
         """
         admin_ids=self.__getAllAdminIDs()
-        map(self.loadAdmin,admin_ids)
-        
+        for admin_id in admin_ids:
+            self.loadAdmin(admin_id)
+
     def unLoadAdmin(self, admin_id):
         """
-            unload admin with id "admin_id"     
+            unload admin with id "admin_id"
         """
         admin_obj = self.getAdminByID(admin_id)
         del(self.admins_id[admin_id])
@@ -91,7 +92,7 @@ class AdminLoader:
 
     def __loadAdminObj(self,admin_id):
         """
-            get admin information from db(including basic info,perms and locks), 
+            get admin information from db(including basic info,perms and locks),
             Create an object of these information, and return the object
         """
         admin_info=self.__getAdminBasicInfoDB(admin_id)
@@ -101,7 +102,7 @@ class AdminLoader:
         admin_obj.setPerms(admin_perms)
         admin_obj.setLocks(admin_locks)
         return admin_obj
-        
+
     def __getAdminBasicInfoDB(self,admin_id):
         """
             return dic of admin basic information from "admin" table
@@ -120,13 +121,13 @@ class AdminLoader:
         return admin.Admin(admin_info["username"],admin_info["password"],admin_info["name"],admin_info["comment"],
                            admin_info["admin_id"],admin_info["deposit"],admin_info["creator_id"],
                            admin_info["due"])
-    
+
     def __getAdminLocks(self,admin_id):
         """
-            retrieve locks of admin with id "admin_id" and return a list of AdminLock instances 
+            retrieve locks of admin with id "admin_id" and return a list of AdminLock instances
         """
         locks=self.__getAdminLocksDB(admin_id)
-        return map(self.__createAdminLockObj,locks)
+        return list(map(self.__createAdminLockObj,locks))
 
     def __createAdminLockObj(self,lock_dic):
         """
@@ -140,7 +141,7 @@ class AdminLoader:
         """
         return db_main.getHandle().get("admin_locks","admin_id=%s"%admin_id)
 
-    
+
     def __getAllAdminIDs(self):
         """
             return a list of all admin_ids from "admins" table

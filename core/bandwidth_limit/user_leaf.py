@@ -89,10 +89,10 @@ class UserLeaf:
         services=self.getLeafObj().getServices()
         self.__setMarks(services)
         
-        map(self.__addService,
+        list(map(self.__addService,
             services,
             self.service_marks,
-            itertools.repeat(all_parent_id,len(services)))
+            itertools.repeat(all_parent_id,len(services))))
         self.__addDefaultClassAndFilter(self.default_mark,all_parent_id)
         
     def __setMarks(self,services):
@@ -177,7 +177,7 @@ class UserLeaf:
     
     def __delClasses(self):
         self.minor_ids.reverse()
-        map(self.__delClass,self.minor_ids)
+        list(map(self.__delClass,self.minor_ids))
         self.getLeafObj().getInterface().getMinorIDPool().freeID(self.minor_ids)
 
     def __delClass(self,minor_id):
@@ -185,7 +185,7 @@ class UserLeaf:
                                        "classid 1:%s"%minor_id)
         
     def __delFilters(self):
-        map(self.__delFilter,self.service_marks)
+        list(map(self.__delFilter,self.service_marks))
         self.__delFilter(self.default_mark)
 
     def __delFilter(self,mark_id):
@@ -195,7 +195,7 @@ class UserLeaf:
                                         "handle %s fw"%mark_id)
     
     def __delMarks(self):
-        map(self.__delMark,self.service_marks,self.getLeafObj().getServices())
+        list(map(self.__delMark,self.service_marks,self.getLeafObj().getServices()))
         self.__delMark(self.default_mark,None)
         bw_main.getMarkIDPool().freeID(self.service_marks+[self.default_mark])
 

@@ -18,7 +18,7 @@ class ChargeLoader:
         return self.getChargeByID(key)
     
     def __iter__(self):
-        return self.charges_id.iterkeys()
+        return iter(list(self.charges_id.keys()))
     
     def getChargeByID(self,charge_id):
         try:
@@ -79,7 +79,7 @@ class ChargeLoader:
             return 1 if it exists, and there's a charge with name "charge_name"
             return 0 if not
         """
-        return self.charges_name.has_key(charge_name)
+        return charge_name in self.charges_name
 
     def runOnAllCharges(self,function):
         """
@@ -87,10 +87,10 @@ class ChargeLoader:
             function should accept one argument that is a charge_obj. Function will be called for
             all loaded charge_objs
         """
-        map(function,self.charges_id.values())
+        list(map(function,list(self.charges_id.values())))
 
     def getAllChargeNames(self):
-        return self.charges_name.keys()
+        return list(self.charges_name.keys())
 
     def __createCharge(self,charge_id):
         """
@@ -145,7 +145,7 @@ class ChargeRuleLoader:
         for rule_info in rules:
             ports=self.__getRulePorts(rule_info["charge_rule_id"])
             day_of_weeks=self.__getDayOfWeeks(rule_info["charge_rule_id"])
-            day_of_week_container=apply(DayOfWeekIntContainer,day_of_weeks)
+            day_of_week_container=DayOfWeekIntContainer(*day_of_weeks)
             rule_obj=self.__createChargeRuleObject(charge_obj,rule_info,day_of_week_container,ports)
             rules_dic[rule_obj.getRuleID()]=rule_obj
         return rules_dic
@@ -177,7 +177,7 @@ class ChargeRuleLoader:
         """
             return a list of DayOfWeekInt instances 
         """
-        return map(DayOfWeekInt,self.__getDayOfWeeksDB(charge_rule_id))
+        return list(map(DayOfWeekInt,self.__getDayOfWeeksDB(charge_rule_id)))
 
     def __getDayOfWeeksDB(self,charge_rule_id):
         """

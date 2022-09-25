@@ -31,8 +31,8 @@ class AttributeHandler:
         
         attr_updater=self.attr_updater_class(self.getName())
         if action=="change":
-            arg_list=map(lambda x:attrs[x],self.attr_updater_change_arg_attrs)
-            apply(attr_updater.changeInit,arg_list)
+            arg_list=[attrs[x] for x in self.attr_updater_change_arg_attrs]
+            attr_updater.changeInit(*arg_list)
         else:
             attr_updater.deleteInit()
         return attr_updater
@@ -53,8 +53,8 @@ class AttributeHandler:
             attrs(dic or list): dic of attributes 
         """
         (attr_holder_class,attr_holder_attrs)=self.__findAttrHolder(attr_name)
-        arg_list=map(lambda x:attrs[x],attr_holder_attrs)
-        return apply(attr_holder_class,arg_list)
+        arg_list=[attrs[x] for x in attr_holder_attrs]
+        return attr_holder_class(*arg_list)
 
     def __findAttrHolder(self,attr_name):
         for (attr_holder_class,holder_attrs) in self.attr_holders:
@@ -101,12 +101,12 @@ class UserAttributes:
             set "attr_name" value to "attr_value" in loaded object
             use this with caution, this may lead to database inconsistency
         """
-        assert(not self.attributes.has_key(attr_name))
+        assert(attr_name not in self.attributes)
         self.attributes[attr_name]=attr_value
             
 
     def userHasAttr(self,attr_name):
-        return self.attributes.has_key(attr_name)
+        return attr_name in self.attributes
         
     def hasAttr(self,attr_name):
         return self.userHasAttr(attr_name) or self.__getGroupObj().hasAttr(attr_name)

@@ -10,7 +10,7 @@ class TWrapperChecker(periodic_events.PeriodicEvent):
         periodic_events.PeriodicEvent.__init__(self, "TWrapperChecker", 5*60, [], False, 10)
     
     def run(self):
-        now = long(time.time())
+        now = int(time.time())
         logged_threadpool = False
         
         for twrapper in thread_main.getTWrappers():

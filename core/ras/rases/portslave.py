@@ -56,7 +56,7 @@ class PortSlaveRas(GeneralUpdateRas):
                     self.toLog("Can't parse line %s"%line,LOG_ERROR)
                     continue
 
-                users_list[sp[0]]={"username":sp[1],"in_bytes":long(sp[2]),"out_bytes":long(sp[3])}
+                users_list[sp[0]]={"username":sp[1],"in_bytes":int(sp[2]),"out_bytes":int(sp[3])}
         except:
             logException(LOG_ERROR)
 
@@ -69,7 +69,7 @@ class PortSlaveRas(GeneralUpdateRas):
         self.onlines=onlines
 ####################################
     def isOnline(self,user_msg):
-        return self.onlines.has_key(user_msg["port"])
+        return user_msg["port"] in self.onlines
 ####################################
     def getInOutBytes(self, user_msg):
         try:
@@ -92,7 +92,7 @@ class PortSlaveRas(GeneralUpdateRas):
                                     "Calling-Station-Id":"caller_id"
                                     })
 
-        if self.onlines.has_key(ras_msg["port"]):
+        if ras_msg["port"] in self.onlines:
                 self.onlines[ras_msg["port"]]["in_bytes"],self.onlines[ras_msg["port"]]["out_bytes"]=0,0
 
         ras_msg.setAction("INTERNET_AUTHENTICATE")

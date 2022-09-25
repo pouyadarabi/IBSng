@@ -16,7 +16,7 @@ LOG_SERVER_REQUESTS=True #LOG server requests in /var/log/IBSng/ibs_server.log, 
 LOG_DATABASE_QUERIES=True #LOG every query we send to database
 LOG_EVENTS=False #LOG every event that event schedueler runs
 
-IBS_ROOT="/usr/local/IBSng"
+IBS_ROOT="/mnt/files/Projects/IBSng"
 IBS_CORE="%s/core"%IBS_ROOT
 IBS_ADDONS="%s/addons/"%IBS_ROOT
 
@@ -41,8 +41,8 @@ MAXLONG=0x7fffffff
 def init():
     global defs_loader
     defs_loader=DefsLoader()
-    defs_loader.setGlobalsDic(globals())   
+    defs_loader.setGlobalsDic(globals())
     defs_loader.loadAll()
-    
+
 def getDefsLoader():
     return defs_loader

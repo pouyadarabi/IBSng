@@ -80,10 +80,10 @@ class MikrotikRas(GeneralUpdateRas):
         snmp_in_bytes=self.snmp_client.walk(in_bytes_oid)
         snmp_out_bytes=self.snmp_client.walk(out_bytes_oid)
 
-        if snmp_in_bytes.has_key(in_bytes_oid):
+        if in_bytes_oid in snmp_in_bytes:
             del(snmp_in_bytes[in_bytes_oid])
 
-        if snmp_out_bytes.has_key(out_bytes_oid):
+        if out_bytes_oid in snmp_out_bytes:
             del(snmp_out_bytes[out_bytes_oid])
 
         inout_bytes={}
@@ -91,7 +91,7 @@ class MikrotikRas(GeneralUpdateRas):
             port=oid[oid.rfind(".")+1:]
             try:
                 inout_bytes[port]={"in_bytes":snmp_in_bytes[oid], "out_bytes":snmp_out_bytes["%s.%s"%(out_bytes_oid, port)]}
-            except KeyError, key:
+            except KeyError as key:
                 self.toLog("Unable to update port inout bytes, key %s missing"%key)
         return inout_bytes
 
@@ -107,7 +107,7 @@ class MikrotikRas(GeneralUpdateRas):
             self.inouts=inouts
 ####################################
     def isOnline(self, user_msg):
-        return self.onlines.has_key(user_msg["port"]) and self.onlines[user_msg["port"]]["last_update"] >= \
+        return user_msg["port"] in self.onlines and self.onlines[user_msg["port"]]["last_update"] >= \
                                     time.time() - int(self.getAttribute("mikrotik_update_accounting_interval"))*60
 ####################################
     def getInOutBytes(self, user_msg):
@@ -156,7 +156,7 @@ class MikrotikRas(GeneralUpdateRas):
             ras_msg["ip_assignment"]=False      
             ras_msg.setInAttrsIfExists({"Calling-Station-Id":"mac"})
 
-        if self.onlines.has_key(ras_msg["port"]):
+        if ras_msg["port"] in self.onlines:
                 self.onlines[ras_msg["port"]]["in_bytes"], self.onlines[ras_msg["port"]]["out_bytes"]=0, 0
 
         ras_msg.setAction("INTERNET_AUTHENTICATE")
@@ -171,7 +171,7 @@ class MikrotikRas(GeneralUpdateRas):
             ras_msg["update_attrs"]=["remote_ip", "start_accounting"]
 
             self.onlines[ras_msg["port"]] = {"username":ras_msg["username"], "in_bytes":0, "out_bytes":0 , "in_rate":0, "out_rate":0, "last_update":time.time()}
-            if self.inouts.has_key(ras_msg["port"]):
+            if ras_msg["port"] in self.inouts:
                 del(self.inouts[ras_msg["port"]])
 
             ras_msg.setAction("INTERNET_UPDATE")
@@ -191,12 +191,12 @@ class MikrotikRas(GeneralUpdateRas):
         elif status_type == "Alive":
             if ras_msg["port"] in self.onlines:
 
-                now = long(time.time())
+                now = int(time.time())
                 
                 in_bytes = ras_msg.getRequestAttr("Acct-Output-Octets")[0] 
                 out_bytes = ras_msg.getRequestAttr("Acct-Input-Octets")[0] 
 
-                if ras_msg.getRequestPacket().has_key("Acct-Output-Gigawords"):
+                if "Acct-Output-Gigawords" in ras_msg.getRequestPacket():
                     in_bytes += 2**32 * ras_msg.getRequestAttr("Acct-Output-Gigawords")[0]
                     out_bytes += 2**32 * ras_msg.getRequestAttr("Acct-Input-Gigawords")[0]
 

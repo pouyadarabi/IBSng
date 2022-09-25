@@ -29,7 +29,7 @@ class MessageHandler(handler.Handler):
         if request["user_ids"] == "ALL USERS":
             user_ids = None
         else:
-            user_ids = map(lambda x:to_long(x,"user id"),MultiStr(request["user_ids"]))
+            user_ids = [to_long(x,"user id") for x in MultiStr(request["user_ids"])]
             
         message_main.getActionsManager().postMessageToUser(user_ids,
                                                            request["message"])
@@ -38,7 +38,7 @@ class MessageHandler(handler.Handler):
         request.needAuthType(request.VOIP_USER,request.NORMAL_USER)
         request.checkArgs("message")
         requester=request.getAuthNameObj()
-        message_main.getActionsManager().postMessageToAdmin(long(requester.getUserID()),
+        message_main.getActionsManager().postMessageToAdmin(int(requester.getUserID()),
                                                            request["message"])
 
     ######################################
@@ -50,7 +50,7 @@ class MessageHandler(handler.Handler):
         requester.canDo("VIEW MESSAGES")
 
         conds = report_lib.fixConditionsDic(request["conds"])
-        if conds.has_key("table") and conds["table"] == "user":
+        if "table" in conds and conds["table"] == "user":
             table = "user_messages"
         else:
             table = "admin_messages"
@@ -94,7 +94,7 @@ class MessageHandler(handler.Handler):
         message_main.getActionsManager().deleteMessages(self.__getMessageIDs(request), request["table"])
     
     def __getMessageIDs(self, request):
-        return map(lambda x:to_long(x,"message_id"),request.fixList("message_ids"))
+        return [to_long(x,"message_id") for x in request.fixList("message_ids")]
 
     #########################   
     

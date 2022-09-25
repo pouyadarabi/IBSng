@@ -40,14 +40,14 @@ class CallerIDUserAttrUpdater(AttrUpdater):
 
 #######################################
     def checkInput(self,src,action,dargs):
-        map(dargs["admin_obj"].canChangeVoIPAttrs,dargs["users"].itervalues())
+        list(map(dargs["admin_obj"].canChangeVoIPAttrs,iter(dargs["users"].values())))
     
     def __checkCallerID(self,caller_ids,users):
         if len(caller_ids)<len(users):
             raise GeneralException(errorText("USER_ACTIONS","CALLER_ID_MAC_COUNT_NOT_MATCH")%(len(users),len(caller_ids)))
 
         cur_caller_ids = []
-        for loaded_user in users.itervalues():
+        for loaded_user in users.values():
             if loaded_user.userHasAttr("caller_id"):
                 cur_caller_ids += loaded_user.getUserAttrs()["caller_id"]
             
@@ -131,9 +131,9 @@ class CallerIDUserAttrUpdater(AttrUpdater):
         return ibs_db.createDeleteQuery("caller_id_users","user_id=%s"%user_id)
 
     def __insertCallerIDsQuery(self,user_id, caller_ids):
-        return "".join(map(lambda caller_id: ibs_db.createInsertQuery("caller_id_users",
+        return "".join([ibs_db.createInsertQuery("caller_id_users",
                                                                 {"caller_id":dbText(caller_id),
-                                                                "user_id":user_id}), caller_ids))
+                                                                "user_id":user_id}) for caller_id in caller_ids])
 
 ##########################################################
     def callerIDExists(self,caller_ids):
@@ -146,7 +146,7 @@ class CallerIDUserAttrUpdater(AttrUpdater):
         """
         if len(caller_ids)==0:
             return []
-        where_clause=" or ".join(map(lambda c:"caller_id=%s"%dbText(c),caller_ids))
+        where_clause=" or ".join(["caller_id=%s"%dbText(c) for c in caller_ids])
         cids_db=db_main.getHandle().get("caller_id_users",where_clause,0,-1,"",["caller_id"])
         return [m["caller_id"] for m in cids_db]
 

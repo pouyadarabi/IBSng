@@ -12,7 +12,7 @@ class Group:
         self.attributes=attributes
         
     def hasAttr(self,attr_name):
-        return self.attributes.has_key(attr_name)
+        return attr_name in self.attributes
 
     def getAttr(self,attr_name):
         try:

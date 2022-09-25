@@ -15,7 +15,7 @@ class RealTimeManager:
         self.snapshots[snapshot_obj.getName()]=snapshot_obj
         
     def updateAll(self):
-        for snapshot in self.snapshots.values():
+        for snapshot in list(self.snapshots.values()):
             try:
                 snapshot.update()
             except:

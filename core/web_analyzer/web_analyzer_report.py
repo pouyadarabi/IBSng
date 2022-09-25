@@ -117,9 +117,9 @@ class WebAnalyzerSearcher:
                     owner_ids=(self.search_helper.getRequesterObj().getAdminID(),)
                 else:
                     owner_name=self.search_helper.getCondValue("owner")
-                    if type(owner_name)==types.StringType:
+                    if type(owner_name)==bytes:
                         owner_name=(owner_name,)
-                    owner_ids=map(lambda owner_name:admin_main.getLoader().getAdminByName(owner_name).getAdminID(),owner_name)
+                    owner_ids=[admin_main.getLoader().getAdminByName(owner_name).getAdminID() for owner_name in owner_name]
             
                 sub_query=self.__userOwnersConditionQuery(owner_ids)
                 web_analyzer_table.getRootGroup().addGroup(sub_query)
@@ -128,7 +128,7 @@ class WebAnalyzerSearcher:
 
     def __userOwnersConditionQuery(self,owner_ids):
         cond_group=SearchGroup("or")
-        map(lambda owner_id:cond_group.addGroup("users.owner_id=%s"%owner_id),owner_ids)
+        list(map(lambda owner_id:cond_group.addGroup("users.owner_id=%s"%owner_id),owner_ids))
         return "web_analyzer_log.user_id in (select user_id from users where %s)"%cond_group.getConditionalClause()
 
     #################################################

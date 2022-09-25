@@ -11,7 +11,7 @@ def initFilters():
     global filters
     
     filters = []
-    for module_obj in loadPlugins(ONLINES_FILTER_PATH).itervalues():
+    for module_obj in loadPlugins(ONLINES_FILTER_PATH).values():
         for obj_name in dir(module_obj):
             try:
                 obj = getattr(module_obj, obj_name)
@@ -51,7 +51,7 @@ class OnlinesFilterManager:
         self.__filters_apply = self.__generateFiltersApply() #what filters should apply?
         
     def __generateFiltersApply(self):
-        return map(lambda filter_obj: filter_obj.appliesOnCond(self.__conds), self.__filters)
+        return [filter_obj.appliesOnCond(self.__conds) for filter_obj in self.__filters]
     
     def filter(self, user_obj, instance):
         if True not in self.__filters_apply:

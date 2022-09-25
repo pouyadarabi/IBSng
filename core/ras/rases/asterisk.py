@@ -169,7 +169,7 @@ class AsteriskHandler(handler.Handler):
         request.checkArgs("username")
         try:
             return user_main.getActionManager().getLastDestination(request["username"])
-        except IBSError,e:
+        except IBSError as e:
             raise IBSError(e.getErrorKey())
         
         
@@ -185,7 +185,7 @@ class AsteriskHandler(handler.Handler):
         request.checkArgs("username","caller_id")
         try:
             return user_main.getActionManager().addCallerIDAuthentication(request["username"], request["caller_id"])
-        except IBSError,e:
+        except IBSError as e:
             raise IBSError(e.getErrorKey())
 
     def deleteCallerIDAuthentication(self, request):
@@ -199,7 +199,7 @@ class AsteriskHandler(handler.Handler):
         request.checkArgs("username","caller_id")
         try:
             return user_main.getActionManager().deleteCallerIDAuthentication(request["username"], request["caller_id"])
-        except IBSError,e:
+        except IBSError as e:
             raise IBSError(e.getErrorKey())
 
     def getUserCredit(self, request):

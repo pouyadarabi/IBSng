@@ -61,7 +61,7 @@ class ChilliSpot(GeneralUpdateRas):
           
 ####################################
     def isOnline(self,user_msg):
-        return self.onlines.has_key(user_msg["port"]) and self.onlines[user_msg["port"]]["last_update"] >= \
+        return user_msg["port"] in self.onlines and self.onlines[user_msg["port"]]["last_update"] >= \
             time.time() - int(self.getAttribute("chilli_update_accounting_interval"))*60
 
 #####################################
@@ -82,7 +82,7 @@ class ChilliSpot(GeneralUpdateRas):
                                     "Calling-Station-Id":"mac",
                                     "Framed-IP-Address":"remote_ip"
                                     })
-        if self.onlines.has_key(ras_msg["port"]):
+        if ras_msg["port"] in self.onlines:
             self.onlines[ras_msg["port"]]["in_bytes"], self.onlines[ras_msg["port"]]["out_bytes"]= 0,0
         
         ras_msg.getReplyPacket()["Acct-Interim-Interval"] = self.getAttribute("chilli_update_accounting_interval")*60
@@ -139,7 +139,7 @@ class ChilliSpot(GeneralUpdateRas):
     def __addInOnlines(self, ras_msg):
     
         pkt = ras_msg.getRequestPacket()
-        if pkt.has_key("Acct-Output-Octets"):
+        if "Acct-Output-Octets" in pkt:
             start_in_bytes = pkt["Acct-Input-Octets"][0]
             start_out_bytes = pkt["Acct-Output-Octets"][0]
         else:

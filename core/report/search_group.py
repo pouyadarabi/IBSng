@@ -23,7 +23,7 @@ class SearchGroup:
         """
         if len(self.__groups)==0:
             return ""
-        str_groups=map(self.__getConditionStr,self.__groups)
+        str_groups=list(map(self.__getConditionStr,self.__groups))
         return " (%s) "%(" %s "%self.__operator).join(str_groups)
     
     def isEmpty(self):

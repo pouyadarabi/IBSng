@@ -38,7 +38,7 @@ class PermLoader:
             check if there's already registered permission with name "perm_name"
             return 1 if perm_name is valid and else 0
         """
-        return self.perm_objs.has_key(perm_name)
+        return perm_name in self.perm_objs
 
         
 
@@ -52,7 +52,7 @@ class PermLoader:
 
 
     def __checkDuplicateName(self,perm_name):
-        if self.perm_objs.has_key(perm_name):
+        if perm_name in self.perm_objs:
             raise IBSException(errorText("PERMISSION","DUPLICATE_PERM_NAME")%perm_name)    
 
 

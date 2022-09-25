@@ -14,7 +14,7 @@ class IPpoolLoader:
             check if pool with id "ippool_id" exists
             raise a GeneralException if !
         """
-        if not self.pool_id.has_key(ippool_id):
+        if ippool_id not in self.pool_id:
             raise GeneralException(errorText("IPPOOL","INVALID_IP_POOL_ID")%ippool_id)
 
     def checkIPpoolName(self,ippool_name):
@@ -22,7 +22,7 @@ class IPpoolLoader:
             check if pool with name "ippool_name" exists
             raise a GeneralException if not
         """
-        if not self.pool_names.has_key(ippool_name):
+        if ippool_name not in self.pool_names:
             raise GeneralException(errorText("IPPOOL","INVALID_IP_POOL_NAME")%ippool_id)
 
 
@@ -47,7 +47,7 @@ class IPpoolLoader:
             return True if ippool with name "ippool_name" exists
             else return False
         """
-        return self.pool_names.has_key(ippool_name)
+        return ippool_name in self.pool_names
 
 
     def loadIPpoolByID(self,ippool_id):
@@ -89,10 +89,10 @@ class IPpoolLoader:
             load all ip pools into object, normally should be called by startup routing
         """
         ippool_ids=self.__getAllIPpoolIds()
-        map(self.loadIPpoolByID,ippool_ids)
+        list(map(self.loadIPpoolByID,ippool_ids))
 
     def getAllIPpoolNames(self):
-        return self.pool_names.keys()
+        return list(self.pool_names.keys())
 
     def reloadIPpoolByID(self,ippool_id):
         ippool_obj=self.getIPpoolByID(ippool_id)
@@ -114,7 +114,7 @@ class IPpoolLoader:
             return a list of ippool id's from ippool table
         """
         ippoolids_dic=db_main.getHandle().get("ippool","true",0,-1,"ippool_id",["ippool_id"])
-        return map(lambda x:x["ippool_id"],ippoolids_dic)
+        return [x["ippool_id"] for x in ippoolids_dic]
 
     def __keepObj(self,ippool_obj):
         """

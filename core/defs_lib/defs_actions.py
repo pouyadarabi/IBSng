@@ -30,7 +30,7 @@ class DefsActions:
             check if defined names are valid and cast their value if needed
         """
         for def_var in def_vars:
-            if not getDefsLoader().has_key(def_var.getName()):
+            if def_var.getName() not in getDefsLoader():
                 raise GeneralException(errorText("DEFS","INVALID_DEFINITION_NAME")%def_var.getName())
             
             loaded_def_var=getDefsLoader()[def_var.getName()]

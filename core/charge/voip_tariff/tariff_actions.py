@@ -83,7 +83,7 @@ class TariffActions:
     def __tariffUsedInCharge(self,tariff_id):
         def checkTariffInChargeObj(charge_obj):
             if charge_obj.isVoIPCharge():
-                for rule_obj in charge_obj.getRules().itervalues():
+                for rule_obj in list(charge_obj.getRules().values()):
                     if rule_obj.getTariffObj().getTariffID()==tariff_id:
                         raise GeneralException(errorText("VOIP_TARIFF","TARIFF_USED_IN_CHARGE")%charge_obj.getChargeName())
 
@@ -120,7 +120,7 @@ class TariffActions:
         errs=self.__addPrefixCheckInput(tariff_name,prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations)
         if errs: return {"errs":errs,"success":False}
         tariff_obj=tariff_main.getLoader().getTariffByName(tariff_name)
-        prefix_ids=map(lambda x:self.__getNewPrefixID(),xrange(len(prefix_codes)))
+        prefix_ids=[self.__getNewPrefixID() for x in range(len(prefix_codes))]
         self.__addPrefixDB(tariff_obj.getTariffID(),prefix_ids,prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations)
         tariff_main.getLoader().loadTariffByID(tariff_obj.getTariffID())
         return {"errs":[],"success":True}
@@ -131,7 +131,7 @@ class TariffActions:
             raise GeneralException(errorText("VOIP_TARIFF","PREFIX_COUNT_NOT_EQUAL"))
         errs=[]
         line=1
-        for code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration in itertools.izip(prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations):
+        for code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration in zip(prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations):
             cpm,free_sec,min_duration,round_to,min_chargable_duration=self.__convertToInt(cpm,free_sec,min_duration,round_to,min_chargable_duration,errs,line)
             self.__checkPrefix(code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration,errs,line)
             self.__checkCodeExistence(code,tariff_obj,errs,line)
@@ -204,7 +204,7 @@ class TariffActions:
         """
             check if there's duplicate prefix_code for prefix_codes[_index] from 0 to _index
         """
-        for i in xrange(0,_index):
+        for i in range(0,_index):
             if prefix_codes[i]==prefix_codes[_index]:
                 errs.append("%s:%s"%(line,errorText("VOIP_TARIFF","DUPLICATE_PREFIX_CODE")%(prefix_codes[_index])))
                 return
@@ -214,7 +214,7 @@ class TariffActions:
 
     def __addPrefixDB(self,tariff_id,prefix_ids,prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations):
         query=ibs_query.IBSQuery()
-        for _id,code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration in itertools.izip(prefix_ids,prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations):
+        for _id,code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration in zip(prefix_ids,prefix_codes,prefix_names,cpms,free_seconds,min_durations,round_tos,min_chargable_durations):
             query+=self.__addPrefixQuery(tariff_id,_id,code,name,cpm,free_sec,min_duration,round_to,min_chargable_duration)
         query.runQuery()
 
@@ -283,6 +283,6 @@ class TariffActions:
         db_main.getHandle().transactionQuery(self.__delPrefixQuery(tariff_id,prefix_codes))
 
     def __delPrefixQuery(self,tariff_id,prefix_codes):
-        prefix_code_cond = " or ".join(map(lambda code:"prefix_code=%s"%dbText(code),prefix_codes))
+        prefix_code_cond = " or ".join(["prefix_code=%s"%dbText(code) for code in prefix_codes])
         return ibs_db.createDeleteQuery("tariff_prefix_list","(%s) and tariff_id = %s"%(prefix_code_cond, tariff_id))
     ################################################

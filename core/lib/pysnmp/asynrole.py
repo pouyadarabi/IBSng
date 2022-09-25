@@ -10,7 +10,7 @@ from types import ClassType
 import asyncore
 
 # Import PySNMP components
-import role, error
+from . import role, error
 
 class Error(role.Error):
     """Base class for asynrole module
@@ -100,7 +100,7 @@ class manager(asyncore.dispatcher):
                               (None, None), (exc_type, \
                                              exc_value, exc_traceback))
         else:
-            raise (exc_type, exc_value)
+            raise exc_type
 
 class agent(asyncore.dispatcher):
     """An asynchronous SNMP agent based on the asyncore.py class.
@@ -176,5 +176,5 @@ class agent(asyncore.dispatcher):
                               (None, None), (exc_type, \
                                              exc_value, exc_traceback))
         else:    
-            raise (exc_type, exc_value)
+            raise exc_type
         

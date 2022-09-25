@@ -60,7 +60,7 @@ class AssignIPUserPlugin(user_plugin.AttrCheckUserPlugin):
 
 
     def s_logout(self,instance,ras_msg):
-        if self.user_obj.getInstanceInfo(instance)["attrs"].has_key("assigned_ip"):
+        if "assigned_ip" in self.user_obj.getInstanceInfo(instance)["attrs"]:
             try:
                 self.getIPContainer().freeIP(self.user_obj.getInstanceInfo(instance)["attrs"]["assigned_ip"])
             except GeneralException:
@@ -87,7 +87,7 @@ class AssignIPAttrUpdater(AttrUpdater):
     def changeInit(self,ips):
         self.ips = MultiStr(ips)
         self.checkIPs(self.ips)
-        self.useGenerateQuery({"assign_ip":",".join(map(lambda x:x,self.ips))})
+        self.useGenerateQuery({"assign_ip":",".join([x for x in self.ips])})
 
     def checkIPs(self, ips):
         for ip in ips:

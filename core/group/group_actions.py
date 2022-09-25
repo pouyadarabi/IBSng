@@ -171,5 +171,5 @@ class GroupActions:
         group_ids=db_main.getHandle().get("group_attrs","attr_name=%s and attr_value=%s"%(dbText(attr_name),dbText(attr_value)),
                                          0,-1,("group_id",True),["group_id"])
                 
-        return map(lambda dic:dic["group_id"],group_ids)
+        return [dic["group_id"] for dic in group_ids]
         

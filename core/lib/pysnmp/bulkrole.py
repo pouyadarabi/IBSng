@@ -9,8 +9,8 @@
 import socket
 
 # Import PySNMP components
-import role
-import v1, v2c
+from . import role
+from . import v1, v2c
 
 class Error(role.Error):
     """Base class for bulkrole module
@@ -60,7 +60,7 @@ class manager:
         # [Re-]create SNMP manager transport
         self.transport = role.manager(self.iface)
 
-    def append(self, (dst, req)):
+    def append(self, xxx_todo_changeme):
         """
            append((dst, req))
 
@@ -71,23 +71,23 @@ class manager:
            All queued request messages will be sent upon self.dispatch() method
            invocation.
         """
+        (dst, req) = xxx_todo_changeme
         if self._durty:
             raise ValueError('List is not valid for update (try clear())')
 
-        if req['request_id'] in map(lambda (dst, req): \
-                                    req['request_id'], self._requests):
+        if req['request_id'] in [dst_req1[1]['request_id'] for dst_req1 in self._requests]:
             raise BadArgument('Duplicate request IDs in queue')
 
         self._requests.append((dst, req))
 
-    def __setitem__(self, idx, (dst, req)):
+    def __setitem__(self, idx, xxx_todo_changeme5):
         """
         """
+        (dst, req) = xxx_todo_changeme5
         if self._durty:
             raise ValueError('List is not valid for update (try clear())')
 
-        if req['request_id'] in map(lambda (dst, req): \
-                                    req['request_id'], self._requests):
+        if req['request_id'] in [dst_req2[1]['request_id'] for dst_req2 in self._requests]:
             raise BadArgument('Duplicate request IDs in queue')
         
         try:
@@ -115,9 +115,10 @@ class manager:
         """
         return self._requests.count(val)
 
-    def index(self, (dst, req)):
+    def index(self, xxx_todo_changeme6):
         """
         """
+        (dst, req) = xxx_todo_changeme6
         if self._durty:
             raise ValueError('List is not valid for update (try clear())')
 
@@ -127,14 +128,14 @@ class manager:
         except ValueError:
             raise ValueError('No such request in queue')
 
-    def insert(self, idx, (dst, req)):
+    def insert(self, idx, xxx_todo_changeme7):
         """
         """
+        (dst, req) = xxx_todo_changeme7
         if self._durty:
             raise ValueError('List is not valid for update (try clear())')
 
-        if req['request_id'] in map(lambda (dst, req): \
-                                    req['request_id'], self._requests):
+        if req['request_id'] in [dst_req3[1]['request_id'] for dst_req3 in self._requests]:
             raise BadArgument('Duplicate request IDs in queue')
         
         try:
@@ -143,9 +144,10 @@ class manager:
         except IndexError:
             raise IndexError('Request index out of range')
 
-    def remove(self, (dst, req)):
+    def remove(self, xxx_todo_changeme8):
         """
         """
+        (dst, req) = xxx_todo_changeme8
         try:
             return self._requests.remove((dst, req))
 
@@ -175,16 +177,14 @@ class manager:
 
         # Resolve destination hostnames to IP numbers for later comparation
         try:
-            self._requests = map(lambda (dst, req): \
-                                 ((socket.gethostbyname(dst[0]), \
-                                   dst[1]), req),\
-                                 self._requests)
+            self._requests = [((socket.gethostbyname(dst_req[0][0]), \
+                                   dst_req[0][1]), dst_req[1]) for dst_req in self._requests]
 
-        except socket.error, why:
+        except socket.error as why:
             raise BadArgument(why)
 
         # Initialize a list of responses
-        self._responses = map(lambda (dst, req): (dst, None), self._requests)
+        self._responses = [(dst_req4[0], None) for dst_req4 in self._requests]
 
         # Initialize retry counter
         retries = self.retries

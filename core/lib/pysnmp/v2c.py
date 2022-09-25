@@ -9,8 +9,8 @@ import time
 import string
 
 # Import package components
-import asn1
-import v1
+from . import asn1
+from . import v1
 
 class Error(v1.Error):
     """Base class for v2 module exceptions
@@ -150,7 +150,7 @@ class BINDINGS(BERHEADER, v1.BINDINGS):
 class RR_PDU(BERHEADER, v1.RR_PDU):
     """
     """
-    FILTER = { 'error_status' :  range(0, 19) }
+    FILTER = { 'error_status' :  list(range(0, 19)) }
 
     def _encode(self):
         """
@@ -377,14 +377,14 @@ def decode(input):
     try:
         tag = BERHEADER().decode_tag(ord(pdu[0]))
 
-    except StandardError, why:
+    except Exception as why:
         raise BadEncoding('Decoder failure (bad input?): ' + str(why))
 
     try:
         # Create request object of matching type
         msg = eval(tag[:-4]+'()')
 
-    except NameError, why:
+    except NameError as why:
         raise BadPDUType('Unsuppored SNMP request type: ' + str(why))
 
     # Decode request

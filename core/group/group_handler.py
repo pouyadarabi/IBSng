@@ -36,7 +36,7 @@ class GroupHandler(handler.Handler):
         request.needAuthType(request.ADMIN)
         requester=request.getAuthNameObj()
         group_names=group_main.getLoader().getAllGroupNames()
-        group_names = filter(requester.canUseGroup,group_names) 
+        group_names = list(filter(requester.canUseGroup,group_names)) 
 
         sorted_group_names = SortedList(group_names)
         sorted_group_names.sort(False)

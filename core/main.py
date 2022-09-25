@@ -1,7 +1,7 @@
 import traceback
 import sys
 import time
-import ibs_exceptions
+from . import ibs_exceptions
 from core.lib.general import *
 
 SHUTDOWN=False
@@ -33,12 +33,12 @@ def init():
 
     import core.defs
     core.defs.init()
-    
+
     from core.script_launcher import launcher_main
     launcher_main.init()
 
     from core.server import server
-    server.init()    
+    server.init()
 
     import core.admin.admin_main
     core.admin.admin_main.init()
@@ -69,13 +69,13 @@ def init():
 
     import core.util.util_main
     core.util.util_main.init()
-    
+
     import core.ippool.ippool_main
     core.ippool.ippool_main.init()
 
     import core.report.report_main
     core.report.report_main.init()
-    
+
     import core.bandwidth_limit.bw_main
     core.bandwidth_limit.bw_main.init()
 
@@ -84,18 +84,18 @@ def init():
 
     import radius_server.rad_main
     radius_server.rad_main.init()
-    
-    import snapshot.snapshot_main
-    snapshot.snapshot_main.init()
 
-    import message.message_main
-    message.message_main.init()
+    import core.snapshot.snapshot_main
+    core.snapshot.snapshot_main.init()
 
-    import web_analyzer.web_analyzer_main
-    web_analyzer.web_analyzer_main.init()
-    
+    import core.message.message_main
+    core.message.message_main.init()
+
+    import core.web_analyzer.web_analyzer_main
+    core.web_analyzer.web_analyzer_main.init()
+
     ibs_exceptions.toLog("Starting server",ibs_exceptions.LOG_DEBUG)
-    server.startServer()    
+    server.startServer()
 
     setStartTime()
     unSetNoLoginFlag()
@@ -107,7 +107,7 @@ def init():
     sys.excepthook=sys_except_hook
 
     unsetStartingFlag()
-    
+
 ############################################
 post_init_methods=[]
 
@@ -122,14 +122,14 @@ def registerPostInitMethod(method):
     post_init_methods.append(method)
 
 #######################
-def mainThreadShutdown(): 
+def mainThreadShutdown():
     """
         we must call this in main event loop(main thread)
     """
-    ibs_exceptions.toLog("Shutting down @ %s"%time.localtime(),ibs_exceptions.LOG_DEBUG)
+    ibs_exceptions.toLog(f"Shutting down @ {time.localtime()}",ibs_exceptions.LOG_DEBUG)
 
     from core.threadpool import thread_main
-    thread_main.getThreadPool().logThreads()    
+    thread_main.getThreadPool().logThreads()
 
     setNoLoginFlag()
 
@@ -140,7 +140,7 @@ def mainThreadShutdown():
     import radius_server.rad_main
     radius_server.rad_main.shutdown()
 
-    from core.server import server    
+    from core.server import server
     server.shutdown()
 
     thread_main.shutdown(10)
@@ -151,11 +151,11 @@ def mainThreadShutdown():
     thread_main.shutdown(30)
     sys.exit(0)
 
-########################    
-    
+########################
+
 def isShuttingDown(): #check for this in long last jobs, and see wether we must release out thread
     return SHUTDOWN
-    
+
 def setShutdownFlag():
     global SHUTDOWN
     SHUTDOWN=True

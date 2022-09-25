@@ -5,7 +5,7 @@ class UsernameOnlinesFilter(OnlinesFilter):
         filter online users by username prefix
     """
     def appliesOnCond(self, conds):
-        return conds.has_key("username_starts_with")
+        return "username_starts_with" in conds
     
     def filter(self, user_obj, instance, conds):
         if user_obj.isNormalUser() and user_obj.getUserAttrs().hasAttr("normal_username"):

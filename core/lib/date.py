@@ -2,7 +2,7 @@ from core.lib import jalali
 from core.lib.general import *
 from core.ibs_exceptions import *
 from core.errors import errorText
-import time_lib
+from . import time_lib
 import time
 import re
 import operator
@@ -141,7 +141,7 @@ class AbsDate:
             else:
                 raise GeneralException(errorText("GENERAL","INVALID_DATE")%self.date)
         
-            (year,month,day)=map(int,self.split_pattern.split(date_sp[0]))
+            (year,month,day)=list(map(int,self.split_pattern.split(date_sp[0])))
         except ValueError:
             raise GeneralException(errorText("GENERAL","INVALID_DATE")%self.date)
         
@@ -196,10 +196,10 @@ class AbsDate:
             return string representation of gregorian date in format
             YYYY-MM-DD hh:mm
         """
-        return apply(self.__getFormattedDate,self.getGregorianDateList())
+        return self.__getFormattedDate(*self.getGregorianDateList())
 
     def getJalaliDate(self):
-        return apply(self.__getFormattedDate,self.getJalaliDateList())
+        return self.__getFormattedDate(*self.getJalaliDateList())
 
     def __getFormattedDate(self,year,month,day,hour,minute,second):
         return "%s-%s-%s %s:%s"%(year,
@@ -215,7 +215,7 @@ class AbsDate:
 
     def getEpochDate(self):
         #changed to -1, because it made jalali date to increment 1 hour
-        return long(time.mktime(self.getGregorianDateList()+(0,0,-1))) 
+        return int(time.mktime(self.getGregorianDateList()+(0,0,-1))) 
 
     def getRelativeDate(self):
         """     
@@ -301,10 +301,10 @@ def AbsDateFromEpoch(epoch_time):
         
 def test():
     a= AbsDate("1384-5-1 12:30", "jalali")
-    print a.getGregorianDate()
-    print a.getEpochDate()
-    print time.localtime(a.getEpochDate())
+    print((a.getGregorianDate()))
+    print((a.getEpochDate()))
+    print((time.localtime(a.getEpochDate())))
     b = AbsDateFromEpoch(a.getEpochDate())
-    print b.getGregorianDate()
-    print b.getJalaliDate()
+    print((b.getGregorianDate()))
+    print((b.getJalaliDate()))
         

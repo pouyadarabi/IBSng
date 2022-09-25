@@ -54,7 +54,7 @@ class AdminPermission:
             additional *args are used in situations where they are needed
             (ex. username where adding a new user)
         """
-        return apply(self.perm_obj.check,[self.admin_obj,self]+list(args))
+        return self.perm_obj.check(*[self.admin_obj,self]+list(args))
     
     
     def __parseValue(self,perm_value):

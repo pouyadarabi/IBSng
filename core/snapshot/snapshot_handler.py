@@ -58,7 +58,7 @@ class SnapShotHandler(handler.Handler):
         
         user_vals = []
         cur_val = values[i]
-        while cur_val.has_key(key):
+        while key in cur_val:
             user_vals.append(cur_val[key])
 
             i -= 1
@@ -89,7 +89,7 @@ class SnapShotHandler(handler.Handler):
         requester = request.getAuthNameObj()
 
         if request.hasAuthType(request.ADMIN):
-            if not conds.has_key("user_id"):
+            if "user_id" not in conds:
                 request.raiseIncompleteRequest("user_id")
         
             user_ids = MultiStr(conds["user_id"])
